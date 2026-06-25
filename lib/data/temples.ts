@@ -1,0 +1,148 @@
+import { Temple } from "@/lib/types";
+
+const img = (seed: string) => `https://picsum.photos/seed/${seed}/1000/700`;
+
+export const temples: Temple[] = [
+  {
+    id: "t1",
+    slug: "kedarnath-temple",
+    name: "Kedarnath Temple",
+    deity: "Shiva",
+    state: "Uttarakhand",
+    city: "Kedarnath",
+    history:
+      "One of the twelve Jyotirlingas, Kedarnath is an ancient Shiva temple set amid the Garhwal Himalayas at 3,583m. Built by the Pandavas and revived by Adi Shankaracharya, it is among the holiest pilgrimage sites.",
+    timings: "4:00 AM – 9:00 PM (seasonal)",
+    dressCode: "Modest, warm traditional attire",
+    bestTime: "May to June, September to October",
+    howToReach: "Trek 16km from Gaurikund; nearest railhead Rishikesh; helicopter from Phata.",
+    image: "/assets/temple-2.jpg",
+    gallery: [img("kedar-1"), img("kedar-2"), img("kedar-3"), img("kedar-4")],
+    festivals: ["Maha Shivaratri", "Shravan Month"],
+  },
+  {
+    id: "t2",
+    slug: "siddhivinayak-temple",
+    name: "Siddhivinayak Temple",
+    deity: "Ganesh",
+    state: "Maharashtra",
+    city: "Mumbai",
+    history:
+      "Built in 1801, Shree Siddhivinayak is one of the richest and most visited temples in Mumbai, dedicated to Lord Ganesha. The black stone idol with a right-tilted trunk is considered especially auspicious.",
+    timings: "5:30 AM – 9:50 PM",
+    dressCode: "Traditional preferred, modest clothing",
+    bestTime: "Ganesh Chaturthi, Tuesdays",
+    howToReach: "Dadar station nearby; well connected by Mumbai local and metro.",
+    image: img("temple-siddhivinayak"),
+    gallery: [img("sid-1"), img("sid-2"), img("sid-3"), img("sid-4")],
+    festivals: ["Ganesh Chaturthi"],
+  },
+  {
+    id: "t3",
+    slug: "vaishno-devi",
+    name: "Vaishno Devi",
+    deity: "Durga",
+    state: "Jammu & Kashmir",
+    city: "Katra",
+    history:
+      "Nestled in the Trikuta Mountains, the Vaishno Devi shrine honours the Mother Goddess in the form of three natural rock formations (pindis). Millions undertake the sacred trek each year.",
+    timings: "Open 24 hours",
+    dressCode: "Comfortable, modest trekking attire",
+    bestTime: "March to October",
+    howToReach: "13km trek from Katra; ponies, palki and helicopter available.",
+    image: img("temple-vaishno"),
+    gallery: [img("vai-1"), img("vai-2"), img("vai-3"), img("vai-4")],
+    festivals: ["Navratri"],
+  },
+  {
+    id: "t4",
+    slug: "golden-temple",
+    name: "Golden Temple",
+    deity: "Guru Granth Sahib",
+    state: "Punjab",
+    city: "Amritsar",
+    history:
+      "Sri Harmandir Sahib, the holiest gurdwara of Sikhism, is renowned for its gold-plated facade reflected in the sacred Amrit Sarovar. It welcomes people of all faiths and serves the world's largest free community kitchen.",
+    timings: "Open 24 hours",
+    dressCode: "Head must be covered; remove shoes",
+    bestTime: "October to March",
+    howToReach: "Amritsar railway station and airport nearby; central city location.",
+    image: "/assets/temple-1.jpg",
+    gallery: [img("gold-1"), img("gold-2"), img("gold-3"), img("gold-4")],
+    festivals: ["Vaisakhi", "Gurpurab"],
+  },
+  {
+    id: "t5",
+    slug: "meenakshi-temple",
+    name: "Meenakshi Temple",
+    deity: "Parvati",
+    state: "Tamil Nadu",
+    city: "Madurai",
+    history:
+      "The Meenakshi Amman Temple is a historic temple dedicated to Goddess Meenakshi and Lord Sundareswarar. Famed for its towering, vividly coloured gopurams covered in thousands of sculptures.",
+    timings: "5:00 AM – 12:30 PM, 4:00 PM – 9:30 PM",
+    dressCode: "Traditional Indian attire required",
+    bestTime: "October to March, Meenakshi Thirukalyanam",
+    howToReach: "Madurai junction and airport well connected.",
+    image: "/assets/temple-3.jpg",
+    gallery: [img("mee-1"), img("mee-2"), img("mee-3"), img("mee-4")],
+    festivals: ["Meenakshi Thirukalyanam"],
+  },
+  {
+    id: "t6",
+    slug: "somnath-temple",
+    name: "Somnath Temple",
+    deity: "Shiva",
+    state: "Gujarat",
+    city: "Prabhas Patan",
+    history:
+      "The first among the twelve Jyotirlingas, Somnath stands on the western coast of Gujarat. Destroyed and rebuilt many times through history, it symbolises resilience and eternal faith.",
+    timings: "6:00 AM – 9:30 PM",
+    dressCode: "Modest traditional clothing",
+    bestTime: "October to February, Maha Shivaratri",
+    howToReach: "Nearest railhead Veraval (7km); Diu airport nearby.",
+    image: "/assets/temple-4.jpg",
+    gallery: [img("som-1"), img("som-2"), img("som-3"), img("som-4")],
+    festivals: ["Maha Shivaratri"],
+  },
+  {
+    id: "t7",
+    slug: "guruvayur-temple",
+    name: "Guruvayur Temple",
+    deity: "Krishna",
+    state: "Kerala",
+    city: "Guruvayur",
+    history:
+      "Known as Bhuloka Vaikunta (Heaven on Earth), Guruvayur is one of the most sacred Krishna temples in Kerala, famed for its disciplined rituals and the deity Guruvayurappan.",
+    timings: "3:00 AM – 1:30 PM, 4:30 PM – 9:15 PM",
+    dressCode: "Traditional: men dhoti, women saree/set mundu",
+    bestTime: "October to February",
+    howToReach: "Nearest railway Thrissur (29km); Kochi airport (80km).",
+    image: img("temple-guruvayur"),
+    gallery: [img("gur-1"), img("gur-2"), img("gur-3"), img("gur-4")],
+    festivals: ["Janmashtami", "Guruvayur Ekadasi"],
+  },
+  {
+    id: "t8",
+    slug: "jakhu-temple",
+    name: "Jakhu Temple",
+    deity: "Hanuman",
+    state: "Himachal Pradesh",
+    city: "Shimla",
+    history:
+      "Perched atop Jakhu Hill, the highest peak in Shimla, this ancient Hanuman temple is marked by a towering 108-foot statue visible across the town, surrounded by deodar forests.",
+    timings: "5:00 AM – 9:00 PM",
+    dressCode: "Warm modest clothing",
+    bestTime: "March to June, Hanuman Jayanti",
+    howToReach: "Trek or drive up from Shimla Ridge (2km).",
+    image: img("temple-jakhu"),
+    gallery: [img("jak-1"), img("jak-2"), img("jak-3"), img("jak-4")],
+    festivals: ["Hanuman Jayanti"],
+  },
+];
+
+export const getTempleBySlug = (slug: string) =>
+  temples.find((t) => t.slug === slug);
+
+export const getTemplesByState = (state: string) =>
+  temples.filter((t) => t.state === state);

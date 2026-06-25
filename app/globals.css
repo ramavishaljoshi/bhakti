@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 28 100% 97%; /* cream #FFF8F2 */
+    --foreground: 24 30% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 24 30% 14%;
+
+    --primary: 30 100% 60%; /* saffron */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 28 60% 94%;
+    --secondary-foreground: 24 30% 20%;
+
+    --muted: 28 40% 92%;
+    --muted-foreground: 24 12% 45%;
+
+    --accent: 28 80% 90%;
+    --accent-foreground: 24 30% 20%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 28 35% 88%;
+    --input: 28 35% 88%;
+    --ring: 30 100% 60%;
+  }
+
+  .dark {
+    --background: 24 18% 8%;
+    --foreground: 28 30% 94%;
+
+    --card: 24 16% 12%;
+    --card-foreground: 28 30% 94%;
+
+    --primary: 30 100% 60%;
+    --primary-foreground: 24 30% 10%;
+
+    --secondary: 24 12% 18%;
+    --secondary-foreground: 28 30% 90%;
+
+    --muted: 24 12% 18%;
+    --muted-foreground: 28 12% 62%;
+
+    --accent: 24 14% 22%;
+    --accent-foreground: 28 30% 90%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 24 12% 22%;
+    --input: 24 12% 22%;
+    --ring: 30 100% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-white/40 dark:border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-saffron-500 to-orange-500 bg-clip-text text-transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
