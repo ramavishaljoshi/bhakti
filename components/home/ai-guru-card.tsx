@@ -1,15 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowUpRight } from "lucide-react";
 
 const examples = [
   "Which mantra should I chant for peace?",
   "Explain Bhagavad Gita Chapter 2.",
   "Tell me a Hanuman story.",
 ];
+
+// Free public AI platform the questions open on. Swap this single builder to
+// point the whole card at Claude / Perplexity / Grok instead:
+//   Claude:     https://claude.ai/new?q=<q>
+//   Perplexity: https://www.perplexity.ai/search?q=<q>
+//   Grok:       https://grok.com/?q=<q>
+const askUrl = (q: string) =>
+  `https://chatgpt.com/?hints=search&q=${encodeURIComponent(q)}`;
+
+const defaultPrompt =
+  "Be my spiritual guide — suggest a mantra for today and share a short teaching from the Bhagavad Gita.";
 
 export function AIGuruBanner() {
   return (
@@ -36,22 +46,27 @@ export function AIGuruBanner() {
 
           <div className="mt-4 flex flex-wrap gap-2">
             {examples.map((ex) => (
-              <Link
+              <a
                 key={ex}
-                href={`/ai-guru?q=${encodeURIComponent(ex)}`}
-                className="rounded-2xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:border-violet-300 hover:text-violet-600"
+                href={askUrl(ex)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-1.5 rounded-2xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:border-violet-300 hover:text-violet-600"
               >
                 {ex}
-              </Link>
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </a>
             ))}
           </div>
 
-          <Link
-            href="/ai-guru"
+          <a
+            href={askUrl(defaultPrompt)}
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-5 inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 px-6 font-semibold text-white shadow-lg transition-transform active:scale-95"
           >
-            Ask Now <ArrowRight className="h-4 w-4" />
-          </Link>
+            Ask Now <ArrowUpRight className="h-4 w-4" />
+          </a>
         </div>
 
         <div className="relative mx-auto hidden h-44 w-44 sm:block">
