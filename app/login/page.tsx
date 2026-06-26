@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { AuthShell, Field } from "@/components/auth/auth-shell";
 import { FormMessage } from "@/components/shared/form-message";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [registered, setRegistered] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -83,14 +84,29 @@ export default function LoginPage() {
         </Field>
 
         <Field label="Password">
-          <Input
-            type="password"
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pr-12"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          </div>
         </Field>
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>

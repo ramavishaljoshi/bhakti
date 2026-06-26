@@ -1,0 +1,175 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { MapPin, Clock, Shirt, CalendarDays, Route, Sparkles } from "lucide-react";
+import { PageHeader } from "@/components/shared/page-header";
+import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/shared/favorite-button";
+import { temples, getTempleBySlug } from "@/lib/data/temples";
+
+export function generateStaticParams() {
+  return temples.map((t) => ({ slug: t.slug }));
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const t = getTempleBySlug(params.slug);
+  return { title: t ? `${t.name} — Bhakti` : "Temple — Bhakti" };
+}
+
+export default function TempleDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const temple = getTempleBySlug(params.slug);
+  if (!temple) notFound();
+
+  return (
+    <div className="container py-6 lg:py-10">
+      <PageHeader title={temple.name} backHref="/temples" />
+
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+        {/* Hero image */}
+        <div className="relative aspect-[4/3] overflow-hidden rounded-4xl border border-border shadow-soft lg:sticky lg:top-6 lg:self-start">
+          <Image
+            src={temple.image}
+            alt={temple.name}
+            fill
+            sizes="(max-width: 1024px) 100vw, 40vw"
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute right-4 top-4">
+            <FavoriteButton
+              item={{
+                type: "temple",
+                id: temple.id,
+                title: temple.name,
+                href: `/temples/${temple.slug}`,
+              }}
+            />
+          </div>
+          <div className="absolute bottom-5 left-5 right-5">
+            <p className="flex items-center gap-1.5 text-white/90">
+              <MapPin className="h-4 w-4" /> {temple.city}, {temple.state}
+            </p>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="space-y-6">
+          <div className="flex flex-wrap gap-2">
+            <Badge>{temple.deity}</Badge>
+            <Badge variant="muted">{temple.state}</Badge>
+          </div>
+
+          <Section title="History" icon={<Sparkles className="h-4 w-4" />}>
+            <p className="leading-relaxed text-muted-foreground">
+              {temple.history}
+            </p>
+          </Section>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <InfoTile
+              icon={<Clock className="h-4 w-4" />}
+              label="Timings"
+              value={temple.timings}
+            />
+            <InfoTile
+              icon={<Shirt className="h-4 w-4" />}
+              label="Dress Code"
+              value={temple.dressCode}
+            />
+            <InfoTile
+              icon={<CalendarDays className="h-4 w-4" />}
+              label="Best Time to Visit"
+              value={temple.bestTime}
+            />
+            <InfoTile
+              icon={<Route className="h-4 w-4" />}
+              label="How to Reach"
+              value={temple.howToReach}
+            />
+          </div>
+
+          {temple.festivals?.length > 0 && (
+            <Section
+              title="Festivals"
+              icon={<CalendarDays className="h-4 w-4" />}
+            >
+              <div className="flex flex-wrap gap-2">
+                {temple.festivals.map((f) => (
+                  <Badge key={f} variant="muted">
+                    {f}
+                  </Badge>
+                ))}
+              </div>
+            </Section>
+          )}
+        </div>
+      </div>
+
+      {/* Gallery */}
+      {temple.gallery?.length > 0 && (
+        <div className="mt-12">
+          <h2 className="mb-4 font-display text-xl font-bold">Gallery</h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {temple.gallery.map((src, i) => (
+              <div
+                key={i}
+                className="relative aspect-square overflow-hidden rounded-3xl border border-border"
+              >
+                <Image
+                  src={src}
+                  alt={`${temple.name} ${i + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-500 hover:scale-105"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Section({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <h2 className="mb-2 flex items-center gap-2 font-display text-lg font-semibold">
+        {icon && <span className="text-saffron-500">{icon}</span>}
+        {title}
+      </h2>
+      {children}
+    </div>
+  );
+}
+
+function InfoTile({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-4">
+      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-saffron-600 dark:text-saffron-400">
+        {icon} {label}
+      </p>
+      <p className="text-sm">{value}</p>
+    </div>
+  );
+}

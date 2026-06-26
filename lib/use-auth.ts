@@ -116,5 +116,44 @@ export function useAuth() {
     setUser(null);
   }, []);
 
-  return { user, ready, register, login, logout, configured: isSupabaseConfigured };
+  const updateAccount = React.useCallback(
+    async (data: {
+      name?: string;
+      email?: string;
+      password?: string;
+    }): Promise<AuthResult> => {
+      const supabase = getSupabaseClient();
+      if (!supabase) return { ok: false, error: NOT_CONFIGURED };
+
+      const payload: {
+        email?: string;
+        password?: string;
+        data?: Record<string, unknown>;
+      } = {};
+      if (data.name !== undefined) payload.data = { name: data.name.trim() };
+      if (data.email) payload.email = data.email.trim().toLowerCase();
+      if (data.password) payload.password = data.password;
+
+      const { data: result, error } = await supabase.auth.updateUser(payload);
+      if (error) return { ok: false, error: error.message };
+
+      setUser(mapUser(result.user));
+      // Changing the email sends a confirmation link to the new address.
+      const needsConfirmation = Boolean(
+        data.email && result.user?.new_email
+      );
+      return { ok: true, needsConfirmation };
+    },
+    []
+  );
+
+  return {
+    user,
+    ready,
+    register,
+    login,
+    logout,
+    updateAccount,
+    configured: isSupabaseConfigured,
+  };
 }

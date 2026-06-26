@@ -147,6 +147,36 @@ export const festivals: Festival[] = [
     ],
     image: img("festival-ganesh"),
   },
+  {
+    id: "f7",
+    slug: "raksha-bandhan",
+    name: "Raksha Bandhan",
+    date: "August",
+    story:
+      "Raksha Bandhan, also called Rakhi, celebrates the sacred bond between brothers and sisters. A sister ties a rakhi on her brother's wrist, praying for his well-being, while he vows to protect her. Legends recall Draupadi tying a cloth on Krishna's wrist and Krishna's promise to protect her.",
+    whyCelebrate:
+      "It honours the lifelong bond of love, duty and protection between siblings.",
+    pujaVidhi: [
+      "Prepare a puja thali with rakhi, roli, rice, sweets and a diya",
+      "Apply tilak and aarti to the brother",
+      "Tie the rakhi on his right wrist with a prayer",
+      "Exchange sweets and gifts",
+    ],
+    mantras: [],
+    bhajans: ["Behna Ne Bhai Ki Kalai Se", "Phoolon Ka Taaron Ka"],
+    food: ["Ghevar", "Kaju Katli", "Coconut Ladoo", "Rasgulla"],
+    faqs: [
+      {
+        q: "On which wrist is the rakhi tied?",
+        a: "The rakhi is traditionally tied on the brother's right wrist.",
+      },
+      {
+        q: "What is the story of Krishna and Draupadi?",
+        a: "When Krishna cut his finger, Draupadi tore a piece of her saree to bind the wound; Krishna vowed to protect her in return, exemplifying the spirit of Rakhi.",
+      },
+    ],
+    image: img("festival-rakhi"),
+  },
 ];
 
 export const getFestivalBySlug = (slug: string) =>

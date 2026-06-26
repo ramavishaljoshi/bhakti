@@ -22,7 +22,7 @@ export function AuthShell({
   footer: React.ReactNode;
 }) {
   return (
-    <div className="container grid min-h-[calc(100vh-4rem)] items-center gap-10 py-10 lg:grid-cols-2 lg:py-16">
+    <div className="container grid min-h-screen items-center gap-10 py-10 lg:grid-cols-2 lg:py-16">
       {/* Devotional side panel */}
       <motion.aside
         initial={{ opacity: 0, x: -20 }}

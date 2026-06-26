@@ -80,6 +80,9 @@ const config: Config = {
         "3xl": "1.5rem",
         "2xl": "1.25rem",
       },
+      spacing: {
+        "13": "3.25rem",
+      },
       fontFamily: {
         sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
         display: ["var(--font-poppins)", "system-ui", "sans-serif"],

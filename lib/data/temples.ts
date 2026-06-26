@@ -135,9 +135,45 @@ export const temples: Temple[] = [
     dressCode: "Warm modest clothing",
     bestTime: "March to June, Hanuman Jayanti",
     howToReach: "Trek or drive up from Shimla Ridge (2km).",
-    image: img("temple-jakhu"),
+    image: "/assets/jakhu-temple.jpg",
     gallery: [img("jak-1"), img("jak-2"), img("jak-3"), img("jak-4")],
     festivals: ["Hanuman Jayanti"],
+  },
+  {
+    id: "t9",
+    slug: "ram-mandir-ayodhya",
+    name: "Ram Mandir",
+    deity: "Rama",
+    state: "Uttar Pradesh",
+    city: "Ayodhya",
+    history:
+      "Built at Ram Janmabhoomi, the believed birthplace of Lord Rama, the grand Nagara-style Ram Mandir was consecrated on 22 January 2024. Its intricately carved sandstone shikhara and pillars make it one of India's most significant modern pilgrimage sites.",
+    timings: "6:30 AM – 9:30 PM (darshan with breaks)",
+    dressCode: "Modest traditional attire",
+    bestTime: "Ram Navami; October to March",
+    howToReach:
+      "Ayodhya Dham Junction railway station; Maharishi Valmiki International Airport, Ayodhya.",
+    image: "/assets/ram-mandir.jpg",
+    gallery: [img("ram-1"), img("ram-2"), img("ram-3"), img("ram-4")],
+    festivals: ["Ram Navami", "Diwali"],
+  },
+  {
+    id: "t10",
+    slug: "mahakaleshwar-ujjain",
+    name: "Mahakaleshwar Temple",
+    deity: "Shiva",
+    state: "Madhya Pradesh",
+    city: "Ujjain",
+    history:
+      "One of the twelve Jyotirlingas, Mahakaleshwar in Ujjain is renowned for its swayambhu (self-manifested) south-facing lingam and the famous predawn Bhasma Aarti, where the deity is adorned with sacred ash.",
+    timings: "3:00 AM – 11:00 PM (Bhasma Aarti at 4:00 AM)",
+    dressCode: "Traditional; men wear dhoti for sanctum entry",
+    bestTime: "Maha Shivaratri; October to March",
+    howToReach:
+      "Ujjain Junction railway station; nearest airport Devi Ahilyabai Holkar, Indore (55km).",
+    image: "/assets/mahakaleshwar.jpg",
+    gallery: [img("maha-1"), img("maha-2"), img("maha-3"), img("maha-4")],
+    festivals: ["Maha Shivaratri", "Nag Panchami"],
   },
 ];
 
