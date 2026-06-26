@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RotateCcw, Flame, Target, History, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useJap } from "@/lib/use-jap";
 
 const malaOptions = [
   { label: "108 Mala", value: 108 },
@@ -12,52 +13,14 @@ const malaOptions = [
   { label: "Unlimited", value: 0 },
 ];
 
-const STORAGE_KEY = "bhakti:jap";
-
-interface JapState {
-  total: number;
-  today: number;
-  streak: number;
-  goal: number;
-  history: { date: string; count: number }[];
-}
-
-const seed: JapState = {
-  total: 10548,
-  today: 72,
-  streak: 7,
-  goal: 108,
-  history: [
-    { date: "Mon", count: 108 },
-    { date: "Tue", count: 96 },
-    { date: "Wed", count: 108 },
-    { date: "Thu", count: 54 },
-    { date: "Fri", count: 108 },
-    { date: "Sat", count: 81 },
-    { date: "Sun", count: 72 },
-  ],
-};
-
 export function JapCounter({ mantraName = "Om Namah Shivaya" }: { mantraName?: string }) {
+  const jap = useJap();
   const [mala, setMala] = React.useState(108);
   const [count, setCount] = React.useState(0);
   const [rounds, setRounds] = React.useState(0);
-  const [state, setState] = React.useState<JapState>(seed);
   const [pulse, setPulse] = React.useState(0);
 
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setState({ ...seed, ...JSON.parse(saved) });
-    } catch {}
-  }, []);
-
-  const persist = (next: JapState) => {
-    setState(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {}
-  };
+  const weekTotal = jap.week.reduce((a, b) => a + b.count, 0);
 
   const increment = () => {
     setPulse((p) => p + 1);
@@ -68,11 +31,7 @@ export function JapCounter({ mantraName = "Om Namah Shivaya" }: { mantraName?: s
     } else {
       setCount(nextCount);
     }
-    persist({
-      ...state,
-      total: state.total + 1,
-      today: state.today + 1,
-    });
+    jap.addJap(1, mantraName);
     if (navigator?.vibrate) navigator.vibrate(8);
   };
 
@@ -207,41 +166,41 @@ export function JapCounter({ mantraName = "Om Namah Shivaya" }: { mantraName?: s
           <StatTile
             icon={<Flame className="h-5 w-5" />}
             label="Day Streak"
-            value={`${state.streak}`}
+            value={`${jap.streak}`}
           />
           <StatTile
             icon={<Target className="h-5 w-5" />}
             label="Today"
-            value={`${state.today}/${state.goal}`}
+            value={`${jap.today}/${jap.goal}`}
           />
           <StatTile
             icon={<Check className="h-5 w-5" />}
             label="Total Jap"
-            value={state.total.toLocaleString("en-IN")}
+            value={jap.total.toLocaleString("en-IN")}
           />
           <StatTile
             icon={<History className="h-5 w-5" />}
             label="This Week"
-            value={`${state.history.reduce((a, b) => a + b.count, 0)}`}
+            value={`${weekTotal}`}
           />
         </div>
 
         <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-display font-semibold">Weekly History</h3>
-            <span className="text-xs text-muted-foreground">Goal {state.goal}</span>
+            <span className="text-xs text-muted-foreground">Goal {jap.goal}</span>
           </div>
           <div className="flex h-36 items-end justify-between gap-2">
-            {state.history.map((d) => (
+            {jap.week.map((d) => (
               <div key={d.date} className="flex flex-1 flex-col items-center gap-2">
                 <motion.div
                   initial={{ height: 0 }}
-                  animate={{ height: `${(d.count / 108) * 100}%` }}
+                  animate={{ height: `${Math.min((d.count / jap.goal) * 100, 100)}%` }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="w-full rounded-xl bg-saffron-gradient"
                   style={{ minHeight: 6 }}
                 />
-                <span className="text-[10px] text-muted-foreground">{d.date}</span>
+                <span className="text-[10px] text-muted-foreground">{d.label}</span>
               </div>
             ))}
           </div>

@@ -5,6 +5,16 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
+import { useAuth } from "@/lib/use-auth";
+
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 
 const links = [
   { label: "Home", href: "/" },
@@ -18,6 +28,7 @@ const links = [
 
 export function TopNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
@@ -69,8 +80,9 @@ export function TopNav() {
             href="/profile"
             className="flex h-10 w-10 items-center justify-center rounded-full bg-saffron-gradient text-sm font-bold text-white shadow-glow ring-2 ring-background"
             aria-label="Profile"
+            title={user ? user.name : "Sign in"}
           >
-            A
+            {user ? initials(user.name) : "ॐ"}
           </Link>
         </div>
       </div>
