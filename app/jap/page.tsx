@@ -1,17 +1,9 @@
+import { Suspense } from "react";
 import { CircleDot } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { JapCounter } from "@/components/jap/jap-counter";
-import { mantras, getMantraBySlug } from "@/lib/data/mantras";
+import { JapCounterSection } from "@/components/jap/jap-counter-section";
 
-export default function JapPage({
-  searchParams,
-}: {
-  searchParams: { mantra?: string };
-}) {
-  const mantra = searchParams.mantra
-    ? getMantraBySlug(searchParams.mantra)
-    : mantras[0];
-
+export default function JapPage() {
   return (
     <div className="container py-6 lg:py-10">
       <PageHeader
@@ -19,7 +11,9 @@ export default function JapPage({
         description="Count your chants mindfully. Your progress is saved automatically and works offline."
         icon={<CircleDot className="h-6 w-6" />}
       />
-      <JapCounter mantraName={mantra?.name ?? "Om Namah Shivaya"} />
+      <Suspense fallback={null}>
+        <JapCounterSection />
+      </Suspense>
     </div>
   );
 }
