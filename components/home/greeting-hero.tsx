@@ -45,7 +45,7 @@ export function GreetingHero({ userName = "Anju" }: { userName?: string }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl"
+            className="mt-3 font-display text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl"
           >
             🙏 {greeting},{" "}
             <span className="text-gradient">{userName}</span>
@@ -55,7 +55,7 @@ export function GreetingHero({ userName = "Anju" }: { userName?: string }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-2 max-w-md text-muted-foreground"
+            className="mt-2 max-w-md text-stone-600"
           >
             May your day be filled with peace, devotion and positivity.
           </motion.p>

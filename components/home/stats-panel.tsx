@@ -39,20 +39,20 @@ export function StatsPanel() {
           <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-white/70 text-orange-500">
             <Flame className="h-5 w-5" />
           </div>
-          <p className="font-display text-3xl font-bold tabular-nums text-foreground">
+          <p className="font-display text-3xl font-bold tabular-nums text-stone-800">
             12
           </p>
-          <p className="text-xs text-muted-foreground">Days streak</p>
+          <p className="text-xs text-stone-500">Days streak</p>
         </div>
 
         <div className="flex flex-col justify-center rounded-3xl bg-tint-saffron p-5">
           <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-white/70 text-saffron-600">
             <Sparkles className="h-5 w-5" />
           </div>
-          <p className="font-display text-3xl font-bold tabular-nums text-foreground">
+          <p className="font-display text-3xl font-bold tabular-nums text-stone-800">
             2,430
           </p>
-          <p className="text-xs text-muted-foreground">Total Jap</p>
+          <p className="text-xs text-stone-500">Total Jap</p>
         </div>
       </div>
     </motion.div>
