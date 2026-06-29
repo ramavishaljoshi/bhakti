@@ -4,7 +4,18 @@ import { MapPin, Clock, Shirt, CalendarDays, Route, Sparkles } from "lucide-reac
 import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
-import { temples, getTempleBySlug } from "@/lib/data/temples";
+import {
+  temples,
+  getTempleBySlug,
+  getTemplesByState,
+} from "@/lib/data/temples";
+import { getGodByName } from "@/lib/data/gods";
+import { getFestivalByName } from "@/lib/data/festivals";
+import { mantras } from "@/lib/data/mantras";
+import {
+  RelatedLinks,
+  type RelatedGroup,
+} from "@/components/shared/related-links";
 import { buildMetadata, breadcrumbSchema, absoluteUrl } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -62,6 +73,36 @@ export default function TempleDetailPage({
 }) {
   const temple = getTempleBySlug(params.slug);
   if (!temple) notFound();
+
+  // Cross-entity related graph for this temple.
+  const god = getGodByName(temple.deity);
+  const relatedGroups: RelatedGroup[] = [
+    {
+      title: "God",
+      items: god ? [{ label: god.name, href: `/gods/${god.slug}` }] : [],
+    },
+    {
+      title: "Festivals",
+      items: (temple.festivals ?? [])
+        .map((name) => ({ name, f: getFestivalByName(name) }))
+        .filter((x) => x.f)
+        .map((x) => ({ label: x.name, href: `/festivals/${x.f!.slug}` })),
+    },
+    {
+      title: "Mantras",
+      items: mantras
+        .filter((m) => m.deity.toLowerCase() === temple.deity.toLowerCase())
+        .slice(0, 5)
+        .map((m) => ({ label: m.name, href: `/mantras/${m.slug}` })),
+    },
+    {
+      title: `More in ${temple.state}`,
+      items: getTemplesByState(temple.state)
+        .filter((t) => t.slug !== temple.slug)
+        .slice(0, 5)
+        .map((t) => ({ label: t.name, href: `/temples/${t.slug}` })),
+    },
+  ];
 
   return (
     <div className="container py-6 lg:py-10">
@@ -171,7 +212,7 @@ export default function TempleDetailPage({
               >
                 <Image
                   src={src}
-                  alt={`${temple.name} ${i + 1}`}
+                  alt={`${temple.name}, ${temple.city} — view ${i + 1}`}
                   fill
                   sizes="(max-width: 640px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 hover:scale-105"
@@ -181,6 +222,8 @@ export default function TempleDetailPage({
           </div>
         </div>
       )}
+
+      <RelatedLinks groups={relatedGroups} />
     </div>
   );
 }

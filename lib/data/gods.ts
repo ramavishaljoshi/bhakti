@@ -126,3 +126,24 @@ export const gods: God[] = [
 ];
 
 export const getGodBySlug = (slug: string) => gods.find((g) => g.slug === slug);
+
+// Resolve a deity reference (e.g. mantra.deity "Shiva", temple.deity "Krishna")
+// to a god entity. Matches the slug or the display name. Returns undefined when
+// there is no dedicated god page (e.g. "Gayatri", "Sai Baba").
+export const getGodByName = (name: string) => {
+  const n = name.trim().toLowerCase();
+  return gods.find(
+    (g) => g.slug === n || g.name.toLowerCase().includes(n)
+  );
+};
+
+// Gods that are associated with a given festival or temple name.
+export const getGodsByFestival = (festivalName: string) =>
+  gods.filter((g) =>
+    g.festivals.some((f) => f.toLowerCase() === festivalName.toLowerCase())
+  );
+
+export const getGodsByTemple = (templeName: string) =>
+  gods.filter((g) =>
+    g.temples.some((t) => t.toLowerCase() === templeName.toLowerCase())
+  );

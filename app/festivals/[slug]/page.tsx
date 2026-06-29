@@ -12,6 +12,13 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { festivals, getFestivalBySlug } from "@/lib/data/festivals";
+import { getGodsByFestival } from "@/lib/data/gods";
+import { getMantraBySlug } from "@/lib/data/mantras";
+import { temples } from "@/lib/data/temples";
+import {
+  RelatedLinks,
+  type RelatedGroup,
+} from "@/components/shared/related-links";
 import {
   buildMetadata,
   breadcrumbSchema,
@@ -55,6 +62,35 @@ export default function FestivalDetailPage({
 }) {
   const festival = getFestivalBySlug(params.slug);
   if (!festival) notFound();
+
+  // Cross-entity related graph for this festival.
+  const relatedGroups: RelatedGroup[] = [
+    {
+      title: "Gods",
+      items: getGodsByFestival(festival.name).map((g) => ({
+        label: g.name,
+        href: `/gods/${g.slug}`,
+      })),
+    },
+    {
+      title: "Mantras",
+      items: festival.mantras
+        .map((slug) => getMantraBySlug(slug))
+        .filter((m): m is NonNullable<typeof m> => Boolean(m))
+        .map((m) => ({ label: m.name, href: `/mantras/${m.slug}` })),
+    },
+    {
+      title: "Temples",
+      items: temples
+        .filter((t) =>
+          t.festivals?.some(
+            (f) => f.toLowerCase() === festival.name.toLowerCase()
+          )
+        )
+        .slice(0, 6)
+        .map((t) => ({ label: t.name, href: `/temples/${t.slug}` })),
+    },
+  ];
 
   return (
     <div className="container py-6 lg:py-10">
@@ -173,6 +209,8 @@ export default function FestivalDetailPage({
           </div>
         </div>
       )}
+
+      <RelatedLinks groups={relatedGroups} />
     </div>
   );
 }

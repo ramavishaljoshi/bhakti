@@ -15,6 +15,14 @@ import { FavoriteButton } from "@/components/shared/favorite-button";
 import { MantraListenButton } from "@/components/shared/mantra-listen-button";
 import { MantraCard } from "@/components/cards/mantra-card";
 import { mantras, getMantraBySlug, getMantrasByCategory } from "@/lib/data/mantras";
+import { getGodByName } from "@/lib/data/gods";
+import { getFestivalByName } from "@/lib/data/festivals";
+import { getTempleByName } from "@/lib/data/temples";
+import { getIntentionById } from "@/lib/data/intentions";
+import {
+  RelatedLinks,
+  type RelatedGroup,
+} from "@/components/shared/related-links";
 import {
   buildMetadata,
   breadcrumbSchema,
@@ -56,6 +64,40 @@ export default function MantraDetailPage({
   const related = getMantrasByCategory(mantra.category)
     .filter((m) => m.id !== mantra.id)
     .slice(0, 4);
+
+  // Build the cross-entity related graph from this mantra's relation fields.
+  const god = getGodByName(mantra.deity);
+  const festival = mantra.relatedFestival
+    ? getFestivalByName(mantra.relatedFestival)
+    : undefined;
+  const temple = mantra.relatedTemple
+    ? getTempleByName(mantra.relatedTemple)
+    : undefined;
+  const relatedGroups: RelatedGroup[] = [
+    {
+      title: "God",
+      items: god ? [{ label: god.name, href: `/gods/${god.slug}` }] : [],
+    },
+    {
+      title: "Festival",
+      items: festival
+        ? [{ label: festival.name, href: `/festivals/${festival.slug}` }]
+        : [],
+    },
+    {
+      title: "Temple",
+      items: temple
+        ? [{ label: temple.name, href: `/temples/${temple.slug}` }]
+        : [],
+    },
+    {
+      title: "Intentions",
+      items: mantra.intentions
+        .map((id) => getIntentionById(id))
+        .filter((i): i is NonNullable<typeof i> => Boolean(i))
+        .map((i) => ({ label: i.label, href: `/intentions/${i.id}` })),
+    },
+  ];
 
   return (
     <div className="container py-6 lg:py-10">
@@ -167,6 +209,8 @@ export default function MantraDetailPage({
           </div>
         </div>
       </div>
+
+      <RelatedLinks groups={relatedGroups} />
 
       {related.length > 0 && (
         <div className="mt-12">
