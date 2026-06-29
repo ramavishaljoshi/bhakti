@@ -1,0 +1,438 @@
+.journey {
+  --jr-card: rgba(10, 18, 32, 0.66);
+  --jr-card-2: rgba(14, 24, 40, 0.6);
+  --jr-line: rgba(140, 170, 220, 0.16);
+  --jr-accent: var(--teal, #35e5bd);
+  --jr-indigo: #7c6cf0;
+  position: relative;
+  z-index: 2;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 8px clamp(10px, 2.2vw, 26px) 64px;
+  color: var(--ink, #f6fbff);
+}
+
+.journey-head {
+  text-align: center;
+  margin: 6px 0 22px;
+}
+
+.journey-head h1 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.journey-head p {
+  margin: 8px 0 0;
+  color: var(--ink-dim, rgba(246, 251, 255, 0.54));
+  font-size: clamp(14px, 1.8vw, 19px);
+}
+
+.journey-board {
+  border: 1px solid var(--jr-line);
+  border-radius: 26px;
+  padding: clamp(14px, 2.4vw, 30px);
+  background:
+    radial-gradient(circle at 50% -4%, rgba(124, 108, 240, 0.12), transparent 36%),
+    var(--jr-card-2);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.38);
+}
+
+.journey-sync {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--jr-line);
+  color: var(--ink-dim);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sync-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  animation: jr-pulse 2s ease-out infinite;
+}
+
+@keyframes jr-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Cards */
+.summary-card,
+.goal-card,
+.calendar-card,
+.period-card {
+  border: 1px solid var(--jr-line);
+  border-radius: 18px;
+  padding: clamp(16px, 2vw, 22px);
+  background: var(--jr-card);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(150deg, #7c6cf0, #5a48d6);
+  color: #fff;
+  font-size: 20px;
+  box-shadow: 0 8px 22px rgba(90, 72, 214, 0.34);
+}
+
+.card-head h2 {
+  margin: 0;
+  font-size: clamp(17px, 1.9vw, 21px);
+  font-weight: 700;
+}
+
+.card-head p {
+  margin: 3px 0 0;
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+
+/* Summary row */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.summary-metrics > div {
+  text-align: left;
+}
+
+.summary-metrics strong {
+  display: block;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+
+.summary-metrics span {
+  display: block;
+  margin-top: 4px;
+  color: var(--jr-accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Goals */
+.goal-card {
+  margin-bottom: 16px;
+}
+
+.goal-edit {
+  flex-shrink: 0;
+  border: 1px solid var(--jr-line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.goal-edit:hover {
+  border-color: var(--jr-accent);
+}
+
+.goal-edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.goal-edit-row label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-dim);
+}
+
+.goal-edit-row input {
+  width: 100%;
+  border: 1px solid var(--jr-line);
+  border-radius: 10px;
+  padding: 11px 12px;
+  color: var(--ink);
+  background: rgba(4, 9, 18, 0.7);
+  font: inherit;
+  font-weight: 700;
+}
+
+.goal-edit-row input:focus {
+  outline: none;
+  border-color: var(--jr-accent);
+}
+
+.goal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.goal-bar-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.goal-bar-top span {
+  color: var(--ink-dim);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.goal-bar-top strong {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-track {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.goal-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--jr-accent), var(--blue, #6ab0ff));
+  transition: width 0.5s cubic-bezier(0.22, 0.8, 0.22, 1);
+}
+
+.goal-bar.is-met .goal-track i {
+  background: linear-gradient(90deg, #22c55e, var(--jr-accent));
+}
+
+.goal-bar.is-met .goal-bar-top strong {
+  color: #41e08a;
+}
+
+/* Columns */
+.journey-cols {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+}
+
+/* Streak + calendar */
+.streak-badge {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: max(140px, 40%);
+  margin: 4px auto 18px;
+  border: 1px solid var(--jr-line);
+  border-radius: 16px;
+  padding: 16px;
+  background: rgba(4, 9, 18, 0.5);
+}
+
+.streak-badge strong {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.streak-badge span {
+  color: var(--jr-accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.cal-month {
+  border: 1px solid var(--jr-line);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(4, 9, 18, 0.4);
+}
+
+.cal-title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cal-title span {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.cal-week,
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-wd {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 10px;
+  font-weight: 700;
+  padding-bottom: 4px;
+}
+
+.cal-day {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  color: var(--ink-dim);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cal-day.is-empty {
+  visibility: hidden;
+}
+
+.cal-day.is-active {
+  color: #061a12;
+  font-weight: 800;
+  background: linear-gradient(150deg, #34d399, #10b981);
+}
+
+.cal-day.is-today {
+  outline: 2px solid var(--jr-accent);
+  outline-offset: -2px;
+  color: var(--ink);
+}
+
+.cal-day.is-active.is-today {
+  color: #061a12;
+}
+
+/* Period totals */
+.period-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.period-table th {
+  text-align: right;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--jr-line);
+  color: var(--jr-accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.period-table th:first-child {
+  text-align: left;
+  color: var(--ink-soft);
+}
+
+.period-table td {
+  text-align: right;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--jr-line);
+  font-variant-numeric: tabular-nums;
+}
+
+.period-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.period-table td:first-child {
+  text-align: left;
+}
+
+.period-table td:first-child strong {
+  display: block;
+  font-weight: 700;
+}
+
+.period-table td:first-child span {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .journey-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .summary-row {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-metrics {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .goal-grid,
+  .goal-edit-row {
+    grid-template-columns: 1fr;
+  }
+
+  .card-head p {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sync-dot {
+    animation: none;
+  }
+  .goal-track i {
+    transition: none;
+  }
+}

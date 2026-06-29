@@ -15,6 +15,8 @@ export interface Mantra {
   intentions: string[];
   image: string;
   count?: number;
+  /** Optional URL of an audio recording for the "Listen" button. */
+  audio?: string;
 }
 
 export interface God {

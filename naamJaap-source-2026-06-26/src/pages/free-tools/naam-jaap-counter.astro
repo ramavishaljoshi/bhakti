@@ -1,0 +1,229 @@
+---
+import NaamJaapCounter from "../../components/NaamJaapCounter";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import "../../styles/global.css";
+
+const title = "Free Naam Jaap Counter Online - 108 Mala Counter";
+const description =
+  "A free, private Naam Jaap counter for 108-count mala chanting. Track Radhe Radhe, Ram Naam, Hare Krishna, Om Namah Shivaya, Gayatri, Waheguru, or your own mantra.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Naam Jaap Counter",
+  applicationCategory: "LifestyleApplication",
+  operatingSystem: "Web",
+  url: canonical,
+  description,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "108-bead mala counter",
+    "Private localStorage history",
+    "Hindi and English interface",
+    "CSV and JSON export",
+    "Custom mantra and deity background",
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Is the Naam Jaap Counter free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. The Naam Jaap Counter is free to use, private by default, and does not require signup.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where is my jaap count saved?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Your current count, completed malas, total chants, and time are saved in your browser localStorage on your own device.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Which mantras are supported?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Built-in presets include Radhe Radhe, Hare Krishna, Ram Naam, Om Namah Shivaya, Gayatri Mantra, and Waheguru. You can also enter a custom mantra.",
+      },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#081120" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" id="deity-watermark">राधे</div>
+      <SiteHeader section="Counter" note="Private 108 mala counter · local-first · no signup" />
+
+      <main class="content-layer">
+        <NaamJaapCounter client:load />
+
+        <section class="seo-section" aria-labelledby="seo-title">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free spiritual tool</p>
+            <h1 id="seo-title">Free Naam Jaap Counter for 108 mala practice</h1>
+            <p class="lede">
+              Count your daily jaap with a peaceful digital mala. This tool saves completed malas,
+              total chants, and practice time on your device. You can export your history whenever
+              you want a backup.
+            </p>
+
+            <h2>What this counter is built for</h2>
+            <p>
+              A Naam Jaap counter should not feel like a noisy productivity app. It should help you
+              stay with the mantra, keep the count accurate, and quietly record the practice. This
+              page is made for Radhe Radhe, Hare Krishna, Ram Naam, Om Namah Shivaya, Gayatri,
+              Waheguru, and custom mantra practice.
+            </p>
+
+            <div class="seo-grid">
+              <article class="seo-card">
+                <h3>Local-first saving</h3>
+                <p>
+                  Every finished 108-count mala is stored in browser localStorage first. The tap
+                  experience stays fast and your data remains private by default.
+                </p>
+              </article>
+              <article class="seo-card">
+                <h3>Export when needed</h3>
+                <p>
+                  Download CSV or copy JSON when you want a backup. The counter works without any
+                  account, login, cloud storage, or server.
+                </p>
+              </article>
+            </div>
+
+            <h2>Why 108 counts?</h2>
+            <p>
+              The number 108 is used across many Indian spiritual traditions as a complete mala
+              round. A digital counter is not a replacement for devotion or a physical mala; it is a
+              practical companion for moments when you are walking, travelling, sitting at work, or
+              chanting quietly on your phone.
+            </p>
+
+            <h2>Data saved in your browser</h2>
+            <p>
+              The app keeps a simple object for each completed mala. It can also migrate older
+              history from the previous <code>njc-mala-rounds</code> localStorage key.
+            </p>
+            <pre class="data-sample">&#123;
+  id: "mala_1778668843685_828",
+  start: "2026-05-13T10:40:42.500Z",
+  end: "2026-05-13T10:40:43.685Z",
+  count: 108,
+  size: 108,
+  durationSec: 58,
+  mantra: "Radhe Radhe",
+  deity: "Radhe",
+  done: true
+&#125;</pre>
+
+            <h2>How to use</h2>
+            <ol>
+              <li>Choose a mantra or type your own custom mantra.</li>
+              <li>Tap the mala ring once per chant, or use Space/Enter on desktop.</li>
+              <li>At 108, the mala saves automatically and the counter starts the next round.</li>
+              <li>Use Undo for accidental taps and Reset only for the current incomplete mala.</li>
+              <li>Export CSV/JSON when you want a local backup.</li>
+            </ol>
+
+            <h2>FAQ</h2>
+            <div class="faq-list">
+              <details class="faq-item" open>
+                <summary>Is this Naam Jaap counter free?</summary>
+                <p>Yes. It is a free tool with no signup, no subscription, and no forced cloud account.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Does it work on mobile?</summary>
+                <p>Yes. The ring and controls are sized for phone use, with no horizontal overflow on small screens.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Can I use a deity photo?</summary>
+                <p>Yes. Upload an image from your device and it is stored locally in your browser.</p>
+              </details>
+              <details class="faq-item">
+                <summary>Can I export my history?</summary>
+                <p>Yes. Use Export to download CSV or copy JSON from the data saved on your device.</p>
+              </details>
+            </div>
+
+            <h2>Related free tools</h2>
+            <div class="related-tools">
+              <a class="related-link" href="/free-tools/karma-reset/">
+                <strong>Karma Reset</strong>
+                <span>Redirect doomscrolling, guilt loops and urges into one private sankalp action.</span>
+              </a>
+              <a class="related-link" href="/free-tools/daily-sadhana-tracker/">
+                <strong>Daily Sadhana Tracker</strong>
+                <span>Plan and track a 40-day chanting habit.</span>
+              </a>
+              <a class="related-link" href="/free-tools/mantra-timer/">
+                <strong>Mantra Timer</strong>
+                <span>Time-bound meditation and japa sessions.</span>
+              </a>
+              <a class="related-link" href="/free-tools/gayatri-mantra-counter/">
+                <strong>Gayatri Counter</strong>
+                <span>A focused 108-count Gayatri practice tool.</span>
+              </a>
+            </div>
+
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("naamjapa:deity", (event) => {
+        const mark = document.getElementById("deity-watermark");
+        if (mark && event.detail) mark.textContent = event.detail.text || "";
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

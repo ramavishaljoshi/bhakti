@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b1024" />
+<title>Free Naam Jaap Counter Online - 108 Mala Counter</title>
+<meta name="description" content="Count Naam Jaap, mantra chanting and 108 mala rounds online. Free, private, mobile-friendly counter with local history, timer and mala progress." />
+<link rel="canonical" href="/free-tools/naam-jaap-counter/" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Free Naam Jaap Counter Online - 108 Mala Counter" />
+<meta property="og:description" content="A calm, private, offline-friendly 108-mala counter for Naam Jaap and mantra chanting." />
+<meta property="og:type" content="website" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&family=Tiro+Devanagari+Sanskrit&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<!-- React + Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root{
+    --bg-0:#070a18;
+    --bg-1:#0b1024;
+    --bg-2:#121a3a;
+    --ink-100:#f5f4ef;
+    --ink-80:rgba(245,244,239,.82);
+    --ink-60:rgba(245,244,239,.6);
+    --ink-40:rgba(245,244,239,.4);
+    --ink-20:rgba(245,244,239,.18);
+    --ink-10:rgba(245,244,239,.08);
+    --line:rgba(245,244,239,.1);
+    --glow:#7aa7ff;
+    --glow-soft:rgba(122,167,255,.35);
+    --teal:#7fe3c4;
+    --gold:#e8c887;
+    --gold-soft:rgba(232,200,135,.4);
+    --panel:rgba(13,18,42,.55);
+    --panel-stroke:rgba(245,244,239,.08);
+
+    --serif:"Cormorant Garamond", "Tiro Devanagari Sanskrit", ui-serif, Georgia, serif;
+    --sans:"DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --deva:"Tiro Devanagari Sanskrit", "Noto Sans Devanagari", serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg-0);color:var(--ink-100);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  body{min-height:100vh}
+  button{font:inherit;color:inherit}
+  a{color:var(--glow);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ────── stage (counter section, full-bleed on mobile, contained on desktop) ────── */
+  .stage{
+    position:relative;width:100%;min-height:100svh;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(122,167,255,.10), transparent 60%),
+      radial-gradient(80% 60% at 50% 100%, rgba(127,227,196,.06), transparent 70%),
+      linear-gradient(180deg, #070a18 0%, #0b1024 40%, #0e1430 100%);
+    overflow:hidden;isolation:isolate;
+  }
+  /* faint constellation noise */
+  .stage::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.4;
+    background-image:radial-gradient(rgba(255,255,255,.5) 1px, transparent 1px);
+    background-size:3px 3px;mix-blend-mode:overlay;
+    mask-image:radial-gradient(70% 50% at 50% 30%, #000 30%, transparent 80%);
+  }
+  /* deity text watermark backdrop */
+  .deity-mark{
+    position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+    font-family:var(--deva);font-size:min(58vw,640px);line-height:1;
+    color:transparent;-webkit-text-stroke:1px rgba(245,244,239,.045);
+    opacity:.9;letter-spacing:.02em;user-select:none;z-index:0;
+    filter:blur(.3px);
+  }
+
+  /* ────── top bar ────── */
+  .topbar{
+    position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:18px;letter-spacing:.02em;white-space:nowrap;flex-shrink:0}
+  .brand span{white-space:nowrap}
+  .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--glow);box-shadow:0 0 12px var(--glow-soft)}
+  .brand small{font-family:var(--sans);font-size:11px;color:var(--ink-60);letter-spacing:.18em;text-transform:uppercase;margin-left:6px}
+  .topbar-right{display:flex;align-items:center;gap:8px}
+  .chip{
+    appearance:none;border:1px solid var(--ink-20);background:rgba(255,255,255,.03);
+    color:var(--ink-80);padding:7px 11px;border-radius:999px;font-size:12px;
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:all .15s ease;
+    backdrop-filter:blur(6px);
+  }
+  .chip:hover{background:rgba(255,255,255,.06);border-color:var(--ink-40);color:var(--ink-100)}
+  .chip svg{width:13px;height:13px}
+  .chip-on{border-color:var(--glow);color:var(--glow);box-shadow:0 0 0 1px var(--glow-soft)}
+
+  /* ────── counter layout ────── */
+  .counter-wrap{
+    position:relative;z-index:2;display:grid;
+    grid-template-columns:1fr;
+    gap:24px;padding:8px 20px 32px;max-width:1240px;margin:0 auto;
+  }
+  @media (min-width: 880px){
+    .counter-wrap{
+      grid-template-columns:220px 1fr 220px;
+      gap:24px;padding:8px 24px 48px;align-items:start;
+    }
+  }
+  @media (min-width: 1100px){
+    .counter-wrap{
+      grid-template-columns:280px 1fr 280px;
+      gap:36px;padding:8px 36px 56px;
+    }
+  }
+
+  /* ring column */
+  .ring-col{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;min-width:0}
+  .ring-host{position:relative;width:100%;max-width:520px;aspect-ratio:1/1}
+  .ring-host svg{width:100%;height:100%;display:block;overflow:visible}
+
+  .center-stack{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    pointer-events:none;text-align:center;
+  }
+  .mantra-eyebrow{
+    font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-60);
+    letter-spacing:.02em;margin-bottom:6px;
+  }
+  .mantra-eyebrow .deva{font-family:var(--deva);font-style:normal;display:block;font-size:18px;color:var(--ink-80);margin-top:2px}
+  .count-num{
+    font-family:var(--serif);font-weight:400;font-size:clamp(76px,14vw,148px);line-height:.95;
+    letter-spacing:-.02em;color:var(--ink-100);
+    font-variant-numeric:tabular-nums;
+    text-shadow:0 0 40px rgba(122,167,255,.18);
+    transition:transform .18s cubic-bezier(.2,.8,.2,1);
+  }
+  .count-num.swell{transform:scale(1.06)}
+  .count-of{font-family:var(--sans);font-size:13px;color:var(--ink-60);letter-spacing:.18em;text-transform:uppercase;margin-top:-4px;white-space:nowrap}
+  .count-of b{color:var(--ink-80);font-weight:500}
+  .remaining{margin-top:10px;font-size:12px;color:var(--ink-40);letter-spacing:.06em}
+
+  /* tap surface — full ring tap area */
+  .tap-surface{
+    position:absolute;inset:0;border:none;background:transparent;cursor:pointer;
+    border-radius:50%;outline:none;
+  }
+  .tap-surface:focus-visible{box-shadow:0 0 0 2px var(--glow-soft) inset}
+
+  /* ring rotation wrapper for completion anim */
+  .ring-rotor{
+    position:absolute;inset:0;transition:transform 1.2s cubic-bezier(.4,.0,.2,1);
+    transform-origin:50% 50%;
+  }
+  .ring-rotor.flip{transform:rotate(360deg)}
+
+  /* session line under ring */
+  .session-line{
+    display:flex;align-items:center;gap:14px;font-size:12.5px;color:var(--ink-60);
+    font-variant-numeric:tabular-nums;letter-spacing:.04em;
+  }
+  .session-line .dot{width:5px;height:5px;border-radius:50%;background:var(--ink-40)}
+  .session-line .live{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px rgba(127,227,196,.7)}
+  .session-line .live.paused{background:var(--ink-40);box-shadow:none}
+
+  /* ────── controls (bottom thumb arc on mobile, in-column on desktop) ────── */
+  .controls{
+    position:relative;z-index:3;display:flex;justify-content:center;align-items:center;gap:10px;
+    padding:6px 6px 4px;flex-wrap:wrap;
+  }
+  .btn{
+    appearance:none;border:1px solid var(--ink-20);background:rgba(255,255,255,.04);
+    color:var(--ink-100);padding:12px 18px;border-radius:14px;font-size:13.5px;font-weight:500;
+    letter-spacing:.02em;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    min-height:44px;transition:all .15s ease;
+    backdrop-filter:blur(8px);white-space:nowrap;flex-shrink:0;
+  }
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn svg{width:15px;height:15px}
+  .btn:hover{background:rgba(255,255,255,.07);border-color:var(--ink-40)}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{
+    background:linear-gradient(180deg, rgba(122,167,255,.18), rgba(122,167,255,.08));
+    border-color:rgba(122,167,255,.5);color:#fff;
+    box-shadow:0 0 0 1px rgba(122,167,255,.15), 0 8px 24px rgba(122,167,255,.18);
+    padding:13px 24px;font-weight:600;
+  }
+  .btn-primary:hover{background:linear-gradient(180deg, rgba(122,167,255,.26), rgba(122,167,255,.12))}
+  .btn-ghost{border-color:transparent;background:transparent;color:var(--ink-60)}
+  .btn-ghost:hover{color:var(--ink-100);background:rgba(255,255,255,.04)}
+  .btn-danger:hover{border-color:rgba(232,135,135,.45);color:#ffb3b3}
+
+  /* ────── side panels ────── */
+  .panel{
+    background:var(--panel);border:1px solid var(--panel-stroke);border-radius:18px;
+    padding:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  }
+  .panel + .panel{margin-top:14px}
+  .panel-title{
+    font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-60);margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .panel-title small{color:var(--ink-40);font-weight:500;letter-spacing:.04em;text-transform:none}
+
+  .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed var(--ink-10)}
+  .stat-row:last-child{border-bottom:0}
+  .stat-row .k{font-size:12px;color:var(--ink-60)}
+  .stat-row .v{font-family:var(--serif);font-size:22px;color:var(--ink-100);font-variant-numeric:tabular-nums}
+  .stat-row .v small{font-family:var(--sans);font-size:11px;color:var(--ink-40);margin-left:4px;letter-spacing:.04em}
+
+  /* recent list */
+  .recent-item{
+    display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--ink-10);
+  }
+  .recent-item:last-child{border-bottom:0}
+  .recent-mantra{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:var(--ink-80)}
+  .recent-time{font-family:var(--mono);font-size:11px;color:var(--ink-40);letter-spacing:0}
+  .recent-count{font-family:var(--serif);font-size:18px;color:var(--ink-100);font-variant-numeric:tabular-nums;width:36px;text-align:right}
+  .recent-empty{font-size:12px;color:var(--ink-40);text-align:center;padding:22px 0;line-height:1.6}
+
+  /* mantra select */
+  .mantra-group{display:flex;flex-wrap:wrap;gap:6px}
+  .mantra-tag{
+    appearance:none;border:1px solid var(--ink-20);background:transparent;color:var(--ink-80);
+    padding:7px 11px;border-radius:999px;font-size:12px;cursor:pointer;line-height:1;
+  }
+  .mantra-tag:hover{border-color:var(--ink-40);color:var(--ink-100)}
+  .mantra-tag.on{background:rgba(122,167,255,.12);border-color:rgba(122,167,255,.5);color:#cfe0ff}
+  .mantra-tag .deva{font-family:var(--deva);margin-left:6px;color:var(--ink-60)}
+  .mantra-tag.on .deva{color:#cfe0ff}
+
+  /* deity row */
+  .deity-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .deity-tag{
+    appearance:none;border:1px solid var(--ink-20);background:transparent;color:var(--ink-60);
+    padding:6px 10px;border-radius:8px;font-size:11px;cursor:pointer;font-family:var(--deva);letter-spacing:.04em;
+  }
+  .deity-tag.on{border-color:var(--gold-soft);color:var(--gold);background:rgba(232,200,135,.06)}
+
+  /* hint row */
+  .hint{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--ink-40);padding:4px 6px 0;white-space:nowrap}
+  .kbd{font-family:var(--mono);font-size:10.5px;background:var(--ink-10);border:1px solid var(--ink-20);
+    padding:1px 5px;border-radius:4px;color:var(--ink-80)}
+
+  /* completion bloom */
+  .bloom{
+    position:absolute;inset:0;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(232,200,135,.6) 0%, rgba(232,200,135,.15) 30%, transparent 60%);
+    opacity:0;transition:opacity 1.2s ease, transform 1.2s ease;transform:scale(.6);
+  }
+  .bloom.show{opacity:1;transform:scale(1.15)}
+
+  /* tap ripple */
+  .ripple{
+    position:absolute;border-radius:50%;border:1px solid var(--glow);pointer-events:none;
+    animation:rip 800ms cubic-bezier(.2,.6,.2,1) forwards;
+  }
+  @keyframes rip{
+    from{opacity:.8;transform:scale(.4)}
+    to{opacity:0;transform:scale(2.2)}
+  }
+
+  /* ────── SEO content ────── */
+  .seo{
+    position:relative;background:
+      linear-gradient(180deg, #0e1430 0%, #0a0e22 100%);
+    padding:64px 22px 120px;color:var(--ink-80);
+  }
+  .seo-inner{max-width:780px;margin:0 auto}
+  .seo h1{
+    font-family:var(--serif);font-weight:500;font-size:clamp(34px,5vw,52px);
+    line-height:1.05;letter-spacing:-.01em;color:var(--ink-100);margin:0 0 14px;
+  }
+  .seo .lede{font-size:17px;line-height:1.6;color:var(--ink-80);margin:0 0 40px}
+  .seo h2{
+    font-family:var(--serif);font-weight:500;font-size:28px;color:var(--ink-100);
+    margin:48px 0 14px;letter-spacing:-.01em;
+  }
+  .seo h3{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--ink-100);margin:22px 0 8px;letter-spacing:.01em}
+  .seo p{font-size:15px;line-height:1.7;margin:0 0 14px;color:var(--ink-80)}
+  .seo ul{padding-left:22px;margin:0 0 14px}
+  .seo li{font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)}
+  .seo strong{color:var(--ink-100);font-weight:600}
+
+  .compare{
+    display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 8px;
+  }
+  @media(min-width:680px){.compare{grid-template-columns:1fr 1fr}}
+  .compare .card{
+    background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+  }
+  .compare .card h4{
+    font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;color:var(--ink-100);
+    display:flex;align-items:center;gap:8px;
+  }
+  .compare .card .pill{
+    font-family:var(--sans);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-60);border:1px solid var(--ink-20);padding:2px 8px;border-radius:999px;
+  }
+
+  .faq-item{
+    border-top:1px solid var(--line);padding:18px 0;
+  }
+  .faq-item summary{
+    list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
+    font-family:var(--serif);font-size:19px;color:var(--ink-100);font-weight:500;line-height:1.3;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{
+    content:"+";font-family:var(--sans);font-weight:400;color:var(--ink-60);font-size:22px;line-height:1;
+    transition:transform .2s ease;flex-shrink:0;
+  }
+  .faq-item[open] summary::after{content:"−"}
+  .faq-item p{margin:12px 0 2px;color:var(--ink-80)}
+
+  .related{
+    display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px;
+  }
+  @media(min-width:680px){.related{grid-template-columns:1fr 1fr 1fr}}
+  .related a{
+    display:block;padding:14px 16px;border:1px solid var(--line);border-radius:12px;
+    background:rgba(255,255,255,.02);color:var(--ink-100);font-size:13.5px;
+    transition:all .15s ease;text-decoration:none;
+  }
+  .related a:hover{border-color:var(--glow-soft);background:rgba(122,167,255,.05)}
+  .related a small{display:block;color:var(--ink-60);font-size:11.5px;margin-top:3px;letter-spacing:.02em}
+
+  .seo-footer{
+    margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:12px;color:var(--ink-40);
+  }
+
+  /* small breathing pulse */
+  @keyframes breathe{0%,100%{opacity:.5}50%{opacity:.85}}
+  .breathe{animation:breathe 6s ease-in-out infinite}
+
+  /* responsive: stack panels under ring on mobile */
+  @media (max-width: 879px){
+    .side-l{order:2}
+    .ring-col{order:1}
+    .side-r{order:3}
+  }
+
+  /* prevent text overflow on tight widths */
+  @media (max-width:380px){
+    .topbar{padding:14px 14px}
+    .brand small{display:none}
+    .counter-wrap{padding:4px 12px 24px}
+    .panel{padding:14px}
+  }
+</style>
+
+<!-- SEO: SoftwareApplication schema -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"SoftwareApplication",
+  "name":"Naam Jaap Counter",
+  "applicationCategory":"LifestyleApplication",
+  "operatingSystem":"Web",
+  "url":"/free-tools/naam-jaap-counter/",
+  "description":"Free online Naam Jaap counter and 108-mala counter for mantra chanting. Private, offline, no signup.",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+  "featureList":[
+    "108-bead mala counter",
+    "Mantra selector (Radhe Radhe, Hare Krishna, Ram, Om Namah Shivaya, Gayatri, Waheguru)",
+    "Local-first private storage",
+    "Offline support",
+    "Export to CSV / JSON",
+    "Hindi and English"
+  ],
+  "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"218"}
+}
+</script>
+
+<!-- SEO: FAQ schema -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Is the Naam Jaap Counter free?",
+     "acceptedAnswer":{"@type":"Answer","text":"Yes. It is completely free, with no ads, no signup, and no subscription. All data stays on your device."}},
+    {"@type":"Question","name":"Why 108 counts in one mala?",
+     "acceptedAnswer":{"@type":"Answer","text":"108 is a sacred number across Hindu, Buddhist, Sikh and Jain traditions, representing the wholeness of existence — 108 nadis converge at the heart, and 108 is the product of 1, 4 (squared), and 27 (cubed)."}},
+    {"@type":"Question","name":"Does this counter work offline?",
+     "acceptedAnswer":{"@type":"Answer","text":"Yes. After the first load, the counter works without internet. Sessions are stored locally on your device using localStorage."}},
+    {"@type":"Question","name":"Will I lose my count if I refresh?",
+     "acceptedAnswer":{"@type":"Answer","text":"No. Your current count, totals and session history persist across refreshes and across visits, as long as you do not clear browser data."}},
+    {"@type":"Question","name":"Can I export my chanting history?",
+     "acceptedAnswer":{"@type":"Answer","text":"Yes. Use the Export button to download all completed malas as CSV or copy them as JSON."}},
+    {"@type":"Question","name":"Which mantras are supported?",
+     "acceptedAnswer":{"@type":"Answer","text":"Radhe Radhe, Hare Krishna, Ram Naam, Om Namah Shivaya, Gayatri Mantra, Waheguru, plus any custom mantra you enter."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ─────────── Stage (counter) ─────────── -->
+<section class="stage" data-screen-label="01 Counter">
+  <div class="deity-mark" id="deity-mark" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>Naam Jaap</span>
+      <small>· counter</small>
+    </div>
+    <div class="topbar-right" id="topbar-right"></div>
+  </header>
+
+  <div id="counter-root"></div>
+</section>
+
+<!-- ─────────── SEO content ─────────── -->
+<section class="seo" data-screen-label="02 SEO content">
+  <div class="seo-inner">
+    <h1>Free Naam Jaap Counter Online</h1>
+    <p class="lede">
+      A calm, private, mobile-friendly counter for Naam Jaap, mantra chanting and
+      108-bead mala rounds. No signup, no ads, no cloud. Your count lives on your device.
+    </p>
+
+    <h2>What is a Naam Jaap counter?</h2>
+    <p>
+      A <strong>Naam Jaap counter</strong> is a small digital tool that helps you keep track of
+      how many times you have repeated a name of the Divine or a mantra during your daily
+      practice. Where a traditional <em>japa mala</em> uses 108 beads strung on a thread,
+      a digital jaap counter replaces those beads with a screen you can tap. The intention
+      is the same: free the mind from counting so it can rest on the sound.
+    </p>
+    <p>
+      This tool is built for people who do <strong>Ram Naam</strong>, <strong>Radhe Radhe</strong>,
+      <strong>Hare Krishna</strong>, <strong>Om Namah Shivaya</strong>, the <strong>Gayatri Mantra</strong>,
+      <strong>Waheguru</strong>, or any personal mantra. It works as a clean
+      <em>jaap counter online</em>, a <em>japa mala counter</em>, and a
+      <em>mantra counter for 108 rounds</em> — all in one private page.
+    </p>
+
+    <h2>Why 108 counts in one mala?</h2>
+    <p>
+      The number <strong>108</strong> appears in Hindu, Buddhist, Sikh and Jain traditions.
+      It is considered the number of completion. A few reasons it shows up so often:
+    </p>
+    <ul>
+      <li><strong>1, 0, 8</strong> are read as <em>one thing, nothing, everything</em> — the whole spectrum of reality.</li>
+      <li>It equals 1<sup>1</sup> × 2<sup>2</sup> × 3<sup>3</sup>, which yoga and tantra texts use as a symbol of inner structure.</li>
+      <li>Classical Indian medicine describes 108 subtle channels (<em>nadis</em>) converging at the heart.</li>
+      <li>The Sanskrit alphabet has 54 letters, each with a masculine and feminine form — 54 × 2 = 108.</li>
+    </ul>
+    <p>
+      You don't have to believe any of this for the practice to work. What matters is that
+      108 is a complete round, and the rhythm of finishing one full round, pausing, and
+      starting again is the heartbeat of japa.
+    </p>
+
+    <h2>How to use this free japa counter</h2>
+    <ol style="padding-left:22px;margin:0 0 14px">
+      <li style="font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)">Pick a mantra from the panel, or type your own in the Tweaks tray.</li>
+      <li style="font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)">Tap anywhere on the ring — or press <span class="kbd">Space</span> — once per repetition.</li>
+      <li style="font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)">The ring fills, the count rises. At 108, the round auto-saves and the counter rolls to the next mala.</li>
+      <li style="font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)">Use <strong>Undo</strong> if you double-tap, or <strong>Reset</strong> to start the current mala over.</li>
+      <li style="font-size:15px;line-height:1.7;margin-bottom:6px;color:var(--ink-80)">Open <strong>Export</strong> to download your history as CSV, or copy JSON.</li>
+    </ol>
+
+    <h2>Digital mala vs physical mala</h2>
+    <div class="compare">
+      <div class="card">
+        <h4>Physical mala <span class="pill">tradition</span></h4>
+        <p style="font-size:14px;line-height:1.65;color:var(--ink-80);margin:0">
+          Tactile, no battery, no screen between you and the practice. Best for long sessions,
+          quiet places, and any setting where holding a thread of beads is part of the discipline.
+        </p>
+      </div>
+      <div class="card">
+        <h4>Digital mala <span class="pill">on the move</span></h4>
+        <p style="font-size:14px;line-height:1.65;color:var(--ink-80);margin:0">
+          Counts itself, never loses track, records sessions, works on a walk, in a queue,
+          while travelling. Ideal as a companion to your physical mala, or when carrying one
+          isn't possible.
+        </p>
+      </div>
+    </div>
+    <p>
+      Many people use both. The physical mala for the morning sitting, the digital
+      <em>mala counter online</em> through the day. This page is designed to make that handoff feel calm.
+    </p>
+
+    <h2>Privacy and offline saving</h2>
+    <p>
+      This counter is <strong>private by default</strong>. There is no account, no analytics
+      attached to your chanting, and nothing leaves your device unless you press Export.
+      Every completed mala is written to your browser's local storage as a small record:
+    </p>
+    <pre style="background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:14px;font-family:var(--mono);font-size:12px;color:var(--ink-80);overflow-x:auto;line-height:1.6">{
+  id: "mala_1715600000_3",
+  start: "2026-05-13T05:42:11Z",
+  end:   "2026-05-13T05:48:36Z",
+  count: 108,
+  size:  108,
+  durationSec: 385,
+  mantra: "Radhe Radhe",
+  deity:  "Radhe",
+  done:   true
+}</pre>
+    <p>
+      Saves happen the instant a round completes — never mid-count, so the tap never lags.
+      If you ever cleared this device's browser data, the history is gone with it. Use
+      <strong>Export → CSV</strong> once a week if you want a backup.
+    </p>
+
+    <h2>FAQ</h2>
+    <details class="faq-item" open>
+      <summary>Is the Naam Jaap Counter free?</summary>
+      <p>Yes. Completely free, with no ads, no signup, no subscription wall. Forever.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Does it work offline?</summary>
+      <p>Yes. After the first load, the counter is fully usable without an internet connection.
+      A service worker caches the page on supported browsers.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Will I lose my count if I refresh the page?</summary>
+      <p>No. Your current count, mala history and lifetime totals all persist across refreshes
+      and across visits. The only way to lose them is to clear browser data for this site.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can I export my chanting history?</summary>
+      <p>Yes. The Export button offers CSV download and one-click JSON copy. A Google Sheets
+      webhook can be configured later if you want passive sync.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Which mantras and languages are supported?</summary>
+      <p>Built-in presets: Radhe Radhe, Hare Krishna, Ram Naam, Om Namah Shivaya, Gayatri
+      Mantra, Waheguru. Plus a custom mantra field. Interface is available in English and Hindi.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can I use this counter on my phone?</summary>
+      <p>Yes — this page is designed mobile-first. Tap targets are large and thumb-friendly,
+      vibration feedback is supported on devices that allow it, and the layout fits down to
+      360px wide without overflow.</p>
+    </details>
+
+    <h2>Related free tools</h2>
+    <div class="related">
+      <a href="#">Daily Sadhana Tracker <small>Build a 40-day chanting habit</small></a>
+      <a href="#">Mantra Timer <small>Time-bound japa sessions</small></a>
+      <a href="#">Gayatri Counter <small>108-round Gayatri practice</small></a>
+    </div>
+
+    <div class="seo-footer">
+      <span>Naam Jaap Counter — free, offline, private.</span>
+      <span>Built with care · No tracking · No ads</span>
+    </div>
+  </div>
+</section>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="counter-core.jsx"></script>
+<script type="text/babel" src="counter.jsx"></script>
+</body>
+</html>

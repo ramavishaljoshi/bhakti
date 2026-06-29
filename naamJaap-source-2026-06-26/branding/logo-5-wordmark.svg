@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="280" viewBox="0 0 900 280">
+  <defs>
+    <radialGradient id="bg5" cx="35%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#101937"/>
+      <stop offset="100%" stop-color="#070a18"/>
+    </radialGradient>
+    <linearGradient id="ring5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7aa7ff"/>
+      <stop offset="100%" stop-color="#7fe3c4"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="280" rx="40" fill="url(#bg5)"/>
+  <!-- mark: small mala ring with bead -->
+  <g transform="translate(140 140)">
+    <circle r="78" fill="none" stroke="url(#ring5)" stroke-width="7" stroke-dasharray="2 16" stroke-linecap="round"/>
+    <circle cx="0" cy="-78" r="13" fill="#e8c887"/>
+    <text x="0" y="18" text-anchor="middle" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#f5f4ef">108</text>
+  </g>
+  <!-- wordmark -->
+  <text x="262" y="132" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700" fill="#f5f4ef">Japa</text>
+  <text x="408" y="132" font-family="Georgia, serif" font-size="72" font-weight="400" fill="#7fe3c4">Mala</text>
+  <text x="264" y="182" font-family="Inter, Arial, sans-serif" font-size="22" letter-spacing="6" fill="#9fb0cf">PRIVATE · 108 · LOCAL-FIRST</text>
+</svg>

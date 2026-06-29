@@ -1,0 +1,128 @@
+---
+import JapaJourney from "../../components/JapaJourney";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import TrackerNav from "../../components/TrackerNav.astro";
+import "../../styles/global.css";
+
+const title = "Japa Journey - Your Private Naam Jaap Progress Dashboard";
+const description =
+  "A free, private dashboard for your Naam Jaap practice. See today, yesterday, lifetime totals, a continuity streak calendar, period totals, and personal goals - all stored locally in your browser.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Japa Journey Dashboard",
+  applicationCategory: "LifestyleApplication",
+  operatingSystem: "Web",
+  url: canonical,
+  description,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  featureList: [
+    "Today, yesterday and lifetime totals",
+    "Continuity streak calendar",
+    "Weekly, monthly and yearly totals",
+    "Daily and weekly goals",
+    "Private localStorage data",
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#081120" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" id="deity-watermark">राधे</div>
+      <SiteHeader section="Journey" note="Private progress dashboard · local-first · no signup" />
+
+      <main class="content-layer">
+        <TrackerNav active="journey" />
+        <JapaJourney client:load />
+
+        <section class="seo-section" aria-labelledby="seo-title">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free spiritual tool</p>
+            <h1 id="seo-title">Your private Japa Journey dashboard</h1>
+            <p class="lede">
+              Japa Journey reads the practice you have already saved in the Naam Jaap Counter and
+              turns it into gentle insights: today and yesterday, your lifetime total, a continuity
+              calendar, and weekly, monthly and yearly totals. You can also set a small daily and
+              weekly goal to return to.
+            </p>
+
+            <h2>Everything stays on your device</h2>
+            <p>
+              This dashboard does not use any account, login, or server. It reads the same browser
+              localStorage the counter writes to (<code>njc-day-log</code>, <code>njc-totals</code>),
+              and saves your goals in <code>njc-journey-goals</code>. Clearing your browser data or
+              switching devices will reset the view, because nothing is uploaded.
+            </p>
+
+            <h2>How to use</h2>
+            <ol>
+              <li>Do your jaap on the Naam Jaap Counter so completed malas are saved.</li>
+              <li>Open this page to see today, yesterday, and lifetime totals refresh live.</li>
+              <li>Watch your continuity streak grow as you return on more days.</li>
+              <li>Set a daily and weekly mala goal and track the progress bars.</li>
+            </ol>
+
+            <h2>Related free tools</h2>
+            <div class="related-tools">
+              <a class="related-link" href="/free-tools/naam-jaap-counter/">
+                <strong>Naam Jaap Counter</strong>
+                <span>108 mala counter with local history and optional Sheets sync.</span>
+              </a>
+              <a class="related-link" href="/free-tools/kids-naam-jaap-counter/">
+                <strong>Kids Naam Jaap Counter</strong>
+                <span>A cute 108-name bhakti bucket game for children.</span>
+              </a>
+              <a class="related-link" href="/free-tools/daily-affirmations/">
+                <strong>Daily Affirmations</strong>
+                <span>Purpose-based affirmations with naam anchors and private reflections.</span>
+              </a>
+              <a class="related-link" href="/free-tools/karma-reset/">
+                <strong>Karma Reset</strong>
+                <span>Redirect doomscrolling and urges into one private sankalp action.</span>
+              </a>
+            </div>
+
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

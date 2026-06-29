@@ -4,10 +4,13 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search, Flame, Sparkles } from "lucide-react";
+import { useJap } from "@/lib/use-jap";
 
 export function StatsPanel() {
   const router = useRouter();
   const [q, setQ] = React.useState("");
+  // Real per-user stats (daily-reset jap; localStorage for guests).
+  const { streak, total } = useJap();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ export function StatsPanel() {
             <Flame className="h-5 w-5" />
           </div>
           <p className="font-display text-3xl font-bold tabular-nums text-stone-800">
-            12
+            {streak}
           </p>
           <p className="text-xs text-stone-500">Days streak</p>
         </div>
@@ -50,7 +53,7 @@ export function StatsPanel() {
             <Sparkles className="h-5 w-5" />
           </div>
           <p className="font-display text-3xl font-bold tabular-nums text-stone-800">
-            2,430
+            {total.toLocaleString()}
           </p>
           <p className="text-xs text-stone-500">Total Jap</p>
         </div>

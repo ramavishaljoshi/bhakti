@@ -1,0 +1,174 @@
+---
+import MindResetGame from "../../components/MindResetGame";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import "../../styles/global.css";
+
+const title = "Karma Reset Game - Break Doomscrolling, Guilt and Bad Habits";
+const description =
+  "A free local-only spiritual habit game to redirect doomscrolling, guilt, gaming urges, anger and loneliness into one clear karma action.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Karma Reset Game",
+  applicationCategory: "HealthApplication",
+  operatingSystem: "Web",
+  url: canonical,
+  description,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "Doomscroll reset game",
+    "Guilt to repair game",
+    "Gaming urge reset",
+    "Karma action selector",
+    "Devotional background selector",
+    "Sankalp bead rewards",
+    "Local-only browser storage",
+    "JSON export",
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Is Karma Reset therapy?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. It is a self-help wellbeing and habit-direction tool. It is not a replacement for therapy, diagnosis, treatment or emergency support.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where is my data saved?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The tool stores reset sessions in your browser localStorage on your own device under karma-reset-game-v1. There is no cloud account or server database.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can this help with doomscrolling?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "It can help you pause, see the habit loop, choose a better next action and save a local sankalp. It does not block apps or replace professional support.",
+      },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#07131d" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" aria-hidden="true">शांति</div>
+      <SiteHeader section="Karma Reset" note="Local-first · karma game · no cloud storage" />
+
+      <main class="content-layer">
+        <MindResetGame client:load />
+
+        <section class="seo-section" aria-labelledby="mind-seo-title">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free wellbeing tool</p>
+            <h1 id="mind-seo-title">Karma Reset Game for doomscrolling, guilt loops and bad habits</h1>
+            <p class="lede">
+              This page is built for the moment before a pattern repeats: the thumb moves toward the
+              feed, guilt starts attacking the mind, or gaming and loneliness begin pulling your
+              energy away. Karma Reset turns that energy into one small dharmic action.
+            </p>
+
+            <h2>What the tool does</h2>
+            <p>
+              The experience is a simple game: see the loop, name the cue, choose where your energy
+              should go, and earn sankalp beads by taking one clear action. It uses common habit
+              design ideas such as cue, routine and reward, combined with spiritual intention.
+            </p>
+
+            <div class="seo-grid">
+              <article class="seo-card">
+                <h3>Doomscroll to direction</h3>
+                <p>
+                  See the promise of the feed, break the loop and redirect attention into prayer,
+                  body, study, family, seva or a clean space.
+                </p>
+              </article>
+              <article class="seo-card">
+                <h3>Guilt to karma</h3>
+                <p>
+                  Move from self-attack into one useful repair action. Guilt becomes energy for
+                  improvement, not punishment.
+                </p>
+              </article>
+              <article class="seo-card">
+                <h3>Sankalp beads</h3>
+                <p>
+                  Every reset lights a small bead. Your private local garden grows only on your
+                  device.
+                </p>
+              </article>
+            </div>
+
+            <h2>Privacy and local storage</h2>
+            <p>
+              Reset sessions are saved only in browser localStorage under
+              <code>karma-reset-game-v1</code>. You can clear the history any time. There is no login,
+              no cloud database and no social profile.
+            </p>
+
+            <h2>Safety note</h2>
+            <p>
+              If your distress is intense, keeps getting worse, or you might harm yourself, use this
+              tool only as a bridge to real support. Contact local emergency services, a trusted
+              person or a qualified mental health professional. A website should never be the only
+              support system for a crisis.
+            </p>
+
+            <h2>Related tools</h2>
+            <div class="related-tools">
+              <a class="related-link" href="/free-tools/naam-jaap-counter/">
+                <strong>Naam Jaap Counter</strong>
+                <span>A peaceful 108 mala counter for mantra focus.</span>
+              </a>
+            </div>
+
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

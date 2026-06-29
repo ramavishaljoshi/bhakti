@@ -12,14 +12,17 @@ import { PanchangCard, QuoteCard } from "@/components/home/panchang-card";
 import { ArticleVerse } from "@/components/home/article-verse";
 import { AIGuruBanner } from "@/components/home/ai-guru-card";
 import { TempleCard } from "@/components/cards/temple-card";
+import { FestivalCard } from "@/components/cards/festival-card";
 import { SectionHeader } from "@/components/shared/section-header";
 import { mantras } from "@/lib/data/mantras";
 import { temples } from "@/lib/data/temples";
+import { festivals } from "@/lib/data/festivals";
 import { states } from "@/lib/data/misc";
 
 export default function HomePage() {
   const todayMantra = mantras[0];
   const exploreTemples = temples.slice(0, 4);
+  const featuredFestivals = festivals.slice(0, 4);
 
   return (
     <div className="container space-y-10 py-6 lg:py-8">
@@ -29,10 +32,10 @@ export default function HomePage() {
       {/* Ticker */}
       <Ticker />
 
-      {/* Today's Progress: Jap card + stats/search */}
+      {/* Today's Progress: Jap card + Today's Panchang */}
       <section className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
         <JapProgressCard mantraName={todayMantra.name} />
-        <StatsPanel />
+        <PanchangCard />
       </section>
 
       {/* Intentions */}
@@ -52,9 +55,9 @@ export default function HomePage() {
         <DailyShortcutsPanel />
       </section>
 
-      {/* Panchang + quote */}
+      {/* Search + stats + quote */}
       <section className="grid gap-5 lg:grid-cols-[1fr_1.4fr]">
-        <PanchangCard />
+        <StatsPanel />
         <QuoteCard
           text="Set thy heart upon thy work, but never on its reward."
           source="Bhagavad Gita 2.47"
@@ -72,6 +75,21 @@ export default function HomePage() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {exploreTemples.map((temple) => (
             <TempleCard key={temple.id} temple={temple} />
+          ))}
+        </div>
+      </section>
+
+      {/* Festivals */}
+      <section>
+        <SectionHeader
+          title="Festivals"
+          subtitle="Celebrate the year's sacred days"
+          href="/festivals"
+          actionLabel="View all"
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {featuredFestivals.map((festival) => (
+            <FestivalCard key={festival.id} festival={festival} />
           ))}
         </div>
       </section>

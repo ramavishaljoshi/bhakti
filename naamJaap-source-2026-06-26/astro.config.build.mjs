@@ -1,0 +1,9 @@
+import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+
+export default defineConfig({
+  site: "https://naamjapa.com",
+  integrations: [react()],
+  output: "static",
+  vite: { cacheDir: "/tmp/njc-vite-cache" },
+});

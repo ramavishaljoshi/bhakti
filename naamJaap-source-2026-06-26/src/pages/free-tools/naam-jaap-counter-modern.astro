@@ -1,0 +1,95 @@
+---
+import ModernCounter from "../../components/ModernCounter";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import "../../styles/global.css";
+
+const title = "Modern Naam Jaap Counter - Orbit 108 Mala Counter";
+const description =
+  "A modern, hands-free 108 mala counter with an orbit display, manual or auto mode, configurable mala size, vibration and sound - private and local-first, shares history with the classic counter.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#081120" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" id="deity-watermark">राधे</div>
+      <SiteHeader section="Counter · Modern" note="Modern orbit counter · local-first · no signup" />
+      <main class="content-layer">
+        <ModernCounter client:load />
+        <section class="seo-section">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free spiritual tool</p>
+            <h1>The modern Naam Jaap counter</h1>
+            <p class="lede">
+              A second look for the 108 mala counter: an orbit of beads fills as you chant, with
+              floating tiles for time, total, count and your daily goal. Tap anywhere to count in
+              manual mode, or switch to hands-free auto mode. Open Japa Settings to change mala size,
+              vibration, free-style counting and sound.
+            </p>
+            <p>
+              This counter shares the same private history as the
+              <a href="/free-tools/naam-jaap-counter/">classic Naam Jaap Counter</a>, so your malas,
+              streaks and milestones stay in one place. Nothing leaves your device.
+            </p>
+            <h2>Related</h2>
+            <div class="related-tools">
+              <a class="related-link" href="/free-tools/naam-jaap-counter/">
+                <strong>Classic Counter</strong>
+                <span>The calm mala-ring counter.</span>
+              </a>
+              <a class="related-link" href="/free-tools/japa-journey/">
+                <strong>Japa Journey</strong>
+                <span>Today, lifetime, streak and period totals.</span>
+              </a>
+              <a class="related-link" href="/free-tools/japa-milestones/">
+                <strong>Milestones</strong>
+                <span>Devotion badges and the path.</span>
+              </a>
+              <a class="related-link" href="/free-tools/japa-goals/">
+                <strong>Goals</strong>
+                <span>Set and track practice targets.</span>
+              </a>
+            </div>
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <style>
+      /* Mobile: keep the focus on the counter only */
+      @media (max-width: 760px) {
+        .seo-section {
+          display: none;
+        }
+        .content-layer {
+          min-height: calc(100svh - 80px);
+          display: flex;
+          align-items: center;
+        }
+      }
+    </style>
+  </body>
+</html>

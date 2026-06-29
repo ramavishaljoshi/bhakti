@@ -1,15 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { JapCounter } from "./jap-counter";
-import { mantras, getMantraBySlug } from "@/lib/data/mantras";
+import NaamJaapCounter from "./naam-jaap-counter";
 
 /**
- * Reads the `?mantra=` query param on the client so the page can be statically
- * exported (server-side searchParams would force dynamic rendering).
+ * The classic Naam Jaap counter (mantra presets on the left, mala ring,
+ * stats and history). Manages its own mantra selection.
  */
 export function JapCounterSection() {
-  const slug = useSearchParams().get("mantra");
-  const mantra = slug ? getMantraBySlug(slug) : mantras[0];
-  return <JapCounter mantraName={mantra?.name ?? "Om Namah Shivaya"} />;
+  return <NaamJaapCounter />;
 }

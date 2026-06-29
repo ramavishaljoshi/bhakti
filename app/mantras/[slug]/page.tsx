@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Play,
-  Headphones,
   Sparkles,
   Clock,
   CalendarDays,
@@ -13,6 +12,7 @@ import {
 import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
+import { MantraListenButton } from "@/components/shared/mantra-listen-button";
 import { MantraCard } from "@/components/cards/mantra-card";
 import { mantras, getMantraBySlug, getMantrasByCategory } from "@/lib/data/mantras";
 
@@ -80,9 +80,7 @@ export default function MantraDetailPage({
             >
               <Play className="h-4 w-4 fill-white" /> Start Jap
             </Link>
-            <button className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-card px-6 font-semibold transition-colors hover:bg-secondary">
-              <Headphones className="h-4 w-4" /> Listen
-            </button>
+            <MantraListenButton src={mantra.audio} />
           </div>
 
           <Section title="Meaning" icon={<Sparkles className="h-4 w-4" />}>

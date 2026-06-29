@@ -1,0 +1,180 @@
+---
+import AffirmationTool from "../../components/AffirmationTool";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import "../../styles/global.css";
+
+const title = "Daily Positive Affirmations With Naam Jaap - Free Mood Uplift Tool";
+const description =
+  "A free local-only affirmation tool with mood purpose, inspiring story cards, mantra anchor, ambient music and tiny actions for anxiety, emotional setback, focus and habit change.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Daily Affirmations With Naam Jaap",
+  applicationCategory: "LifestyleApplication",
+  operatingSystem: "Web",
+  url: canonical,
+  description,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "Positive affirmation generator",
+    "Naam jaap mantra anchor",
+    "Mood purpose selector",
+    "Ambient meditation music",
+    "Tiny action prompts",
+    "Local-only saved reflections",
+    "Anxiety and emotional setback affirmation packs",
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Can affirmations help with anxiety or emotional setbacks?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Affirmations may support mood and focus when they are believable, repeated, linked to values and followed by one small action. They are not a replacement for therapy, medical care or crisis support.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How does this tool use Naam Jaap?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Each affirmation is paired with a simple mantra anchor such as Om Shanti, Radhe Radhe, Ram Ram or Om Namah Shivaya so the user can repeat the line with calm breathing or jaap.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where is my affirmation history saved?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Saved reflections are stored only in your browser localStorage under naamjapa-affirmation-tool-v1. There is no account or cloud database.",
+      },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#120914" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" aria-hidden="true">प्रकाश</div>
+      <SiteHeader section="Affirmations" note="Daily mood uplift · naam anchor · local-only" />
+
+      <main class="content-layer">
+        <AffirmationTool client:load />
+
+        <section class="seo-section" aria-labelledby="affirm-seo-title">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free affirmation tool</p>
+            <h1 id="affirm-seo-title">Daily positive affirmations with Naam Jaap for mood uplift</h1>
+            <p class="lede">
+              This tool is for people who want a simple reason to pause: anxiety, emotional setback,
+              low confidence, doomscrolling, guilt or scattered focus. It gives a believable
+              affirmation, a short story, a mantra anchor and one tiny action.
+            </p>
+
+            <h2>How this is designed to be useful</h2>
+            <p>
+              Affirmations are more helpful when they do not feel fake. Instead of forcing “I am
+              happy” when someone is hurting, this tool uses realistic lines like “I can be hurt and
+              still be guided” or “I do not need to solve my whole life in this moment.” The user
+              repeats the line, connects it to naam jaap, and then takes a small action.
+            </p>
+
+            <div class="seo-grid">
+              <article class="seo-card">
+                <h3>Purpose-based</h3>
+                <p>
+                  Choose anxiety calm, emotional setback, self-worth, focus reset, guilt repair or
+                  new habit support.
+                </p>
+              </article>
+              <article class="seo-card">
+                <h3>Naam anchor</h3>
+                <p>
+                  Each affirmation connects to a mantra such as Om Shanti, Radhe Radhe, Ram Ram or
+                  Om Namah Shivaya.
+                </p>
+              </article>
+              <article class="seo-card">
+                <h3>Local reflection</h3>
+                <p>
+                  Save the affirmation, mood shift and tiny action in browser storage without login
+                  or cloud tracking.
+                </p>
+              </article>
+            </div>
+
+            <h2>Suggested daily practice</h2>
+            <ol>
+              <li>Choose what you need support with today.</li>
+              <li>Click Begin and let the music start after your tap.</li>
+              <li>Repeat the affirmation slowly with the suggested mantra.</li>
+              <li>Press Next affirmation when the line feels understood.</li>
+              <li>Do the tiny action and save the local reflection.</li>
+            </ol>
+
+            <h2>Safety note</h2>
+            <p>
+              This is a self-help and spiritual practice tool. It is not therapy, diagnosis,
+              treatment or emergency support. If distress is intense, persistent, or you feel unsafe,
+              please contact a trusted person, local emergency service or qualified mental health
+              professional.
+            </p>
+
+            <h2>Related free tools</h2>
+            <div class="related-tools">
+              <a class="related-link" href="/free-tools/naam-jaap-counter/">
+                <strong>Naam Jaap Counter</strong>
+                <span>Use a peaceful 108 mala counter with your chosen affirmation.</span>
+              </a>
+              <a class="related-link" href="/free-tools/karma-reset/">
+                <strong>Karma Reset</strong>
+                <span>Turn doomscrolling, guilt or urges into one sankalp action.</span>
+              </a>
+            </div>
+
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

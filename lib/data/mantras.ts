@@ -1,6 +1,5 @@
 import { Mantra } from "@/lib/types";
 
-const img = (seed: string) => `https://picsum.photos/seed/${seed}/800/600`;
 
 export const mantras: Mantra[] = [
   {
@@ -25,6 +24,8 @@ export const mantras: Mantra[] = [
     intentions: ["peace", "meditation", "spiritual-growth", "protection"],
     image: "/assets/shiva-artwork.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/om-namah-shivay-dhoon/Om%20Namah%20Shivay%20Dhoon.mp3",
   },
   {
     id: "m2",
@@ -46,8 +47,10 @@ export const mantras: Mantra[] = [
     relatedFestival: "Janmashtami",
     relatedTemple: "Banke Bihari Temple",
     intentions: ["happiness", "spiritual-growth", "gratitude", "peace"],
-    image: img("krishna-mantra"),
+    image: "/assets/mantras/hare-krishna-maha-mantra.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/famous-powerful-gayatri-mantra-108-times-om-bhur-bhuva-swaha-mp-3-1/30%20Mins%20of%20The%20Great%20Mantra_%20Hare%20Krishna_%20Hare%20Rama%20_%20Chanting%20_%20Meditation%20Music(MP3_160K).mp3",
   },
   {
     id: "m3",
@@ -69,8 +72,10 @@ export const mantras: Mantra[] = [
     relatedFestival: "Hanuman Jayanti",
     relatedTemple: "Salasar Balaji",
     intentions: ["protection", "career", "success", "health"],
-    image: img("hanuman-mantra"),
+    image: "/assets/mantras/hanuman-chalisa.jpg",
     count: 11,
+    audio:
+      "https://archive.org/download/shree-hanuman-chalisa-original-video-gulshan-kumar-hariharan-full-hd_202503/%E0%A4%B6%E0%A4%B0%20%E0%A4%B9%E0%A4%A8%E0%A4%AE%E0%A4%A8%20%E0%A4%9A%E0%A4%B2%E0%A4%B8%20%20Shree%20Hanuman%20Chalisa%20Original%20Video%20%20GULSHAN%20KUMAR%20%20HARIHARAN%20Full%20HD.mp3",
   },
   {
     id: "m4",
@@ -90,8 +95,10 @@ export const mantras: Mantra[] = [
     ],
     whenToChant: "At dawn (Brahma Muhurta) facing the rising sun.",
     intentions: ["education", "meditation", "spiritual-growth", "success"],
-    image: img("gayatri-mantra"),
+    image: "/assets/mantras/gayatri-mantra.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/famous-powerful-gayatri-mantra-108-times-om-bhur-bhuva-swaha/Famous%20Powerful%20Gayatri%20Mantra%20108%20Times%20_%20Om%20Bhur%20Bhuva%20Swaha%20_%20%E0%A4%97%E0%A4%BE%E0%A4%AF%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%20%E0%A4%AE%E0%A4%82%E0%A4%A4%E0%A5%8D%E0%A4%B0%20%20_%20%E0%A4%93%E0%A4%AE%20%E0%A4%AD%E0%A5%82%E0%A4%B0%20%E0%A4%AD%E0%A5%81%E0%A4%B5%E0%A4%BE%20%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%B9%E0%A4%BE.mp3",
   },
   {
     id: "m5",
@@ -113,8 +120,10 @@ export const mantras: Mantra[] = [
     relatedFestival: "Ganesh Chaturthi",
     relatedTemple: "Siddhivinayak Temple",
     intentions: ["success", "career", "education", "protection"],
-    image: img("ganesh-mantra"),
+    image: "/assets/mantras/om-gam-ganapataye-namaha.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/OmGamGanapatayeNamaha/GaneshMantra-ObstacleBreakerstrobe.mp3",
   },
   {
     id: "m6",
@@ -135,8 +144,9 @@ export const mantras: Mantra[] = [
     whenToChant: "During Navratri or on Fridays.",
     relatedFestival: "Navratri",
     intentions: ["protection", "success", "health", "career"],
-    image: img("durga-mantra"),
+    image: "/assets/mantras/om-dum-durgayei-namaha.jpg",
     count: 108,
+    audio: "https://archive.org/download/DurgaChalisa/Ambe%20Tu%20Hai.mp3",
   },
   {
     id: "m7",
@@ -157,8 +167,10 @@ export const mantras: Mantra[] = [
     whenToChant: "On Fridays and during Diwali.",
     relatedFestival: "Diwali",
     intentions: ["prosperity", "career", "success", "gratitude"],
-    image: img("lakshmi-mantra"),
+    image: "/assets/mantras/om-shreem-mahalakshmiyei-namaha.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/NavarathriNayagiStuti/Navarathri%20Nayagi%20Stuti%2F01-Sri%20Devi%20Navaratna%20Malika%20Stotram.mp3",
   },
   {
     id: "m8",
@@ -179,7 +191,7 @@ export const mantras: Mantra[] = [
     whenToChant: "Before study or during Vasant Panchami.",
     relatedFestival: "Vasant Panchami",
     intentions: ["education", "success", "spiritual-growth"],
-    image: img("saraswati-mantra"),
+    image: "/assets/mantras/saraswati-vandana.jpg",
     count: 108,
   },
   {
@@ -202,8 +214,10 @@ export const mantras: Mantra[] = [
     relatedFestival: "Ram Navami",
     relatedTemple: "Ram Mandir Ayodhya",
     intentions: ["peace", "spiritual-growth", "happiness", "protection"],
-    image: img("ram-mantra"),
+    image: "/assets/mantras/shree-ram-jai-ram.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/RainbowQuest1001/10_01_Pete-Seeger_Raghupati-Raghav-Raja-Ram.mp3",
   },
   {
     id: "m10",
@@ -223,8 +237,10 @@ export const mantras: Mantra[] = [
     ],
     whenToChant: "On Thursdays.",
     intentions: ["peace", "health", "gratitude", "protection"],
-    image: img("sai-mantra"),
+    image: "/assets/mantras/om-sai-namo-namaha.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/BhagawanSatyaSaiBabaSingsBhajans/Baba%20Sings%20Volume_1%2FTrack%2010Madhura%20Murali%20Ghana%20Shyama.mp3",
   },
   {
     id: "m11",
@@ -245,8 +261,9 @@ export const mantras: Mantra[] = [
     whenToChant: "On Fridays and during Thaipusam.",
     relatedTemple: "Palani Murugan Temple",
     intentions: ["success", "protection", "career", "spiritual-growth"],
-    image: img("murugan-mantra"),
+    image: "/assets/mantras/om-saravana-bhava.jpg",
     count: 108,
+    audio: "https://archive.org/download/mu-saravana-bhava/Mu-kumaran.mp3",
   },
   {
     id: "m12",
@@ -267,8 +284,10 @@ export const mantras: Mantra[] = [
     whenToChant: "During illness or for wellbeing, on Mondays.",
     relatedFestival: "Maha Shivaratri",
     intentions: ["health", "protection", "peace", "spiritual-growth"],
-    image: img("mrityunjaya-mantra"),
+    image: "/assets/mantras/mahamrityunjaya-mantra.jpg",
     count: 108,
+    audio:
+      "https://archive.org/download/MahamrityunjayaMantra108Times1/Mahamrityunjaya%20Mantra%20108%20Times-1.mp3",
   },
 ];
 

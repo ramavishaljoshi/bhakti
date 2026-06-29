@@ -1,0 +1,58 @@
+---
+import Goals from "../../components/Goals";
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import TrackerNav from "../../components/TrackerNav.astro";
+import "../../styles/global.css";
+
+const title = "Japa Goals - Set & Track Your Practice Targets";
+const description =
+  "Set private daily, weekly and monthly goals for your Naam Jaap practice and track fulfillment - all stored locally in your browser, no account needed.";
+const canonical = new URL(Astro.url.pathname, Astro.site || "https://naamjapa.com").toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#081120" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-naam-jaap.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800;900&family=Noto+Serif+Devanagari:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="deity-watermark" id="deity-watermark">राधे</div>
+      <SiteHeader section="Goals" note="Private practice goals · local-first · no signup" />
+      <main class="content-layer">
+        <TrackerNav active="goals" />
+        <Goals client:load />
+        <section class="seo-section">
+          <div class="seo-inner">
+            <p class="seo-eyebrow">Free spiritual tool</p>
+            <h1>Gentle goals for your japa practice</h1>
+            <p class="lede">
+              Set a small daily, weekly or monthly target and watch your progress fill from the malas
+              you have already saved. Goals live only in your browser, so there is no account and no
+              pressure - just a quiet nudge to return.
+            </p>
+            <SiteFooter />
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

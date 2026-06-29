@@ -1,0 +1,44 @@
+---
+type Props = {
+  section?: string;
+  note?: string;
+};
+
+const { section = "Tools", note = "Free spiritual tools · local-first · no signup" } = Astro.props;
+
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/free-tools/naam-jaap-counter/", label: "Naam Jaap" },
+  { href: "/free-tools/naam-jaap-counter-modern/", label: "Modern" },
+  { href: "/free-tools/japa-journey/", label: "Progress" },
+  { href: "/free-tools/kids-naam-jaap-counter/", label: "Kids Counter" },
+  { href: "/free-tools/karma-reset/", label: "Karma Reset" },
+  { href: "/free-tools/daily-affirmations/", label: "Affirmations" },
+  { href: "#all-tools", label: "All Tools" },
+];
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Naam Jaap home">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span>Naam Jaap</span>
+    <span class="brand-sub">{section}</span>
+  </a>
+
+  <nav class="desktop-nav" aria-label="Primary">
+    {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+
+  <div class="header-note">{note}</div>
+
+  <details class="mobile-nav">
+    <summary aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </summary>
+    <nav aria-label="Mobile primary">
+      {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+  </details>
+</header>

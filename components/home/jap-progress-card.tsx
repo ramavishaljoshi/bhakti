@@ -4,17 +4,18 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { TempleSilhouette } from "@/components/shared/temple-silhouette";
+import { useJap } from "@/lib/use-jap";
 
 export function JapProgressCard({
   mantraName = "Om Namah Shivaya",
-  current = 54,
-  goal = 108,
 }: {
   mantraName?: string;
-  current?: number;
-  goal?: number;
 }) {
-  const pct = Math.round((current / goal) * 100);
+  // Live daily count: resets each day (bucketed by date) and is per-user when
+  // signed in (Supabase), otherwise stored locally for guests.
+  const { today, goal } = useJap();
+  const current = today;
+  const pct = goal ? Math.min(100, Math.round((current / goal) * 100)) : 0;
   const size = 124;
   const stroke = 11;
   const r = (size - stroke) / 2;

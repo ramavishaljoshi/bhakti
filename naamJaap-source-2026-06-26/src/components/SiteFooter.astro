@@ -1,0 +1,53 @@
+---
+const tools = [
+  {
+    href: "/free-tools/naam-jaap-counter/",
+    title: "Naam Jaap Counter",
+    text: "108 mala counter with local history, mantras and CSV/JSON export.",
+  },
+  {
+    href: "/free-tools/kids-naam-jaap-counter/",
+    title: "Kids Naam Jaap Counter",
+    text: "A cute 108-name bhakti bucket game for children with simple mantras.",
+  },
+  {
+    href: "/free-tools/karma-reset/",
+    title: "Karma Reset",
+    text: "A local-only game to redirect doomscrolling, guilt and urges into one sankalp action.",
+  },
+  {
+    href: "/free-tools/daily-affirmations/",
+    title: "Daily Affirmations",
+    text: "Purpose-based affirmations with naam anchors, music and private local reflections.",
+  },
+  {
+    href: "/free-tools/mind-reset-game/",
+    title: "Mind Reset Alias",
+    text: "Same Karma Reset tool kept for people who saved the older link.",
+  },
+];
+---
+
+<footer id="all-tools" class="site-footer">
+  <div class="footer-head">
+    <div>
+      <p class="seo-eyebrow">All free tools</p>
+      <h2>Choose a calm next step</h2>
+    </div>
+    <a class="footer-home" href="/">Naam Jaap home</a>
+  </div>
+
+  <div class="footer-tools">
+    {tools.map((tool) => (
+      <a class="footer-tool" href={tool.href}>
+        <strong>{tool.title}</strong>
+        <span>{tool.text}</span>
+      </a>
+    ))}
+  </div>
+
+  <div class="footer-bottom">
+    <span>Free tools for focus, jaap, habit change and spiritual practice.</span>
+    <span>Private by default: data stays in your browser unless a tool clearly says otherwise.</span>
+  </div>
+</footer>
