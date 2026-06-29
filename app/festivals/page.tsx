@@ -2,8 +2,28 @@ import Link from "next/link";
 import { Sparkles, CalendarDays, UtensilsCrossed } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { festivals } from "@/lib/data/festivals";
+import { FaqSection } from "@/components/shared/faq-section";
 import { buildMetadata, breadcrumbSchema } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
+
+const FESTIVAL_FAQS = [
+  {
+    q: "How many Hindu festivals are there in a year?",
+    a: "India mein saal bhar saikdon tyohar manaaye jaate hain — kuch poore desh mein, kuch sirf kisi rajya ya samuday mein. Bhakti par aapko sabse pramukh festivals milte hain — Diwali, Holi, Navratri, Janmashtami, Maha Shivaratri aur kai aur — har ek ki katha, mahatva aur puja vidhi ke saath.",
+  },
+  {
+    q: "How are Hindu festival dates decided?",
+    a: "Zyadaatar Hindu tyoharon ki tithi Hindu panchang (lunar calendar) ke hisaab se tay hoti hai, isliye English calendar par inki date har saal badal jaati hai. Har festival page par uski expected date aur mahatva diya gaya hai.",
+  },
+  {
+    q: "What is puja vidhi?",
+    a: "Puja vidhi ka matlab hai kisi tyohar ya devta ki pooja karne ka paramparik tareeka — kaun si samagri chahiye, kaun se mantra bole jaate hain, aur kis kram (step-by-step) mein pooja ki jaati hai. Har festival ke saath ek simple puja vidhi guide di gayi hai.",
+  },
+  {
+    q: "Which is the biggest Hindu festival?",
+    a: "Diwali (Deepavali) ko aam taur par sabse bada aur vyapak roop se manaaya jaane wala Hindu festival maana jaata hai, lekin alag-alag kshetron mein Navratri, Durga Puja, Pongal ya Onam jaise tyohar bhi utne hi mahatvapurn hote hain.",
+  },
+];
 
 export const metadata = buildMetadata({
   title: "Hindu Festivals — Dates, Stories & Puja Vidhi",
@@ -35,6 +55,13 @@ export default function FestivalsPage() {
         description="The stories, significance and rituals behind India's most beloved spiritual festivals."
         icon={<Sparkles className="h-6 w-6" />}
       />
+
+      <p className="-mt-2 mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+        Hindu festivals carry deep stories, devotion and joy. Yahan har tyohar
+        ki katha (story), uska mahatva (significance), puja vidhi aur paramparik
+        bhojan ek hi jagah par milta hai — taaki aap har celebration ko
+        shraddha aur samajh ke saath mana sakein.
+      </p>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {festivals.map((f) => (
@@ -82,6 +109,13 @@ export default function FestivalsPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-12">
+        <FaqSection
+          subtitle="Hindu tyohaaron, tithi aur puja vidhi se jude common sawaal."
+          faqs={FESTIVAL_FAQS}
+        />
       </div>
     </div>
   );
