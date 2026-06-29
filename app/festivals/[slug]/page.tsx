@@ -21,6 +21,7 @@ import {
 } from "@/components/shared/related-links";
 import { QuickAnswer } from "@/components/shared/quick-answer";
 import { KeyFacts } from "@/components/shared/key-facts";
+import { EditorialNote } from "@/components/shared/editorial-note";
 import {
   buildMetadata,
   breadcrumbSchema,
@@ -229,6 +230,8 @@ export default function FestivalDetailPage({
       )}
 
       <RelatedLinks groups={relatedGroups} />
+
+      <EditorialNote sources="Puranas and traditional Hindu festival accounts" />
     </div>
   );
 }

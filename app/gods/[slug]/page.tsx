@@ -7,6 +7,7 @@ import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedLinks, type RelatedGroup } from "@/components/shared/related-links";
 import { QuickAnswer } from "@/components/shared/quick-answer";
 import { KeyFacts } from "@/components/shared/key-facts";
+import { EditorialNote } from "@/components/shared/editorial-note";
 import { gods, getGodBySlug } from "@/lib/data/gods";
 import { getFestivalByName } from "@/lib/data/festivals";
 import { getTempleByName } from "@/lib/data/temples";
@@ -172,6 +173,8 @@ export default function GodDetailPage({
           />
         </div>
       )}
+
+      <EditorialNote sources="Puranas, the Ramayana and traditional Hindu scriptures" />
     </div>
   );
 }

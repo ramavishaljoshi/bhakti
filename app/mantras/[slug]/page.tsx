@@ -25,6 +25,7 @@ import {
 } from "@/components/shared/related-links";
 import { QuickAnswer } from "@/components/shared/quick-answer";
 import { KeyFacts } from "@/components/shared/key-facts";
+import { EditorialNote } from "@/components/shared/editorial-note";
 import {
   buildMetadata,
   breadcrumbSchema,
@@ -246,6 +247,8 @@ export default function MantraDetailPage({
           </div>
         </div>
       )}
+
+      <EditorialNote />
     </div>
   );
 }

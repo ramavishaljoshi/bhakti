@@ -17,6 +17,7 @@ import {
   type RelatedGroup,
 } from "@/components/shared/related-links";
 import { QuickAnswer } from "@/components/shared/quick-answer";
+import { EditorialNote } from "@/components/shared/editorial-note";
 import {
   buildMetadata,
   breadcrumbSchema,
@@ -237,6 +238,8 @@ export default function TempleDetailPage({
       )}
 
       <RelatedLinks groups={relatedGroups} />
+
+      <EditorialNote sources="temple records and traditional Hindu accounts" />
     </div>
   );
 }

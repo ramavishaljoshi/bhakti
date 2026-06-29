@@ -3,7 +3,8 @@ import { CircleDot } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { JapCounterSection } from "@/components/jap/jap-counter-section";
 import { FaqSection } from "@/components/shared/faq-section";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import { buildMetadata, howToSchema } from "@/lib/seo";
 
 const JAP_FAQS = [
   {
@@ -42,9 +43,24 @@ export const metadata = buildMetadata({
   ],
 });
 
+const HOW_TO_JAP = howToSchema({
+  name: "How to do mantra jap with a jap counter",
+  description:
+    "Chant a mantra mindfully and keep an accurate count using the online jap counter.",
+  path: "/jap",
+  steps: [
+    { name: "Choose a mantra", text: "Pick a mantra such as Om Namah Shivaya or the Hanuman Chalisa." },
+    { name: "Sit calmly", text: "Sit in a comfortable, quiet place and take a few slow breaths to settle the mind." },
+    { name: "Chant and tap", text: "Chant the mantra once and tap the counter; repeat at a steady, relaxed pace." },
+    { name: "Complete a mala", text: "Continue until you reach 108 repetitions — one full mala — or your chosen goal." },
+    { name: "Track your streak", text: "Your daily count and streak save automatically, so you can build a steady practice." },
+  ],
+});
+
 export default function JapPage() {
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd data={HOW_TO_JAP} />
       <PageHeader
         title="Digital Jap Counter"
         description="Count your chants mindfully. Your progress is saved automatically and works offline."

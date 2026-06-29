@@ -12,6 +12,9 @@ export const SITE_NAME = "Bhakti by Agentic Vani";
 export const SITE_TAGLINE = "Your Spiritual Companion";
 export const DEFAULT_OG_IMAGE = "/assets/hero-illustration.png";
 export const LOCALE = "en_IN";
+// Editorial "last reviewed" date (ISO). Bump when content is substantively
+// updated; surfaced as schema dateModified and a visible EEAT note.
+export const CONTENT_UPDATED = "2026-06-29";
 
 /** Build an absolute URL for a site-relative path (or pass through if absolute). */
 export function absoluteUrl(path: string): string {
@@ -94,6 +97,15 @@ export function organizationSchema() {
     description:
       "A premium, mindful Hindu spirituality app — digital jap counter, mantra library, gods, temples, festivals and the Bhagavad Gita.",
     knowsLanguage: ["en", "hi"],
+    knowsAbout: [
+      "Hindu mantras",
+      "Hindu gods",
+      "Hindu temples",
+      "Hindu festivals",
+      "Jap",
+      "Bhagavad Gita",
+      "Indian spiritual traditions",
+    ],
   };
 }
 
@@ -172,7 +184,13 @@ export function articleSchema({
     description,
     image: image ? absoluteUrl(image) : absoluteUrl(DEFAULT_OG_IMAGE),
     mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
-    author: { "@type": "Organization", name: SITE_NAME },
+    datePublished: CONTENT_UPDATED,
+    dateModified: CONTENT_UPDATED,
+    author: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -181,5 +199,32 @@ export function articleSchema({
         url: absoluteUrl("/assets/hero-illustration.png"),
       },
     },
+  };
+}
+
+/** HowTo structured data — for step-based guides (jap, puja vidhi). */
+export function howToSchema({
+  name,
+  description,
+  steps,
+  path,
+}: {
+  name: string;
+  description: string;
+  steps: { name: string; text: string }[];
+  path: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
   };
 }
