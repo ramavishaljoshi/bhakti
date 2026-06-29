@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
 import { mantras } from "@/lib/data/mantras";
-import { temples } from "@/lib/data/temples";
+import { temples, getAllStates } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { intentions } from "@/lib/data/intentions";
 import { gitaChapters } from "@/lib/data/gita";
@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/mantras", priority: 0.9, freq: "weekly" },
     { path: "/temples", priority: 0.9, freq: "weekly" },
     { path: "/festivals", priority: 0.9, freq: "weekly" },
+    { path: "/states", priority: 0.8, freq: "monthly" },
     { path: "/intentions", priority: 0.8, freq: "monthly" },
     { path: "/gita", priority: 0.8, freq: "monthly" },
     { path: "/gods", priority: 0.9, freq: "weekly" },
@@ -49,6 +50,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
   for (const c of gitaChapters) {
     entries.push({ url: url(`/gita/${c.number}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const s of getAllStates()) {
+    entries.push({ url: url(`/states/${s.slug}`), changeFrequency: "monthly", priority: 0.6 });
   }
 
   return entries;

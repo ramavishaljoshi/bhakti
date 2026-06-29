@@ -15,7 +15,7 @@ import { TempleCard } from "@/components/cards/temple-card";
 import { FestivalCard } from "@/components/cards/festival-card";
 import { SectionHeader } from "@/components/shared/section-header";
 import { mantras } from "@/lib/data/mantras";
-import { temples } from "@/lib/data/temples";
+import { temples, stateSlug, getStateBySlug } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { states } from "@/lib/data/misc";
 import { buildMetadata } from "@/lib/seo";
@@ -63,6 +63,10 @@ export default function HomePage() {
   const todayMantra = mantras[0];
   const exploreTemples = temples.slice(0, 4);
   const featuredFestivals = festivals.slice(0, 4);
+  // Only show state cards that have a real /states/[slug] hub (a temple page).
+  const statesWithTemples = states.filter((s) =>
+    Boolean(getStateBySlug(stateSlug(s.name)))
+  );
 
   return (
     <div className="container space-y-10 py-6 lg:py-8">
@@ -143,10 +147,10 @@ export default function HomePage() {
           actionLabel="View all"
         />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          {states.map((state) => (
+          {statesWithTemples.map((state) => (
             <Link
               key={state.name}
-              href={`/temples?state=${encodeURIComponent(state.name)}`}
+              href={`/states/${stateSlug(state.name)}`}
               className="group relative overflow-hidden rounded-3xl border border-border shadow-soft transition-shadow hover:shadow-soft-lg"
             >
               <div className="relative aspect-[3/4]">
