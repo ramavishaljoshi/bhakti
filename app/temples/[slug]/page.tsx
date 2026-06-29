@@ -16,7 +16,13 @@ import {
   RelatedLinks,
   type RelatedGroup,
 } from "@/components/shared/related-links";
-import { buildMetadata, breadcrumbSchema, absoluteUrl } from "@/lib/seo";
+import { QuickAnswer } from "@/components/shared/quick-answer";
+import {
+  buildMetadata,
+  breadcrumbSchema,
+  absoluteUrl,
+  speakableSchema,
+} from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
 export function generateStaticParams() {
@@ -114,6 +120,7 @@ export default function TempleDetailPage({
             { name: temple.name, path: `/temples/${temple.slug}` },
           ]),
           templeSchema(temple),
+          speakableSchema(`/temples/${temple.slug}`),
         ]}
       />
       <PageHeader title={temple.name} backHref="/temples" />
@@ -153,6 +160,12 @@ export default function TempleDetailPage({
             <Badge>{temple.deity}</Badge>
             <Badge variant="muted">{temple.state}</Badge>
           </div>
+
+          <QuickAnswer label={`About ${temple.name}`}>
+            {temple.name} is a revered Hindu temple dedicated to {temple.deity},
+            located in {temple.city}, {temple.state}. It is open {temple.timings}
+            .
+          </QuickAnswer>
 
           <Section title="History" icon={<Sparkles className="h-4 w-4" />}>
             <p className="leading-relaxed text-muted-foreground">

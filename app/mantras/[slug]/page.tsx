@@ -23,10 +23,13 @@ import {
   RelatedLinks,
   type RelatedGroup,
 } from "@/components/shared/related-links";
+import { QuickAnswer } from "@/components/shared/quick-answer";
+import { KeyFacts } from "@/components/shared/key-facts";
 import {
   buildMetadata,
   breadcrumbSchema,
   articleSchema,
+  speakableSchema,
 } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -114,6 +117,7 @@ export default function MantraDetailPage({
             path: `/mantras/${mantra.slug}`,
             image: mantra.image,
           }),
+          speakableSchema(`/mantras/${mantra.slug}`),
         ]}
       />
       <PageHeader title={mantra.name} backHref="/mantras" />
@@ -154,6 +158,24 @@ export default function MantraDetailPage({
             <Badge>{mantra.deity}</Badge>
             <Badge variant="muted">{mantra.category}</Badge>
           </div>
+
+          <QuickAnswer label={`What is the ${mantra.name}?`}>
+            {mantra.name} ({mantra.transliteration}) is a {mantra.category}{" "}
+            mantra dedicated to {mantra.deity}. {mantra.meaning}
+          </QuickAnswer>
+
+          <KeyFacts
+            facts={[
+              { label: "Deity", value: mantra.deity },
+              { label: "Category", value: mantra.category },
+              { label: "When to chant", value: mantra.whenToChant },
+              {
+                label: "Repetitions",
+                value: mantra.count ? `${mantra.count} (one mala)` : undefined,
+              },
+              { label: "Related festival", value: mantra.relatedFestival },
+            ]}
+          />
 
           <div className="flex flex-wrap gap-3">
             <Link

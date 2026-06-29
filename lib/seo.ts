@@ -138,6 +138,22 @@ export function faqSchema(faqs: { q: string; a: string }[]) {
   };
 }
 
+/**
+ * Speakable schema marks the parts of a page suitable for voice/audio
+ * playback (Google Assistant). Points at the Quick Answer box and FAQ heading.
+ */
+export function speakableSchema(path: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: absoluteUrl(path),
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".quick-answer", "#faq-heading"],
+    },
+  };
+}
+
 export function articleSchema({
   headline,
   description,

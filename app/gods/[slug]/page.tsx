@@ -5,6 +5,8 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedLinks, type RelatedGroup } from "@/components/shared/related-links";
+import { QuickAnswer } from "@/components/shared/quick-answer";
+import { KeyFacts } from "@/components/shared/key-facts";
 import { gods, getGodBySlug } from "@/lib/data/gods";
 import { getFestivalByName } from "@/lib/data/festivals";
 import { getTempleByName } from "@/lib/data/temples";
@@ -13,6 +15,7 @@ import {
   buildMetadata,
   breadcrumbSchema,
   articleSchema,
+  speakableSchema,
 } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -88,6 +91,7 @@ export default function GodDetailPage({
             path: `/gods/${god.slug}`,
             image: god.image,
           }),
+          speakableSchema(`/gods/${god.slug}`),
           // FAQPage schema is emitted by the visible <FaqSection> below.
         ]}
       />
@@ -116,11 +120,17 @@ export default function GodDetailPage({
         {/* Details */}
         <div className="space-y-6">
           {/* Quick answer (AI-friendly) */}
-          <div className="rounded-3xl border border-border bg-secondary/40 p-5">
-            <p className="leading-relaxed text-muted-foreground">
-              {god.introduction}
-            </p>
-          </div>
+          <QuickAnswer label={`Who is ${god.name}?`}>
+            {god.introduction}
+          </QuickAnswer>
+
+          <KeyFacts
+            facts={[
+              { label: "Also known as", value: god.title },
+              { label: "Symbols", value: god.symbols?.slice(0, 4).join(", ") },
+              { label: "Festivals", value: god.festivals?.join(", ") },
+            ]}
+          />
 
           <Section title="Story" icon={<Sparkles className="h-4 w-4" />}>
             <p className="leading-relaxed text-muted-foreground">{god.story}</p>

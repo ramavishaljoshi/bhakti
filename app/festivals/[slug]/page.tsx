@@ -19,11 +19,14 @@ import {
   RelatedLinks,
   type RelatedGroup,
 } from "@/components/shared/related-links";
+import { QuickAnswer } from "@/components/shared/quick-answer";
+import { KeyFacts } from "@/components/shared/key-facts";
 import {
   buildMetadata,
   breadcrumbSchema,
   faqSchema,
   articleSchema,
+  speakableSchema,
 } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -107,6 +110,7 @@ export default function FestivalDetailPage({
             path: `/festivals/${festival.slug}`,
             image: festival.image,
           }),
+          speakableSchema(`/festivals/${festival.slug}`),
           ...(festival.faqs?.length ? [faqSchema(festival.faqs)] : []),
         ]}
       />
@@ -143,6 +147,20 @@ export default function FestivalDetailPage({
 
         {/* Details */}
         <div className="space-y-6">
+          <QuickAnswer label={`What is ${festival.name}?`}>
+            {festival.whyCelebrate}
+          </QuickAnswer>
+
+          <KeyFacts
+            facts={[
+              { label: "When", value: festival.date },
+              {
+                label: "Traditional foods",
+                value: festival.food?.slice(0, 3).join(", "),
+              },
+            ]}
+          />
+
           <Section title="The Story" icon={<Sparkles className="h-4 w-4" />}>
             <p className="leading-relaxed text-muted-foreground">
               {festival.story}
