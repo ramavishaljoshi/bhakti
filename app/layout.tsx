@@ -6,7 +6,9 @@ import { AppShell } from "@/components/layout/app-shell";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  // Only the weights actually used in the UI (400/500/600/700). Dropping the
+  // unused 300 & 800 cuts two woff2 files off the critical request path.
+  weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
   display: "swap",
 });

@@ -109,7 +109,9 @@ export function AudioPlayer() {
 
   return (
     <>
-      <audio ref={audioRef} loop preload="auto" />
+      {/* preload="none": don't fetch the (multi-MB) audio until the user picks
+          a track — it must never download on initial page load. */}
+      <audio ref={audioRef} loop preload="none" />
 
       {/* Bhajan list panel */}
       {open && (

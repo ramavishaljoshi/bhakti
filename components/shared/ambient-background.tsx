@@ -1,13 +1,14 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 /**
  * AmbientBackground — a subtle, divine "cosmos & earth" animated layer that
  * sits behind the main content area. It is purely decorative: fixed to the
  * viewport, pointer-events-none, and low-opacity so it never competes with
  * the foreground UI. Works in both light (cream) and dark themes.
+ *
+ * Animations are pure CSS (transform/opacity) so they run on the compositor
+ * thread instead of the JS main thread — no per-frame work, no forced reflow.
  */
+
+import type { CSSProperties } from "react";
 
 const FLOATING_OM = [
   { left: "12%", size: 26, delay: 0, duration: 22, drift: 18 },
@@ -28,14 +29,12 @@ function AuroraBlob({
   delay?: number;
 }) {
   return (
-    <motion.div
-      className={`absolute rounded-full blur-3xl ${className}`}
-      animate={{
-        x: [0, 30, -20, 0],
-        y: [0, -25, 20, 0],
-        scale: [1, 1.15, 0.95, 1],
+    <div
+      className={`decor-anim absolute rounded-full blur-3xl ${className}`}
+      style={{
+        animation: `aurora-drift ${duration}s ease-in-out ${delay}s infinite`,
+        willChange: "transform",
       }}
-      transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
       aria-hidden
     />
   );
@@ -65,26 +64,24 @@ export function AmbientBackground() {
 
       {/* floating Om symbols rising upward */}
       {FLOATING_OM.map((om, i) => (
-        <motion.span
+        <span
           key={i}
-          className="absolute font-semibold text-saffron-500/30 dark:text-saffron-300/25"
-          style={{ left: om.left, bottom: "-6%", fontSize: om.size }}
-          animate={{
-            y: ["0vh", "-110vh"],
-            x: [0, om.drift, 0],
-            opacity: [0, 0.9, 0.9, 0],
-            rotate: [0, om.drift > 0 ? 12 : -12, 0],
-          }}
-          transition={{
-            duration: om.duration,
-            delay: om.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-            times: [0, 0.1, 0.85, 1],
-          }}
+          className="decor-anim absolute font-semibold text-saffron-500/30 dark:text-saffron-300/25"
+          style={
+            {
+              left: om.left,
+              bottom: "-6%",
+              fontSize: om.size,
+              opacity: 0,
+              "--drift": `${om.drift}px`,
+              "--rot": `${om.drift > 0 ? 12 : -12}deg`,
+              animation: `om-rise ${om.duration}s ease-in-out ${om.delay}s infinite`,
+              willChange: "transform, opacity",
+            } as CSSProperties
+          }
         >
           ॐ
-        </motion.span>
+        </span>
       ))}
     </div>
   );

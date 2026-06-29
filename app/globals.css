@@ -89,6 +89,48 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Decorative background animations (compositor-only: transform/opacity).
+   These replace the previous framer-motion JS-driven loops, which ran on the
+   main thread every frame (even for layers hidden on mobile) and dominated CPU.
+   CSS keyframes run on the compositor and, on display:none elements, don't run
+   at all — so the mobile-hidden layers now cost nothing.
+--------------------------------------------------------------------------- */
+@keyframes aurora-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(30px, -25px) scale(1.15); }
+  66%      { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes om-rise {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  50%  { transform: translate(var(--drift, 0), -55vh) rotate(var(--rot, 0deg)); }
+  85%  { opacity: 0.9; }
+  100% { transform: translate(0, -110vh) rotate(0deg); opacity: 0; }
+}
+
+@keyframes star-twinkle {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: var(--op-min, 0.2); }
+  50%      { transform: translateY(var(--drift, 0)) rotate(var(--rot, 0deg)); opacity: var(--op-max, 0.6); }
+}
+
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, 33%) scale(1); }
+  50%      { opacity: 1; transform: translate(-50%, 33%) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decor-anim { animation: none !important; }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
