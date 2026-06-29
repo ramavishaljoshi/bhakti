@@ -168,24 +168,24 @@ Goal: every page links to ≥4 related entities; no orphan pages; ≤3 clicks fr
 
 ## 9. Prioritized Roadmap
 
-**P0 — fix + highest impact (1–2 builds):**
-1. Fix the `/gita` 404 → build `/scriptures/bhagavad-gita` (data ready) or repoint the link.
-2. Build **`/gods` + `/gods/[slug]`** cluster (data ready): unlocks the entity graph,
-   internal linking, and 7 high-authority hub pages. Add to sitemap.
+**P0 — fix + highest impact — ✅ DONE:**
+1. ✅ `/gita` + `/gita/[chapter]` built (Book/Chapter schema); home link fixed.
+2. ✅ `/gods` + `/gods/[slug]` cluster (7 hubs, Article/FAQ schema, in sitemap & nav).
 
-**P1 — topical authority:**
-3. `RelatedLinks` component + wire reciprocal links across mantra/festival/temple/god.
-4. `/states/[state]` indexable temple hubs (replace filter-only links).
-5. Add Quick-Answer/Definition/Key-Facts blocks + Speakable to all detail pages.
+**P1 — topical authority — ✅ DONE:**
+3. ✅ `RelatedLinks` component + reciprocal links across mantra/festival/temple/god.
+4. ✅ `/states` + `/states/[state]` hubs (14 states); home links repointed; footer rebuilt.
+5. ✅ Quick-Answer + Key-Facts + Speakable schema on all detail pages.
+6. ✅ EEAT: editorial note + last-updated + Article author/dates + HowTo (jap) + Org knowsAbout.
 
-**P2 — coverage expansion:**
-6. `/vrat` (Ekadashi, Pradosh, Navratri) + `/panchang` (daily, mhah-panchang).
-7. `/articles` topical blog targeting Hinglish intent queries.
-8. EEAT: author boxes, editorial policy, last-updated, sources.
+**P2 — coverage expansion (next):**
+7. `/vrat` (Ekadashi, Pradosh, Navratri) + `/panchang` (daily, mhah-panchang) — needs data.
+8. `/articles` topical blog targeting Hinglish intent queries — needs content.
+9. Author bio page + editorial-policy page with `Person` schema.
 
-**P3 — enrichment:**
-9. `sameAs`/Wikidata anchoring, Event/HowTo/Book schema, ratings.
-10. Per-entity OG images (currently one shared hero image).
+**P3 — enrichment (next):**
+10. `sameAs`/Wikidata anchoring on gods/temples; `Event` schema on festivals (needs ISO dates).
+11. Per-entity OG images (currently one shared hero); real god images (currently picsum).
 
 ---
 
