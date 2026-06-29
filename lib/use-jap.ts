@@ -19,6 +19,22 @@ export interface JapStats {
   addJap: (delta: number, mantra?: string) => void;
 }
 
+/** Coerce any stored value into a safe non-negative integer count (0 if junk). */
+function toCount(v: unknown): number {
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+}
+
+/** Drop non-numeric/corrupt entries so stats can never render "[object Object]". */
+function normalizeMap(raw: Record<string, unknown>): DayMap {
+  const out: DayMap = {};
+  for (const [k, v] of Object.entries(raw ?? {})) {
+    const n = toCount(v);
+    if (n > 0) out[k] = n;
+  }
+  return out;
+}
+
 function localDay(d: Date): string {
   // Local-timezone YYYY-MM-DD (not UTC) so "today" matches the user.
   const y = d.getFullYear();
@@ -30,7 +46,7 @@ function localDay(d: Date): string {
 function readLocal(): DayMap {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(localStorage.getItem(KEY) || "{}");
+    return normalizeMap(JSON.parse(localStorage.getItem(KEY) || "{}"));
   } catch {
     return {};
   }
@@ -108,7 +124,8 @@ export function useJap(): JapStats {
         if (!active) return;
         const next: DayMap = {};
         (data ?? []).forEach((r: { day: string; count: number }) => {
-          next[r.day] = r.count;
+          const n = toCount(r.count);
+          if (n > 0) next[r.day] = n;
         });
         setMap(next);
       } else {

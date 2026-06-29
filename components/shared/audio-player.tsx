@@ -46,8 +46,7 @@ const BHAJANS: Bhajan[] = [
  * bhajan with its own Listen (play/pause) button. It lives in the root
  * AppShell, so playback continues as the user moves between pages.
  *
- * Autoplay: the first track starts muted on load (allowed by browsers) and
- * unmutes on the first user interaction. Picking a track from the list (a
+ * No autoplay: nothing plays on load. Picking a track from the list (a user
  * gesture) plays it with sound immediately.
  */
 export function AudioPlayer() {
@@ -70,38 +69,12 @@ export function AudioPlayer() {
     };
   }, []);
 
-  // On mount: load the first track, muted-autoplay it, and unmute on the first
-  // user interaction anywhere on the site.
+  // On mount: pre-load the first track but do NOT play it. Playback only
+  // starts when the user explicitly picks a track from the list.
   React.useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
     audio.src = BHAJANS[0].src;
-    audio.muted = true;
-    audio.play().catch(() => {});
-
-    let done = false;
-    const events: (keyof DocumentEventMap)[] = [
-      "pointerdown",
-      "keydown",
-      "touchstart",
-    ];
-    const unmute = () => {
-      audio.muted = false;
-      if (audio.paused) audio.play().catch(() => {});
-      cleanup();
-    };
-    function cleanup() {
-      if (done) return;
-      done = true;
-      events.forEach((e) =>
-        document.removeEventListener(e, unmute as EventListener)
-      );
-    }
-    events.forEach((e) =>
-      document.addEventListener(e, unmute as EventListener, { once: true })
-    );
-    return cleanup;
   }, []);
 
   // When the user picks a different track, swap the source and play it.
