@@ -5,6 +5,8 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { temples, getTempleBySlug } from "@/lib/data/temples";
+import { buildMetadata, breadcrumbSchema, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export function generateStaticParams() {
   return temples.map((t) => ({ slug: t.slug }));
@@ -12,7 +14,45 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const t = getTempleBySlug(params.slug);
-  return { title: t ? `${t.name} — Bhakti` : "Temple — Bhakti" };
+  if (!t)
+    return buildMetadata({
+      title: "Temple",
+      description: "Hindu temple — history, timings and how to reach.",
+      path: `/temples/${params.slug}`,
+    });
+  return buildMetadata({
+    title: `${t.name}, ${t.city} — History, Timings & Darshan`,
+    description: `${t.name} in ${t.city}, ${t.state} — ${t.history}`.slice(0, 155),
+    path: `/temples/${t.slug}`,
+    image: t.image,
+    type: "article",
+    keywords: [
+      t.name.toLowerCase(),
+      `${t.name.toLowerCase()} timings`,
+      `${t.name.toLowerCase()} history`,
+      `${t.deity.toLowerCase()} temple`,
+      `temples in ${t.state.toLowerCase()}`,
+    ],
+  });
+}
+
+function templeSchema(t: NonNullable<ReturnType<typeof getTempleBySlug>>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TouristAttraction",
+    name: t.name,
+    description: t.history,
+    image: absoluteUrl(t.image),
+    url: absoluteUrl(`/temples/${t.slug}`),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: t.city,
+      addressRegion: t.state,
+      addressCountry: "IN",
+    },
+    openingHours: t.timings,
+    isAccessibleForFree: true,
+  };
 }
 
 export default function TempleDetailPage({
@@ -25,6 +65,16 @@ export default function TempleDetailPage({
 
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={[
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Temples", path: "/temples" },
+            { name: temple.name, path: `/temples/${temple.slug}` },
+          ]),
+          templeSchema(temple),
+        ]}
+      />
       <PageHeader title={temple.name} backHref="/temples" />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">

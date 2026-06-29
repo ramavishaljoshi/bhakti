@@ -15,9 +15,34 @@ import { FavoriteButton } from "@/components/shared/favorite-button";
 import { MantraListenButton } from "@/components/shared/mantra-listen-button";
 import { MantraCard } from "@/components/cards/mantra-card";
 import { mantras, getMantraBySlug, getMantrasByCategory } from "@/lib/data/mantras";
+import {
+  buildMetadata,
+  breadcrumbSchema,
+  articleSchema,
+} from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export function generateStaticParams() {
   return mantras.map((m) => ({ slug: m.slug }));
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const m = getMantraBySlug(params.slug);
+  if (!m) return buildMetadata({ title: "Mantra", description: "Hindu mantra with meaning and pronunciation.", path: `/mantras/${params.slug}` });
+  return buildMetadata({
+    title: `${m.name} — Meaning, Pronunciation & Benefits`,
+    description: `${m.name} (${m.transliteration}): ${m.meaning}`.slice(0, 155),
+    path: `/mantras/${m.slug}`,
+    image: m.image,
+    type: "article",
+    keywords: [
+      m.name.toLowerCase(),
+      `${m.deity.toLowerCase()} mantra`,
+      `${m.name.toLowerCase()} meaning`,
+      `${m.name.toLowerCase()} benefits`,
+      "mantra jap",
+    ],
+  });
 }
 
 export default function MantraDetailPage({
@@ -34,6 +59,21 @@ export default function MantraDetailPage({
 
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={[
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Mantras", path: "/mantras" },
+            { name: mantra.name, path: `/mantras/${mantra.slug}` },
+          ]),
+          articleSchema({
+            headline: `${mantra.name} — Meaning, Pronunciation & Benefits`,
+            description: mantra.meaning,
+            path: `/mantras/${mantra.slug}`,
+            image: mantra.image,
+          }),
+        ]}
+      />
       <PageHeader title={mantra.name} backHref="/mantras" />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">

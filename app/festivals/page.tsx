@@ -2,12 +2,34 @@ import Link from "next/link";
 import { Sparkles, CalendarDays, UtensilsCrossed } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { festivals } from "@/lib/data/festivals";
+import { buildMetadata, breadcrumbSchema } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata = { title: "Festivals — Bhakti" };
+export const metadata = buildMetadata({
+  title: "Hindu Festivals — Dates, Stories & Puja Vidhi",
+  description:
+    "Hindu festival guide with dates, stories, significance and puja vidhi — Diwali, Holi, Janmashtami, Navratri & more. Har tyohar ki katha aur vidhi ek jagah.",
+  path: "/festivals",
+  keywords: [
+    "hindu festivals",
+    "festival calendar",
+    "puja vidhi",
+    "diwali",
+    "holi",
+    "janmashtami",
+    "navratri",
+  ],
+});
 
 export default function FestivalsPage() {
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Festivals", path: "/festivals" },
+        ])}
+      />
       <PageHeader
         title="Festivals"
         description="The stories, significance and rituals behind India's most beloved spiritual festivals."

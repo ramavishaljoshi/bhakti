@@ -1,7 +1,13 @@
 import { ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Privacy Policy — Bhakti" };
+export const metadata = buildMetadata({
+  title: "Privacy Policy",
+  description:
+    "How Bhakti by Agentic Vani collects, uses and protects your data. Aapki privacy aur jankari hamare liye important hai.",
+  path: "/privacy",
+});
 
 const sections = [
   {

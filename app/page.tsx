@@ -18,6 +18,42 @@ import { mantras } from "@/lib/data/mantras";
 import { temples } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { states } from "@/lib/data/misc";
+import { buildMetadata, faqSchema } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+
+export const metadata = buildMetadata({
+  title: "Bhakti by Agentic Vani — Your Spiritual Companion",
+  description:
+    "Chant mantras with a digital jap counter, explore gods, temples, festivals & the Bhagavad Gita. Roz ki bhakti ko banaiye simple, shaant aur premium.",
+  path: "/",
+  keywords: [
+    "online jap counter",
+    "mantra jap app",
+    "hanuman chalisa",
+    "hindu mantras",
+    "bhagavad gita",
+    "daily spiritual routine",
+  ],
+});
+
+const HOME_FAQS = [
+  {
+    q: "What is Bhakti by Agentic Vani?",
+    a: "Bhakti by Agentic Vani is a free, modern Hindu spirituality app with a digital jap (mantra) counter, a mantra library, gods, temples, festivals and the Bhagavad Gita — designed to make your daily spiritual practice calm and effortless.",
+  },
+  {
+    q: "Is the online mantra jap counter free to use?",
+    a: "Yes. The digital jap counter is completely free. You can chant any mantra, track your daily count and streak, and continue across devices when you sign in.",
+  },
+  {
+    q: "Which mantras can I chant on Bhakti?",
+    a: "You can chant popular mantras such as Om Namah Shivaya, the Hare Krishna Maha Mantra, Hanuman Chalisa, the Gayatri Mantra and many more, each with meaning, pronunciation and traditional significance.",
+  },
+  {
+    q: "Can I use Bhakti in Hindi and Hinglish?",
+    a: "Bhakti is written for an English and Hinglish audience, so the mantras, meanings and guidance feel natural whether you read in English or Hinglish.",
+  },
+];
 
 export default function HomePage() {
   const todayMantra = mantras[0];
@@ -26,6 +62,7 @@ export default function HomePage() {
 
   return (
     <div className="container space-y-10 py-6 lg:py-8">
+      <JsonLd data={faqSchema(HOME_FAQS)} />
       {/* Greeting hero */}
       <GreetingHero />
 

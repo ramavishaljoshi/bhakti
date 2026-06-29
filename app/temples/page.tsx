@@ -2,12 +2,33 @@ import Link from "next/link";
 import { Landmark, MapPin, Clock, CalendarDays } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { temples } from "@/lib/data/temples";
+import { buildMetadata, breadcrumbSchema } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
-export const metadata = { title: "Sacred Temples — Bhakti" };
+export const metadata = buildMetadata({
+  title: "Sacred Temples of India — History, Timings & Darshan Guide",
+  description:
+    "Discover famous Hindu temples across India — deities, history, timings, dress code and how to reach. Kedarnath se Tirupati tak, har mandir ki poori jaankari.",
+  path: "/temples",
+  keywords: [
+    "temples in india",
+    "famous hindu temples",
+    "temple timings",
+    "darshan guide",
+    "kedarnath",
+    "char dham",
+  ],
+});
 
 export default function TemplesPage() {
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Temples", path: "/temples" },
+        ])}
+      />
       <PageHeader
         title="Sacred Temples"
         description="Discover India's most revered temples — their deities, history, timings and how to visit."

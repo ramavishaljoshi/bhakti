@@ -12,6 +12,13 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { festivals, getFestivalBySlug } from "@/lib/data/festivals";
+import {
+  buildMetadata,
+  breadcrumbSchema,
+  faqSchema,
+  articleSchema,
+} from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export function generateStaticParams() {
   return festivals.map((f) => ({ slug: f.slug }));
@@ -19,7 +26,26 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const f = getFestivalBySlug(params.slug);
-  return { title: f ? `${f.name} — Bhakti` : "Festival — Bhakti" };
+  if (!f)
+    return buildMetadata({
+      title: "Festival",
+      description: "Hindu festival — story, significance and puja vidhi.",
+      path: `/festivals/${params.slug}`,
+    });
+  return buildMetadata({
+    title: `${f.name} — Date, Story, Significance & Puja Vidhi`,
+    description: `${f.name} (${f.date}): ${f.whyCelebrate}`.slice(0, 155),
+    path: `/festivals/${f.slug}`,
+    image: f.image,
+    type: "article",
+    keywords: [
+      f.name.toLowerCase(),
+      `${f.name.toLowerCase()} date`,
+      `${f.name.toLowerCase()} significance`,
+      `${f.name.toLowerCase()} puja vidhi`,
+      "hindu festival",
+    ],
+  });
 }
 
 export default function FestivalDetailPage({
@@ -32,6 +58,22 @@ export default function FestivalDetailPage({
 
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={[
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Festivals", path: "/festivals" },
+            { name: festival.name, path: `/festivals/${festival.slug}` },
+          ]),
+          articleSchema({
+            headline: `${festival.name} — Story, Significance & Puja Vidhi`,
+            description: festival.whyCelebrate,
+            path: `/festivals/${festival.slug}`,
+            image: festival.image,
+          }),
+          ...(festival.faqs?.length ? [faqSchema(festival.faqs)] : []),
+        ]}
+      />
       <PageHeader title={festival.name} backHref="/festivals" />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
