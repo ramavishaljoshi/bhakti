@@ -2,6 +2,14 @@
   "name": "bhakti-by-agentic-vani",
   "version": "1.0.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 91",
+    "edge >= 91",
+    "firefox >= 90",
+    "safari >= 14.1",
+    "not dead",
+    "not op_mini all"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -31,6 +39,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.40",
+    "sharp": "^0.35.2",
     "tailwindcss": "^3.4.7",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.5.4"
