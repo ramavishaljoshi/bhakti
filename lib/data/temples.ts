@@ -488,5 +488,10 @@ export const temples: Temple[] = [
 export const getTempleBySlug = (slug: string) =>
   temples.find((t) => t.slug === slug);
 
+// Match by display name (case-insensitive) — resolves cross-entity references
+// that store temple names rather than slugs (e.g. gods.temples, mantras).
+export const getTempleByName = (name: string) =>
+  temples.find((t) => t.name.toLowerCase() === name.toLowerCase());
+
 export const getTemplesByState = (state: string) =>
   temples.filter((t) => t.state === state);

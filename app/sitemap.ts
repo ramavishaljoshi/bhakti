@@ -4,6 +4,7 @@ import { mantras } from "@/lib/data/mantras";
 import { temples } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { intentions } from "@/lib/data/intentions";
+import { gitaChapters } from "@/lib/data/gita";
 
 // Static-export sitemap (emitted as /sitemap.xml at build time). Lists every
 // public, indexable route. Auth/profile routes are intentionally excluded.
@@ -18,6 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/temples", priority: 0.9, freq: "weekly" },
     { path: "/festivals", priority: 0.9, freq: "weekly" },
     { path: "/intentions", priority: 0.8, freq: "monthly" },
+    { path: "/gita", priority: 0.8, freq: "monthly" },
+    { path: "/gods", priority: 0.9, freq: "weekly" },
     { path: "/jap", priority: 0.7, freq: "monthly" },
     { path: "/ai-guru", priority: 0.7, freq: "monthly" },
     { path: "/about", priority: 0.5, freq: "yearly" },
@@ -43,6 +46,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
   for (const i of intentions) {
     entries.push({ url: url(`/intentions/${i.id}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const c of gitaChapters) {
+    entries.push({ url: url(`/gita/${c.number}`), changeFrequency: "monthly", priority: 0.6 });
   }
 
   return entries;

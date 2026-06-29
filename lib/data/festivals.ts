@@ -635,3 +635,8 @@ export const festivals: Festival[] = [...festivalList].sort(
 
 export const getFestivalBySlug = (slug: string) =>
   festivals.find((f) => f.slug === slug);
+
+// Match by display name (case-insensitive) — resolves cross-entity references
+// that store festival names rather than slugs (e.g. gods.festivals).
+export const getFestivalByName = (name: string) =>
+  festivals.find((f) => f.name.toLowerCase() === name.toLowerCase());

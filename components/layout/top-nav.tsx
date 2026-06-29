@@ -20,12 +20,13 @@ function initials(name: string) {
 
 const links = [
   { label: "Home", href: "/" },
+  { label: "Gods", href: "/gods" },
   { label: "Mantras", href: "/mantras" },
   { label: "Temples", href: "/temples" },
   { label: "Festivals", href: "/festivals" },
-  { label: "Chalisa", href: "/mantras" },
+  { label: "Gita", href: "/gita" },
+  { label: "Chalisa", href: "/mantras/hanuman-chalisa" },
   { label: "AI Guru", href: "/ai-guru" },
-  { label: "Profile", href: "/profile" },
 ];
 
 function ProfileMenu() {
