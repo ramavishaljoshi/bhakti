@@ -56,7 +56,10 @@ export interface Festival {
   id: string;
   slug: string;
   name: string;
+  /** Human-readable date label, e.g. "October / November". */
   date: string;
+  /** Machine-readable date of this year's observance (YYYY-MM-DD), for Event schema. */
+  isoDate?: string;
   story: string;
   whyCelebrate: string;
   pujaVidhi: string[];

@@ -397,7 +397,6 @@ export default function NaamJaapCounter() {
   const [deityImage, setDeityImage] = useState("");
   const [showExport, setShowExport] = useState(false);
   const [showReset, setShowReset] = useState(false);
-  const [showMobileTools, setShowMobileTools] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -773,9 +772,6 @@ export default function NaamJaapCounter() {
           </div>
 
           <div className="counter-under-actions" aria-label="Counter actions">
-            <button className="chip mantra-trigger" onClick={() => setShowMobileTools(true)}>
-              {L.mantra}
-            </button>
             <button
               className="chip fullscreen-trigger"
               onClick={() => {
@@ -802,24 +798,6 @@ export default function NaamJaapCounter() {
           {toolsPanels}
         </aside>
       </div>
-
-      {showMobileTools ? (
-        <div className="mobile-tools-backdrop" role="dialog" aria-modal="true" aria-label={L.mantra}>
-          <button className="mobile-tools-scrim" aria-label={L.close} onClick={() => setShowMobileTools(false)} />
-          <div className="mobile-tools-sheet">
-            <div className="mobile-tools-head">
-              <div>
-                <strong>{L.mantra}</strong>
-                <span>{L.mantra} · {L.background}</span>
-              </div>
-              <button className="chip" onClick={() => setShowMobileTools(false)}>
-                {L.close}
-              </button>
-            </div>
-            <div className="side-stack mobile-tools-stack">{toolsPanels}</div>
-          </div>
-        </div>
-      ) : null}
 
       {showExport ? (
         <div className="modal-backdrop" role="dialog" aria-modal="true">

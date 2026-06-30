@@ -86,41 +86,5 @@ export const shortcutTints = [
   "text-teal-500 bg-tint-mint",
 ];
 
-export const articles = [
-  {
-    id: "a1",
-    slug: "power-of-daily-jap",
-    title: "The Power of Daily Jap: Why Repetition Heals the Mind",
-    excerpt: "Discover how the simple act of repeating a mantra can rewire your mind for calm and focus.",
-    category: "Practice",
-    readTime: "5 min",
-    image: "https://picsum.photos/seed/article-jap/800/500",
-    content:
-      "Jap, the repetition of a sacred mantra, is one of the oldest contemplative practices in the world. Modern neuroscience suggests that rhythmic repetition calms the nervous system, lowers cortisol, and helps anchor wandering attention. In this article we explore the tradition and the science behind daily jap, and how to build a sustainable practice.",
-  },
-  {
-    id: "a2",
-    slug: "understanding-bhagavad-gita",
-    title: "Understanding the Bhagavad Gita in Modern Life",
-    excerpt: "The 5,000-year-old conversation that still answers our deepest questions about purpose.",
-    category: "Wisdom",
-    readTime: "8 min",
-    image: "https://picsum.photos/seed/article-gita/800/500",
-    content:
-      "The Bhagavad Gita is not merely a religious text — it is a manual for living with clarity amid chaos. Its central teaching, to act without attachment to results, speaks directly to the anxieties of modern professional life. Here we unpack its core lessons for the contemporary seeker.",
-  },
-  {
-    id: "a3",
-    slug: "meaning-of-aarti",
-    title: "The Meaning Behind the Evening Aarti",
-    excerpt: "Why we wave a lamp before the divine, and what each gesture symbolises.",
-    category: "Rituals",
-    readTime: "4 min",
-    image: "https://picsum.photos/seed/article-aarti/800/500",
-    content:
-      "Aarti, the ritual of waving a lit lamp before a deity, is rich with symbolism. The flame represents the inner light of awareness, the circular motion the cycle of life, and the collective singing the dissolution of the ego into devotion.",
-  },
-];
-
-export const getArticleBySlug = (slug: string) =>
-  articles.find((a) => a.slug === slug);
+// Articles now live in lib/data/articles.ts (richer structure + Hinglish
+// intent targeting). dailyArticle above links to one of those slugs.

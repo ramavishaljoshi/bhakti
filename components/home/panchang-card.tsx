@@ -1,12 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight, Quote } from "lucide-react";
 import { Icon } from "@/components/shared/icon";
 import { cn } from "@/lib/utils";
-import { panchang } from "@/lib/data/misc";
+import { usePanchang } from "@/lib/use-panchang";
+import type { PanchangItem } from "@/lib/data/misc";
 
-export function PanchangCard() {
+export function PanchangCard({ initial }: { initial?: PanchangItem[] }) {
+  const panchang = usePanchang(initial);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -18,9 +22,12 @@ export function PanchangCard() {
         <h3 className="flex items-center gap-2 font-display font-semibold">
           <span className="text-saffron-500">📅</span> Today&apos;s Panchang
         </h3>
-        <button className="flex items-center gap-0.5 text-xs font-semibold text-saffron-600 dark:text-saffron-400">
+        <Link
+          href="/panchang"
+          className="flex items-center gap-0.5 text-xs font-semibold text-saffron-600 dark:text-saffron-400"
+        >
           View All <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        </Link>
       </div>
 
       <div className="space-y-3">

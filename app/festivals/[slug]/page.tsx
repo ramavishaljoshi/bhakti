@@ -19,7 +19,19 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const f = getFestivalBySlug(params.slug);
-  return { title: f ? `${f.name} — Bhakti` : "Festival — Bhakti" };
+  if (!f) return { title: "Festival — Bhakti" };
+  const description = `${f.whyCelebrate} ${f.name} ${f.date}.`.trim();
+  return {
+    title: f.name,
+    description,
+    alternates: { canonical: `/festivals/${f.slug}` },
+    openGraph: {
+      title: f.name,
+      description,
+      type: "article",
+      images: [f.image],
+    },
+  };
 }
 
 export default function FestivalDetailPage({
@@ -30,8 +42,53 @@ export default function FestivalDetailPage({
   const festival = getFestivalBySlug(params.slug);
   if (!festival) notFound();
 
+  const eventJsonLd = festival.isoDate
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        name: festival.name,
+        startDate: festival.isoDate,
+        eventAttendanceMode:
+          "https://schema.org/MixedEventAttendanceMode",
+        eventStatus: "https://schema.org/EventScheduled",
+        description: festival.whyCelebrate,
+        image: festival.image,
+        location: {
+          "@type": "Place",
+          name: "India",
+          address: { "@type": "PostalAddress", addressCountry: "IN" },
+        },
+      }
+    : null;
+
+  const faqJsonLd =
+    festival.faqs?.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: festival.faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }
+      : null;
+
   return (
     <div className="container py-6 lg:py-10">
+      {eventJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+        />
+      )}
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+
       <PageHeader title={festival.name} backHref="/festivals" />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">

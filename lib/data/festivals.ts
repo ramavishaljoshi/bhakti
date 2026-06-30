@@ -32,6 +32,7 @@ const festivalList: Festival[] = [
     slug: "diwali",
     name: "Diwali",
     date: "October / November",
+    isoDate: "2026-11-08",
     story:
       "Diwali, the festival of lights, celebrates the return of Lord Rama to Ayodhya after fourteen years of exile and his victory over Ravana. Rows of lamps lit the path to welcome him home.",
     whyCelebrate:
@@ -56,6 +57,7 @@ const festivalList: Festival[] = [
     slug: "holi",
     name: "Holi",
     date: "March",
+    isoDate: "2026-03-04",
     story:
       "Holi celebrates the divine love of Radha and Krishna and the legend of Prahlad and Holika, where devotion triumphed over the demoness's fire, symbolising the burning away of evil.",
     whyCelebrate:
@@ -80,6 +82,7 @@ const festivalList: Festival[] = [
     slug: "navratri",
     name: "Navratri",
     date: "September / October",
+    isoDate: "2026-10-11",
     story:
       "Navratri honours Goddess Durga's nine forms and her nine-day battle with the demon Mahishasura, culminating in her victory on the tenth day, Vijayadashami.",
     whyCelebrate:
@@ -104,6 +107,7 @@ const festivalList: Festival[] = [
     slug: "janmashtami",
     name: "Janmashtami",
     date: "August / September",
+    isoDate: "2026-09-04",
     story:
       "Janmashtami celebrates the birth of Lord Krishna at midnight in Mathura, who incarnated to rid the world of the tyrant Kamsa and re-establish dharma.",
     whyCelebrate:
@@ -128,6 +132,7 @@ const festivalList: Festival[] = [
     slug: "maha-shivaratri",
     name: "Maha Shivaratri",
     date: "February / March",
+    isoDate: "2026-02-15",
     story:
       "Maha Shivaratri, the 'Great Night of Shiva', marks the night Shiva performed the cosmic dance and, by some accounts, his marriage to Parvati.",
     whyCelebrate:
@@ -152,6 +157,7 @@ const festivalList: Festival[] = [
     slug: "ganesh-chaturthi",
     name: "Ganesh Chaturthi",
     date: "August / September",
+    isoDate: "2026-09-14",
     story:
       "Ganesh Chaturthi celebrates the birth of Lord Ganesha, the remover of obstacles. Clay idols are installed, worshipped and immersed in water over ten days.",
     whyCelebrate:
@@ -176,6 +182,7 @@ const festivalList: Festival[] = [
     slug: "raksha-bandhan",
     name: "Raksha Bandhan",
     date: "August",
+    isoDate: "2026-08-28",
     story:
       "Raksha Bandhan, also called Rakhi, celebrates the sacred bond between brothers and sisters. A sister ties a rakhi on her brother's wrist, praying for his well-being, while he vows to protect her. Legends recall Draupadi tying a cloth on Krishna's wrist and Krishna's promise to protect her.",
     whyCelebrate:
@@ -206,6 +213,7 @@ const festivalList: Festival[] = [
     slug: "dussehra",
     name: "Dussehra",
     date: "September / October",
+    isoDate: "2026-10-20",
     story:
       "Dussehra, also called Vijayadashami, marks Lord Rama's victory over the demon king Ravana and Goddess Durga's triumph over the buffalo demon Mahishasura. Towering effigies of Ravana, Meghnad and Kumbhakarna are set ablaze to celebrate the defeat of evil.",
     whyCelebrate:
@@ -236,6 +244,7 @@ const festivalList: Festival[] = [
     slug: "karwa-chauth",
     name: "Karwa Chauth",
     date: "October / November",
+    isoDate: "2026-10-29",
     story:
       "Karwa Chauth is a one-day festival when married women observe a fast from sunrise to moonrise for the long life and well-being of their husbands. The fast is broken only after sighting the moon and viewing the husband through a sieve.",
     whyCelebrate:
@@ -266,6 +275,7 @@ const festivalList: Festival[] = [
     slug: "dhanteras",
     name: "Dhanteras",
     date: "October / November",
+    isoDate: "2026-11-06",
     story:
       "Dhanteras, the first day of Diwali, honours Lord Dhanvantari, the physician of the gods who emerged from the cosmic ocean with the nectar of immortality, and Goddess Lakshmi. Buying gold, silver or new utensils on this day is considered auspicious.",
     whyCelebrate:
@@ -296,6 +306,7 @@ const festivalList: Festival[] = [
     slug: "bhai-dooj",
     name: "Bhai Dooj",
     date: "October / November",
+    isoDate: "2026-11-11",
     story:
       "Bhai Dooj, celebrated two days after Diwali, honours the bond between brothers and sisters. Sisters apply a tilak on their brothers' foreheads and pray for their long life, recalling the legend of Yamuna welcoming her brother Yama, the lord of death.",
     whyCelebrate:
@@ -326,6 +337,7 @@ const festivalList: Festival[] = [
     slug: "christmas",
     name: "Christmas",
     date: "25 December",
+    isoDate: "2026-12-25",
     story:
       "Christmas celebrates the birth of Jesus Christ in Bethlehem. Homes and churches are decorated with lights, stars and nativity scenes, and families gather to share love, joy and goodwill. In India, Christmas is celebrated with great warmth across communities.",
     whyCelebrate:
@@ -356,6 +368,7 @@ const festivalList: Festival[] = [
     slug: "makar-sankranti",
     name: "Makar Sankranti",
     date: "14 January",
+    isoDate: "2026-01-14",
     story:
       "Makar Sankranti marks the sun's transition into Capricorn (Makara) and the start of longer, warmer days. Celebrated as Pongal in the South, Lohri in Punjab and Uttarayan in Gujarat, it is a harvest festival famous for colourful kite-flying and til-gud sweets.",
     whyCelebrate:
@@ -386,6 +399,7 @@ const festivalList: Festival[] = [
     slug: "vasant-panchami",
     name: "Vasant Panchami",
     date: "January / February",
+    isoDate: "2026-01-23",
     story:
       "Vasant Panchami heralds the arrival of spring and is dedicated to Goddess Saraswati, the deity of knowledge, music and arts. Devotees wear yellow, worship Saraswati, and children are often taught their first letters on this auspicious day.",
     whyCelebrate:
@@ -416,6 +430,7 @@ const festivalList: Festival[] = [
     slug: "ram-navami",
     name: "Ram Navami",
     date: "March / April",
+    isoDate: "2026-03-26",
     story:
       "Ram Navami celebrates the birth of Lord Rama, the seventh avatar of Vishnu, born to King Dasharatha and Queen Kausalya in Ayodhya. Devotees read the Ramayana, sing bhajans and re-enact scenes from Lord Rama's life.",
     whyCelebrate:
@@ -446,6 +461,7 @@ const festivalList: Festival[] = [
     slug: "hanuman-jayanti",
     name: "Hanuman Jayanti",
     date: "April",
+    isoDate: "2026-04-02",
     story:
       "Hanuman Jayanti celebrates the birth of Lord Hanuman, the mighty devotee of Lord Rama and symbol of strength, courage and selfless devotion. Devotees throng Hanuman temples, recite the Hanuman Chalisa and offer sindoor and laddoos.",
     whyCelebrate:
@@ -476,6 +492,7 @@ const festivalList: Festival[] = [
     slug: "baisakhi",
     name: "Baisakhi",
     date: "13 April",
+    isoDate: "2026-04-14",
     story:
       "Baisakhi (Vaisakhi) is a spring harvest festival and the Sikh New Year. It commemorates the founding of the Khalsa Panth by Guru Gobind Singh in 1699. Punjab comes alive with bhangra, gidda and vibrant fairs celebrating the bountiful harvest.",
     whyCelebrate:
@@ -506,6 +523,7 @@ const festivalList: Festival[] = [
     slug: "guru-purnima",
     name: "Guru Purnima",
     date: "July",
+    isoDate: "2026-07-29",
     story:
       "Guru Purnima is dedicated to honouring one's spiritual and academic teachers (gurus). It also marks the birth of sage Veda Vyasa, who compiled the Vedas and authored the Mahabharata. Disciples express gratitude to their gurus on this full-moon day.",
     whyCelebrate:
@@ -536,6 +554,7 @@ const festivalList: Festival[] = [
     slug: "govardhan-puja",
     name: "Govardhan Puja",
     date: "October / November",
+    isoDate: "2026-11-10",
     story:
       "Govardhan Puja, celebrated the day after Diwali, recalls Lord Krishna lifting the Govardhan hill on his little finger to shelter the people of Vrindavan from torrential rains sent by Indra. Devotees prepare a mountain of food (Annakut) as an offering.",
     whyCelebrate:
@@ -566,6 +585,7 @@ const festivalList: Festival[] = [
     slug: "chhath-puja",
     name: "Chhath Puja",
     date: "October / November",
+    isoDate: "2026-11-15",
     story:
       "Chhath Puja is an ancient festival devoted to the Sun God (Surya) and Chhathi Maiya, observed mainly in Bihar, Jharkhand and eastern UP. Devotees observe rigorous fasts and offer arghya to the setting and rising sun while standing in water.",
     whyCelebrate:
@@ -596,6 +616,7 @@ const festivalList: Festival[] = [
     slug: "guru-nanak-jayanti",
     name: "Guru Nanak Jayanti",
     date: "November",
+    isoDate: "2026-11-24",
     story:
       "Guru Nanak Jayanti, also called Gurpurab, celebrates the birth of Guru Nanak Dev Ji, the founder of Sikhism and the first of the ten Sikh Gurus. Gurudwaras glow with lights, and devotees hold processions, kirtan and langar in his honour.",
     whyCelebrate:

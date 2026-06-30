@@ -19,10 +19,14 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">About</Link>
-          <Link href="/" className="hover:text-foreground">Privacy</Link>
-          <Link href="/" className="hover:text-foreground">Terms</Link>
-          <Link href="/" className="hover:text-foreground">Contact</Link>
+          <Link href="/articles" className="hover:text-foreground">Articles</Link>
+          <Link href="/vrat" className="hover:text-foreground">Vrat</Link>
+          <Link href="/panchang" className="hover:text-foreground">Panchang</Link>
+          <Link href="/about" className="hover:text-foreground">About</Link>
+          <Link href="/editorial-policy" className="hover:text-foreground">Editorial Policy</Link>
+          <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+          <Link href="/terms" className="hover:text-foreground">Terms</Link>
+          <Link href="/contact" className="hover:text-foreground">Contact</Link>
         </div>
       </div>
       <div className="border-t border-border py-4 pb-28 lg:pb-4">

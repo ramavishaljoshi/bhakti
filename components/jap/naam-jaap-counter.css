@@ -133,21 +133,17 @@
   gap: 14px;
 }
 
-/* Persistent tools panel (mantra options etc.) on the right, desktop only.
-   On mobile it stays in the popup sheet via the "Mantra" trigger. */
+/* Persistent tools panel (mantra options etc.). On desktop it sits on the
+   right; on mobile it stacks inline directly below the counter so the mantra
+   list is always visible (no popup, no trigger button). */
 .side-stack-desktop {
-  display: none;
+  display: grid;
 }
 
 @media (min-width: 980px) {
   .side-stack-desktop {
-    display: grid;
     position: sticky;
     top: 16px;
-  }
-  /* The popup trigger is redundant when the panel is always visible. */
-  .counter-under-actions .mantra-trigger {
-    display: none;
   }
 }
 
@@ -363,6 +359,9 @@
   place-items: center;
   width: min(49%, 300px);
   aspect-ratio: 1;
+  /* Keep text inside the round border so long names (e.g. Waheguru) don't get
+     sliced by the circle edge. */
+  padding: 0 12%;
   border: 2px solid color-mix(in srgb, var(--blue) 50%, transparent);
   border-radius: 50%;
   background: radial-gradient(circle, color-mix(in srgb, var(--bg-2) 86%, transparent), color-mix(in srgb, var(--bg-1) 62%, transparent));
@@ -371,9 +370,12 @@
 }
 
 .mantra-line {
+  max-width: 100%;
   color: var(--ink-soft);
   font-family: var(--font-serif);
   font-size: clamp(0.95rem, 2vw, 1.25rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .mantra-line span {
@@ -843,6 +845,29 @@
 @media (max-width: 560px) {
   .counter-app {
     padding-top: 2px;
+  }
+
+  /* Mantra options: one per row on mobile for easy tapping. */
+  .mantra-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mantra-list .tag {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .mantra-list .tag small {
+    display: inline;
+    font-size: 0.78rem;
   }
 
   .counter-topbar {

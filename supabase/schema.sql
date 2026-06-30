@@ -102,6 +102,31 @@ create policy "Jap logs are owner-only"
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
+-- ---------------------------------------------------------------------------
+-- Panchang: one row per (date, location). Publicly readable so the homepage
+-- card and /panchang page can fetch today's values. Rows are managed by an
+-- admin / seed job; when no row exists for today the app falls back to the
+-- values computed locally from `lib/panchang.ts`.
+-- ---------------------------------------------------------------------------
+create table if not exists public.panchang (
+  date        date not null,
+  location    text not null default 'New Delhi',
+  tithi       text not null,
+  nakshatra   text not null,
+  rahu_kaal   text not null,
+  sunrise     text not null,
+  sunset      text not null,
+  updated_at  timestamptz not null default now(),
+  primary key (date, location)
+);
+
+alter table public.panchang enable row level security;
+
+drop policy if exists "Panchang is publicly readable" on public.panchang;
+create policy "Panchang is publicly readable"
+  on public.panchang for select
+  using (true);
+
 -- Atomic increment of today's jap count for the signed-in user.
 create or replace function public.bump_jap(p_delta integer, p_mantra text default null)
 returns void

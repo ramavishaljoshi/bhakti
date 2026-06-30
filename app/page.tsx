@@ -18,11 +18,15 @@ import { mantras } from "@/lib/data/mantras";
 import { temples } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { states } from "@/lib/data/misc";
+import { computePanchang } from "@/lib/panchang";
 
 export default function HomePage() {
   const todayMantra = mantras[0];
   const exploreTemples = temples.slice(0, 4);
   const featuredFestivals = festivals.slice(0, 4);
+  // Computed on the server at build time so `mhah-panchang` stays out of the
+  // client bundle; the card refines it from Supabase on the client if present.
+  const panchang = computePanchang(new Date());
 
   return (
     <div className="container space-y-10 py-6 lg:py-8">
@@ -35,7 +39,7 @@ export default function HomePage() {
       {/* Today's Progress: Jap card + Today's Panchang */}
       <section className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
         <JapProgressCard mantraName={todayMantra.name} />
-        <PanchangCard />
+        <PanchangCard initial={panchang} />
       </section>
 
       {/* Intentions */}
