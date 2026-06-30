@@ -488,5 +488,31 @@ export const temples: Temple[] = [
 export const getTempleBySlug = (slug: string) =>
   temples.find((t) => t.slug === slug);
 
+// Match by display name (case-insensitive) — resolves cross-entity references
+// that store temple names rather than slugs (e.g. gods.temples, mantras).
+export const getTempleByName = (name: string) =>
+  temples.find((t) => t.name.toLowerCase() === name.toLowerCase());
+
 export const getTemplesByState = (state: string) =>
   temples.filter((t) => t.state === state);
+
+// URL-safe slug for a state name, e.g. "Tamil Nadu" -> "tamil-nadu",
+// "Jammu & Kashmir" -> "jammu-and-kashmir".
+export const stateSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+// Every state that has at least one temple, with its temple count and slug.
+export const getAllStates = () => {
+  const counts = new Map<string, number>();
+  for (const t of temples) counts.set(t.state, (counts.get(t.state) ?? 0) + 1);
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, count, slug: stateSlug(name) }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export const getStateBySlug = (slug: string) =>
+  getAllStates().find((s) => s.slug === slug);

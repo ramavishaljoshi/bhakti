@@ -10,9 +10,31 @@ import {
   INTENTION_DISCLAIMER,
 } from "@/lib/data/intentions";
 import { getMantraBySlug } from "@/lib/data/mantras";
+import { buildMetadata, breadcrumbSchema } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 
 export function generateStaticParams() {
   return intentions.map((i) => ({ slug: i.id }));
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const intention = getIntentionById(params.slug);
+  if (!intention)
+    return buildMetadata({
+      title: "Mantras by Intention",
+      description: "Discover mantras traditionally associated with your intention.",
+      path: `/intentions/${params.slug}`,
+    });
+  return buildMetadata({
+    title: `Mantras for ${intention.label} — Chant for ${intention.label}`,
+    description: `${intention.description} ${intention.label} ke liye sujhaaye gaye mantra — meaning aur vidhi ke saath.`.slice(0, 155),
+    path: `/intentions/${intention.id}`,
+    keywords: [
+      `mantra for ${intention.label.toLowerCase()}`,
+      `mantras for ${intention.label.toLowerCase()}`,
+      "mantra jap",
+    ],
+  });
 }
 
 export default function IntentionDetailPage({
@@ -29,6 +51,13 @@ export default function IntentionDetailPage({
 
   return (
     <div className="container py-6 lg:py-10">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Intentions", path: "/intentions" },
+          { name: intention.label, path: `/intentions/${intention.id}` },
+        ])}
+      />
       <PageHeader title={`Mantras for ${intention.label}`} backHref="/intentions" />
 
       <div

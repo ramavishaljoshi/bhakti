@@ -1,6 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
+import type { CSSProperties } from "react";
 
 type Star = {
   top: number; // 0-100 (% of column height)
@@ -57,29 +55,25 @@ function StarColumn({ side, stars }: { side: "left" | "right"; stars: Star[] }) 
       aria-hidden
     >
       {stars.map((s, i) => (
-        <motion.span
+        <span
           key={`${side}-${i}`}
-          className="absolute text-saffron-400 dark:text-saffron-300"
-          style={{
-            top: `${s.top}%`,
-            left: `${s.left}%`,
-            opacity: s.opacity,
-            filter: "drop-shadow(0 0 6px rgba(255, 153, 51, 0.45))",
-          }}
-          animate={{
-            y: [0, s.drift, 0],
-            opacity: [s.opacity * 0.35, s.opacity, s.opacity * 0.35],
-            rotate: [0, side === "left" ? 25 : -25, 0],
-          }}
-          transition={{
-            duration: s.duration,
-            delay: s.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className="decor-anim absolute text-saffron-400 dark:text-saffron-300"
+          style={
+            {
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              filter: "drop-shadow(0 0 6px rgba(255, 153, 51, 0.45))",
+              "--drift": `${s.drift}px`,
+              "--rot": `${side === "left" ? 25 : -25}deg`,
+              "--op-min": s.opacity * 0.35,
+              "--op-max": s.opacity,
+              animation: `star-twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+              willChange: "transform, opacity",
+            } as CSSProperties
+          }
         >
           <StarShape size={s.size} />
-        </motion.span>
+        </span>
       ))}
     </div>
   );

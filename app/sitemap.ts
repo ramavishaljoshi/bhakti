@@ -1,66 +1,79 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, CONTENT_UPDATED } from "@/lib/site";
-import { articles } from "@/lib/data/articles";
-import { festivals } from "@/lib/data/festivals";
+import { SITE_URL } from "@/lib/seo";
 import { mantras } from "@/lib/data/mantras";
-import { temples } from "@/lib/data/temples";
+import { temples, getAllStates } from "@/lib/data/temples";
+import { festivals } from "@/lib/data/festivals";
 import { intentions } from "@/lib/data/intentions";
+import { gitaChapters } from "@/lib/data/gita";
+import { articles } from "@/lib/data/articles";
 import { vrats } from "@/lib/data/vrat";
 import { authors } from "@/lib/data/authors";
 
-const lastModified = CONTENT_UPDATED;
+// Static-export sitemap (emitted as /sitemap.xml at build time). Lists every
+// public, indexable route. Auth/profile routes are intentionally excluded.
+export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const url = (path: string) => `${SITE_URL}${path}`;
+  const url = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
 
-  // Top-level static routes worth indexing (skips auth/profile utility pages).
-  const staticRoutes: Array<[string, number]> = [
-    ["/", 1],
-    ["/mantras", 0.9],
-    ["/temples", 0.9],
-    ["/festivals", 0.9],
-    ["/vrat", 0.9],
-    ["/articles", 0.9],
-    ["/panchang", 0.8],
-    ["/intentions", 0.7],
-    ["/ai-guru", 0.6],
-    ["/about", 0.5],
-    ["/contact", 0.4],
-    ["/editorial-policy", 0.4],
-    ["/privacy", 0.2],
-    ["/terms", 0.2],
+  const staticRoutes: {
+    path: string;
+    priority: number;
+    freq: MetadataRoute.Sitemap[number]["changeFrequency"];
+  }[] = [
+    { path: "/", priority: 1.0, freq: "daily" },
+    { path: "/mantras", priority: 0.9, freq: "weekly" },
+    { path: "/temples", priority: 0.9, freq: "weekly" },
+    { path: "/festivals", priority: 0.9, freq: "weekly" },
+    { path: "/vrat", priority: 0.9, freq: "weekly" },
+    { path: "/articles", priority: 0.9, freq: "weekly" },
+    { path: "/states", priority: 0.8, freq: "monthly" },
+    { path: "/intentions", priority: 0.8, freq: "monthly" },
+    { path: "/gita", priority: 0.8, freq: "monthly" },
+    { path: "/gods", priority: 0.9, freq: "weekly" },
+    { path: "/panchang", priority: 0.8, freq: "daily" },
+    { path: "/jap", priority: 0.7, freq: "monthly" },
+    { path: "/ai-guru", priority: 0.7, freq: "monthly" },
+    { path: "/about", priority: 0.5, freq: "yearly" },
+    { path: "/contact", priority: 0.5, freq: "yearly" },
+    { path: "/editorial-policy", priority: 0.4, freq: "yearly" },
+    { path: "/privacy", priority: 0.3, freq: "yearly" },
+    { path: "/terms", priority: 0.3, freq: "yearly" },
   ];
 
-  const entries: MetadataRoute.Sitemap = staticRoutes.map(([path, priority]) => ({
-    url: url(path),
-    lastModified,
-    changeFrequency: path === "/panchang" ? "daily" : "weekly",
-    priority,
+  const entries: MetadataRoute.Sitemap = staticRoutes.map((r) => ({
+    url: url(r.path),
+    changeFrequency: r.freq,
+    priority: r.priority,
   }));
 
-  const collection = (
-    items: { slug: string }[] | { id: string }[],
-    base: string,
-    key: "slug" | "id" = "slug",
-    priority = 0.7
-  ) => {
-    for (const it of items as Array<Record<string, string>>) {
-      entries.push({
-        url: url(`${base}/${it[key]}`),
-        lastModified,
-        changeFrequency: "monthly",
-        priority,
-      });
-    }
-  };
-
-  collection(mantras, "/mantras");
-  collection(temples, "/temples");
-  collection(festivals, "/festivals");
-  collection(vrats, "/vrat");
-  collection(articles, "/articles", "slug", 0.8);
-  collection(intentions, "/intentions", "id", 0.6);
-  collection(authors, "/authors", "slug", 0.3);
+  for (const m of mantras) {
+    entries.push({ url: url(`/mantras/${m.slug}`), changeFrequency: "monthly", priority: 0.7 });
+  }
+  for (const t of temples) {
+    entries.push({ url: url(`/temples/${t.slug}`), changeFrequency: "monthly", priority: 0.7 });
+  }
+  for (const f of festivals) {
+    entries.push({ url: url(`/festivals/${f.slug}`), changeFrequency: "monthly", priority: 0.7 });
+  }
+  for (const v of vrats) {
+    entries.push({ url: url(`/vrat/${v.slug}`), changeFrequency: "monthly", priority: 0.7 });
+  }
+  for (const a of articles) {
+    entries.push({ url: url(`/articles/${a.slug}`), changeFrequency: "monthly", priority: 0.8 });
+  }
+  for (const i of intentions) {
+    entries.push({ url: url(`/intentions/${i.id}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const c of gitaChapters) {
+    entries.push({ url: url(`/gita/${c.number}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const s of getAllStates()) {
+    entries.push({ url: url(`/states/${s.slug}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const au of authors) {
+    entries.push({ url: url(`/authors/${au.slug}`), changeFrequency: "yearly", priority: 0.3 });
+  }
 
   return entries;
 }

@@ -7,8 +7,14 @@ import {
   Users,
 } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = { title: "About — Bhakti" };
+export const metadata = buildMetadata({
+  title: "About Bhakti by Agentic Vani — Our Story & Mission",
+  description:
+    "Bhakti by Agentic Vani brings mantras, gods, temples, festivals and the Gita into one calm, modern app. Jaaniye humari soch aur mission ke baare mein.",
+  path: "/about",
+});
 
 const offerings = [
   {

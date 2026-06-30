@@ -3,18 +3,22 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AppShell } from "@/components/layout/app-shell";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
   SITE_URL,
   SITE_NAME,
-  SITE_DESCRIPTION,
+  SITE_TAGLINE,
   DEFAULT_OG_IMAGE,
-  SAME_AS,
-  absoluteUrl,
-} from "@/lib/site";
+  LOCALE,
+  organizationSchema,
+  websiteSchema,
+} from "@/lib/seo";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  // Only the weights actually used in the UI (400/500/600/700). Dropping the
+  // unused 300 & 800 cuts two woff2 files off the critical request path.
+  weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
   display: "swap",
 });
@@ -22,55 +26,52 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Your Spiritual Companion`,
-    template: `%s | ${SITE_NAME}`,
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s — ${SITE_NAME}`,
   },
-  description: SITE_DESCRIPTION,
+  description:
+    "A premium, mindful Indian spirituality app. Digital jap counter, mantra library, gods, temples, festivals, Bhagavad Gita and your daily spiritual routine — beautifully designed.",
+  applicationName: SITE_NAME,
   keywords: [
     "bhakti",
     "mantra",
-    "jap",
+    "jap counter",
+    "online mantra jap",
+    "hanuman chalisa",
     "meditation",
     "spirituality",
     "hindu",
-    "temple",
-    "vrat",
-    "panchang",
-    "festival",
+    "temples in india",
+    "hindu festivals",
+    "bhagavad gita",
+    "aarti",
   ],
-  alternates: { canonical: "/" },
+  authors: [{ name: "Agentic Vani" }],
+  creator: "Agentic Vani",
+  publisher: SITE_NAME,
+  alternates: { canonical: SITE_URL },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Your Spiritual Companion`,
-    description: SITE_DESCRIPTION,
     url: SITE_URL,
-    images: [{ url: DEFAULT_OG_IMAGE }],
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description:
+      "Your daily spiritual companion — jap counter, mantras, gods, temples, festivals and the Bhagavad Gita. Roz ki bhakti, ek shaant aur premium experience ke saath.",
+    locale: LOCALE,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Your Spiritual Companion`,
-    description: SITE_DESCRIPTION,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description:
+      "Your daily spiritual companion — jap counter, mantras, gods, temples, festivals and the Bhagavad Gita.",
     images: [DEFAULT_OG_IMAGE],
   },
-};
-
-// Sitewide Organization + WebSite structured data (EEAT / brand knowledge panel).
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: absoluteUrl(DEFAULT_OG_IMAGE),
-  description: SITE_DESCRIPTION,
-  ...(SAME_AS.length > 0 ? { sameAs: SAME_AS } : {}),
-};
-
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: SITE_NAME,
-  url: SITE_URL,
 };
 
 export const viewport: Viewport = {
@@ -90,14 +91,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} font-sans`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        <JsonLd data={[organizationSchema(), websiteSchema()]} />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

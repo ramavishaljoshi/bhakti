@@ -18,15 +18,29 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-          <Link href="/articles" className="hover:text-foreground">Articles</Link>
-          <Link href="/vrat" className="hover:text-foreground">Vrat</Link>
-          <Link href="/panchang" className="hover:text-foreground">Panchang</Link>
-          <Link href="/about" className="hover:text-foreground">About</Link>
-          <Link href="/editorial-policy" className="hover:text-foreground">Editorial Policy</Link>
-          <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-          <Link href="/terms" className="hover:text-foreground">Terms</Link>
-          <Link href="/contact" className="hover:text-foreground">Contact</Link>
+        <div className="flex gap-x-12 gap-y-6 text-sm">
+          <nav className="flex flex-col gap-2">
+            <p className="mb-1 font-semibold text-foreground">Explore</p>
+            <Link href="/gods" className="text-muted-foreground hover:text-foreground">Gods</Link>
+            <Link href="/mantras" className="text-muted-foreground hover:text-foreground">Mantras</Link>
+            <Link href="/temples" className="text-muted-foreground hover:text-foreground">Temples</Link>
+            <Link href="/festivals" className="text-muted-foreground hover:text-foreground">Festivals</Link>
+            <Link href="/vrat" className="text-muted-foreground hover:text-foreground">Vrat</Link>
+            <Link href="/articles" className="text-muted-foreground hover:text-foreground">Articles</Link>
+            <Link href="/panchang" className="text-muted-foreground hover:text-foreground">Panchang</Link>
+            <Link href="/gita" className="text-muted-foreground hover:text-foreground">Bhagavad Gita</Link>
+            <Link href="/states" className="text-muted-foreground hover:text-foreground">Temples by State</Link>
+          </nav>
+          <nav className="flex flex-col gap-2">
+            <p className="mb-1 font-semibold text-foreground">More</p>
+            <Link href="/jap" className="text-muted-foreground hover:text-foreground">Jap Counter</Link>
+            <Link href="/intentions" className="text-muted-foreground hover:text-foreground">Intentions</Link>
+            <Link href="/about" className="text-muted-foreground hover:text-foreground">About</Link>
+            <Link href="/editorial-policy" className="text-muted-foreground hover:text-foreground">Editorial Policy</Link>
+            <Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
+            <Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link>
+            <Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link>
+          </nav>
         </div>
       </div>
       <div className="border-t border-border py-4 pb-28 lg:pb-4">

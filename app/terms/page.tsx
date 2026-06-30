@@ -1,7 +1,13 @@
 import { ScrollText } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Terms of Service — Bhakti" };
+export const metadata = buildMetadata({
+  title: "Terms of Service",
+  description:
+    "The terms for using Bhakti by Agentic Vani. Please read these terms before using the app.",
+  path: "/terms",
+});
 
 const sections = [
   {

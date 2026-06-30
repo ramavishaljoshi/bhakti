@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import {
   Sun,
   Moon,
@@ -134,20 +131,22 @@ function NodeVisual({ node }: { node: OrbitNode }) {
 
 function OrbitRing({ ring }: { ring: Ring }) {
   const size = ring.radius * 2;
-  const spin = ring.reverse ? [0, -360] : [0, 360];
-  const counter = ring.reverse ? [0, 360] : [0, -360];
+  // CSS-driven spin: the ring rotates one way, each node counter-rotates the
+  // other way at the same speed so the icons stay upright.
+  const spin = ring.reverse ? "orbit-spin-reverse" : "orbit-spin";
+  const counter = ring.reverse ? "orbit-spin" : "orbit-spin-reverse";
 
   return (
-    <motion.div
-      className="absolute rounded-full border border-saffron-200/10 dark:border-saffron-300/10"
+    <div
+      className="decor-anim absolute rounded-full border border-saffron-200/10 dark:border-saffron-300/10"
       style={{
         width: size,
         height: size,
         left: -ring.radius,
         bottom: -ring.radius,
+        animation: `${spin} ${ring.duration}s linear infinite`,
+        willChange: "transform",
       }}
-      animate={{ rotate: spin }}
-      transition={{ duration: ring.duration, repeat: Infinity, ease: "linear" }}
     >
       {ring.nodes.map((node, i) => (
         // Placement: rotate to the node's angle, then push out to the ring edge.
@@ -159,12 +158,11 @@ function OrbitRing({ ring }: { ring: Ring }) {
           }}
         >
           {/* Counter-rotate (cancels the ring spin) so icons stay upright. */}
-          <motion.div
-            animate={{ rotate: counter }}
-            transition={{
-              duration: ring.duration,
-              repeat: Infinity,
-              ease: "linear",
+          <div
+            className="decor-anim"
+            style={{
+              animation: `${counter} ${ring.duration}s linear infinite`,
+              willChange: "transform",
             }}
           >
             {/* Undo the placement angle so the icon is level at rest. */}
@@ -174,10 +172,10 @@ function OrbitRing({ ring }: { ring: Ring }) {
             >
               <NodeVisual node={node} />
             </div>
-          </motion.div>
+          </div>
         </div>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -188,15 +186,15 @@ export function OrbitField() {
       aria-hidden
     >
       {/* central glow where the orbits converge */}
-      <motion.div
-        className="absolute left-1/2 bottom-0 h-[420px] w-[820px] -translate-x-1/2 translate-y-1/3 rounded-full"
+      <div
+        className="decor-anim absolute left-1/2 bottom-0 h-[420px] w-[820px] rounded-full"
         style={{
           background:
             "radial-gradient(closest-side, rgba(255,153,51,0.22), rgba(167,139,250,0.10) 55%, transparent 78%)",
           filter: "blur(8px)",
+          animation: "glow-pulse 9s ease-in-out infinite",
+          willChange: "transform, opacity",
         }}
-        animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.06, 1] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* the orbiting rings, anchored to the bottom-center of the viewport */}

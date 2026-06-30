@@ -15,10 +15,50 @@ import { TempleCard } from "@/components/cards/temple-card";
 import { FestivalCard } from "@/components/cards/festival-card";
 import { SectionHeader } from "@/components/shared/section-header";
 import { mantras } from "@/lib/data/mantras";
-import { temples } from "@/lib/data/temples";
+import { temples, stateSlug, getStateBySlug } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { states } from "@/lib/data/misc";
 import { computePanchang } from "@/lib/panchang";
+import { buildMetadata } from "@/lib/seo";
+import { FaqSection } from "@/components/shared/faq-section";
+
+export const metadata = buildMetadata({
+  title: "Bhakti by Agentic Vani — Your Spiritual Companion",
+  description:
+    "Chant mantras with a digital jap counter, explore gods, temples, festivals & the Bhagavad Gita. Roz ki bhakti ko banaiye simple, shaant aur premium.",
+  path: "/",
+  keywords: [
+    "online jap counter",
+    "mantra jap app",
+    "hanuman chalisa",
+    "hindu mantras",
+    "bhagavad gita",
+    "daily spiritual routine",
+  ],
+});
+
+const HOME_FAQS = [
+  {
+    q: "What is Bhakti by Agentic Vani?",
+    a: "Bhakti by Agentic Vani is a free, modern Hindu spirituality app with a digital jap (mantra) counter, a mantra library, gods, temples, festivals and the Bhagavad Gita. Simple shabdon mein — aapki roz ki bhakti ke liye ek shaant, premium aur asaan jagah.",
+  },
+  {
+    q: "Is the online mantra jap counter free to use?",
+    a: "Yes, the digital jap counter is completely free. Aap koi bhi mantra chant kar sakte hain, apna daily count aur streak track kar sakte hain, aur sign in karne par progress sab devices par save rehti hai.",
+  },
+  {
+    q: "Which mantras can I chant on Bhakti?",
+    a: "You can chant popular mantras like Om Namah Shivaya, Hare Krishna Maha Mantra, Hanuman Chalisa and the Gayatri Mantra — har mantra ke saath uska meaning, sahi pronunciation aur paramparik mahatva (traditional significance) diya gaya hai.",
+  },
+  {
+    q: "Do I need to know Sanskrit to chant mantras?",
+    a: "Not at all. Har mantra ke saath aasan pronunciation guide aur transliteration hai, isliye beginners bhi shuruaat se hi aaram se aur sahi tarike se chant kar sakte hain.",
+  },
+  {
+    q: "Can I use Bhakti in Hindi and Hinglish?",
+    a: "Yes. Bhakti English aur Hinglish dono audience ke liye likha gaya hai, taaki mantras, meanings aur guidance sab kuch natural lage — chahe aap English mein padhein ya Hinglish mein.",
+  },
+];
 
 export default function HomePage() {
   const todayMantra = mantras[0];
@@ -27,6 +67,10 @@ export default function HomePage() {
   // Computed on the server at build time so `mhah-panchang` stays out of the
   // client bundle; the card refines it from Supabase on the client if present.
   const panchang = computePanchang(new Date());
+  // Only show state cards that have a real /states/[slug] hub (a temple page).
+  const statesWithTemples = states.filter((s) =>
+    Boolean(getStateBySlug(stateSlug(s.name)))
+  );
 
   return (
     <div className="container space-y-10 py-6 lg:py-8">
@@ -107,10 +151,10 @@ export default function HomePage() {
           actionLabel="View all"
         />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          {states.map((state) => (
+          {statesWithTemples.map((state) => (
             <Link
               key={state.name}
-              href={`/temples?state=${encodeURIComponent(state.name)}`}
+              href={`/states/${stateSlug(state.name)}`}
               className="group relative overflow-hidden rounded-3xl border border-border shadow-soft transition-shadow hover:shadow-soft-lg"
             >
               <div className="relative aspect-[3/4]">
@@ -142,6 +186,13 @@ export default function HomePage() {
 
       {/* AI Guru */}
       <AIGuruBanner />
+
+      {/* FAQ — visible answers + FAQPage schema */}
+      <FaqSection
+        title="Frequently Asked Questions"
+        subtitle="Bhakti, mantra jap aur is app ke baare mein aapke sawaalon ke jawaab."
+        faqs={HOME_FAQS}
+      />
     </div>
   );
 }

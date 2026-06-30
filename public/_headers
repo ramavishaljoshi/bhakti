@@ -1,0 +1,12 @@
+# Cloudflare Pages cache policy (addresses "Use efficient cache lifetimes").
+# Hashed build output is content-addressed, so it is safe to cache forever.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts emitted by next/font are also content-hashed.
+/_next/static/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Images live in /assets. They change rarely; cache for 30 days.
+/assets/*
+  Cache-Control: public, max-age=2592000
