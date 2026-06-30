@@ -5,19 +5,10 @@ import { getSupabaseClient } from "@/lib/supabase/client";
 import { panchang as fallbackPanchang } from "@/lib/data/misc";
 import type { PanchangItem } from "@/lib/data/misc";
 
-// Kept as a string literal (not imported from lib/panchang) so this client
-// hook never pulls the `mhah-panchang` library into the browser bundle.
-const DEFAULT_LOCATION_LABEL = "New Delhi";
-
-/** Today's date as YYYY-MM-DD in IST (matches the `panchang.date` column). */
-function todayInIST(): string {
-  // en-CA renders ISO-style YYYY-MM-DD.
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Kolkata",
-  }).format(new Date());
-}
-
-/** Map a Supabase `panchang` row onto the icon/colour template by label. */
+/**
+ * Map a Supabase `panchang` row onto the icon/colour template by label.
+ * Table columns: id, tithi, nakshatra, rahu_kal, sunrise, sunset, created_at.
+ */
 function applyRow(
   items: PanchangItem[],
   row: Record<string, string>
@@ -25,7 +16,7 @@ function applyRow(
   const byLabel: Record<string, string | undefined> = {
     Tithi: row.tithi,
     Nakshatra: row.nakshatra,
-    "Rahu Kaal": row.rahu_kaal,
+    "Rahu Kaal": row.rahu_kal,
     Sunrise: row.sunrise,
     Sunset: row.sunset,
   };
@@ -39,7 +30,8 @@ function applyRow(
  *
  * `initial` is computed at BUILD TIME on the server (see app/page.tsx) so the
  * heavy `mhah-panchang` library stays out of the client bundle. On mount we
- * only check Supabase for an admin-published override row for today.
+ * fetch the latest published row from the Supabase `panchang` table and, if one
+ * exists, use it instead of the computed values.
  */
 export function usePanchang(
   initial: PanchangItem[] = fallbackPanchang
@@ -55,9 +47,9 @@ export function usePanchang(
       try {
         const { data, error } = await supabase
           .from("panchang")
-          .select("tithi,nakshatra,rahu_kaal,sunrise,sunset")
-          .eq("date", todayInIST())
-          .eq("location", DEFAULT_LOCATION_LABEL)
+          .select("tithi,nakshatra,rahu_kal,sunrise,sunset")
+          .order("created_at", { ascending: false })
+          .limit(1)
           .maybeSingle();
 
         if (!active || error || !data) return;

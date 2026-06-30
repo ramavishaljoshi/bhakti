@@ -103,29 +103,33 @@ create policy "Jap logs are owner-only"
   with check (auth.uid() = user_id);
 
 -- ---------------------------------------------------------------------------
--- Panchang: one row per (date, location). Publicly readable so the homepage
--- card and /panchang page can fetch today's values. Rows are managed by an
--- admin / seed job; when no row exists for today the app falls back to the
--- values computed locally from `lib/panchang.ts`.
+-- Panchang: latest row wins. The homepage card reads the most recent row
+-- (by created_at) and falls back to values computed in `lib/panchang.ts` when
+-- the table is empty. Publicly readable + insertable.
 -- ---------------------------------------------------------------------------
 create table if not exists public.panchang (
-  date        date not null,
-  location    text not null default 'New Delhi',
-  tithi       text not null,
-  nakshatra   text not null,
-  rahu_kaal   text not null,
-  sunrise     text not null,
-  sunset      text not null,
-  updated_at  timestamptz not null default now(),
-  primary key (date, location)
+  id          bigint generated always as identity primary key,
+  tithi       text,
+  nakshatra   text,
+  rahu_kal    text,
+  sunrise     text,
+  sunset      text,
+  created_at  timestamptz not null default now()
 );
 
 alter table public.panchang enable row level security;
 
-drop policy if exists "Panchang is publicly readable" on public.panchang;
-create policy "Panchang is publicly readable"
+drop policy if exists "Public can read panchang" on public.panchang;
+create policy "Public can read panchang"
   on public.panchang for select
+  to anon, authenticated
   using (true);
+
+drop policy if exists "Public can insert panchang" on public.panchang;
+create policy "Public can insert panchang"
+  on public.panchang for insert
+  to anon, authenticated
+  with check (true);
 
 -- Atomic increment of today's jap count for the signed-in user.
 create or replace function public.bump_jap(p_delta integer, p_mantra text default null)
