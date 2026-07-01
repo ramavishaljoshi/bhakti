@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { TopNav } from "./top-nav";
 import { BottomNav } from "./bottom-nav";
@@ -54,30 +55,41 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <FavoritesProvider>
-      <div className="relative flex min-h-screen flex-col">
-        <AmbientBackground />
-        <OrbitField />
-        <StarField />
-        <div className="relative z-10 flex min-h-screen flex-col">
-          {blocked ? (
-            <div className="flex flex-1 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-saffron-500" />
-            </div>
-          ) : (
-            <>
-              {!bare && <TopNav />}
-              <main className={bare ? "flex-1" : "flex-1 pb-28 lg:pb-0"}>
-                {children}
-              </main>
-              {!bare && <SiteFooter />}
-              {!bare && <BottomNav />}
-            </>
-          )}
+      {/* reducedMotion="user" makes every framer-motion animation honour the
+          OS "reduce motion" preference. */}
+      <MotionConfig reducedMotion="user">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
+        <div className="relative flex min-h-screen flex-col">
+          <AmbientBackground />
+          <OrbitField />
+          <StarField />
+          <div className="relative z-10 flex min-h-screen flex-col">
+            {blocked ? (
+              <div className="flex flex-1 items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-saffron-500" />
+              </div>
+            ) : (
+              <>
+                {!bare && <TopNav />}
+                <main
+                  id="main-content"
+                  tabIndex={-1}
+                  className={bare ? "flex-1" : "flex-1 pb-28 lg:pb-0"}
+                >
+                  {children}
+                </main>
+                {!bare && <SiteFooter />}
+                {!bare && <BottomNav />}
+              </>
+            )}
+          </div>
+          {/* Site-wide background music — kept outside the gate so it shows on
+              every page and keeps playing across navigation. */}
+          <AudioPlayer />
         </div>
-        {/* Site-wide background music — kept outside the gate so it shows on
-            every page and keeps playing across navigation. */}
-        <AudioPlayer />
-      </div>
+      </MotionConfig>
     </FavoritesProvider>
   );
 }

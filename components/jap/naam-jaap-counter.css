@@ -499,7 +499,7 @@
   border-radius: 18px;
   background: hsl(var(--secondary));
   color: var(--ink-soft);
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, opacity 160ms ease;
 }
@@ -521,8 +521,14 @@
 .btn-primary {
   border-color: transparent;
   background: linear-gradient(135deg, var(--blue), var(--rose));
-  color: white;
+  /* White text is the only legible choice on the saffron gradient. */
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
   box-shadow: 0 22px 48px color-mix(in srgb, var(--blue) 28%, transparent);
+}
+
+.btn-primary:hover {
+  color: #f57e0f;
 }
 
 .btn-pause {
@@ -542,7 +548,7 @@
 }
 
 .btn-danger {
-  color: #FFD3A1;
+  color: #f57e0f;
 }
 
 .hint {
@@ -770,6 +776,16 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
+  justify-content: flex-end;
+}
+
+/* Popup action buttons (Close, Cancel, Export…): even, tappable widths that
+   fill the row and wrap cleanly on small screens instead of shrinking to text.
+   A lone button (e.g. Close in Settings) stretches to full width. */
+.modal-actions .btn {
+  flex: 1 1 140px;
+  min-width: 140px;
+  width: auto;
 }
 
 .settings-modal {

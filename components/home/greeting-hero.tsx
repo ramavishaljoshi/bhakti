@@ -7,8 +7,11 @@ import { motion } from "framer-motion";
 import { Play, BookOpen, Clock } from "lucide-react";
 import { getGreeting } from "@/lib/utils";
 import { TempleSilhouette } from "@/components/shared/temple-silhouette";
+import { useAuth } from "@/lib/use-auth";
 
-export function GreetingHero({ userName = "Anju" }: { userName?: string }) {
+export function GreetingHero({ userName }: { userName?: string }) {
+  const { user } = useAuth();
+  const displayName = userName ?? user?.name ?? "Seeker";
   const [greeting, setGreeting] = React.useState("Good Morning");
   const [time, setTime] = React.useState("");
 
@@ -48,7 +51,7 @@ export function GreetingHero({ userName = "Anju" }: { userName?: string }) {
             className="mt-3 font-display text-3xl font-bold tracking-tight text-stone-800 sm:text-4xl"
           >
             🙏 {greeting},{" "}
-            <span className="text-gradient">{userName}</span>
+            <span className="text-gradient">{displayName}</span>
           </motion.h1>
 
           <motion.p

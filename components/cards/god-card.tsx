@@ -23,7 +23,7 @@ export function GodCard({ god }: { god: God }) {
           />
           <div
             className={cn(
-              "absolute inset-0 bg-gradient-to-t opacity-90 mix-blend-multiply",
+              "absolute inset-0 bg-gradient-to-t opacity-30",
               god.color
             )}
           />

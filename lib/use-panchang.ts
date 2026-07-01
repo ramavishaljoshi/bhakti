@@ -7,7 +7,7 @@ import type { PanchangItem } from "@/lib/data/misc";
 
 /**
  * Map a Supabase `panchang` row onto the icon/colour template by label.
- * Table columns: id, tithi, nakshatra, rahu_kal, sunrise, sunset, created_at.
+ * Table columns: id, day, tithi, nakshatra, rahu_kal, sunrise, sunset, created_at.
  */
 function applyRow(
   items: PanchangItem[],
@@ -25,37 +25,90 @@ function applyRow(
   );
 }
 
+/** Today's date as YYYY-MM-DD in India time (matches the `day` column). */
+function istDayKey(d: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
+export interface PanchangData {
+  items: PanchangItem[];
+  /** ISO timestamp of the Supabase row shown, or null when using computed values. */
+  publishedAt: string | null;
+}
+
 /**
- * Today's Panchang for the homepage card.
+ * Today's Panchang, always current and DB-backed.
  *
- * `initial` is computed at BUILD TIME on the server (see app/page.tsx) so the
- * heavy `mhah-panchang` library stays out of the client bundle. On mount we
- * fetch the latest published row from the Supabase `panchang` table and, if one
- * exists, use it instead of the computed values.
+ * `initial` is computed at BUILD TIME (frozen to the build date). On mount we:
+ *   1. read the Supabase `panchang` row for TODAY (India time) and use it, else
+ *   2. compute today's Panchang on the client (accurate, changes every day) and
+ *      write it back to Supabase so subsequent visits are served from the DB.
  */
 export function usePanchang(
   initial: PanchangItem[] = fallbackPanchang
-): PanchangItem[] {
+): PanchangData {
   const [items, setItems] = useState<PanchangItem[]>(initial);
+  const [publishedAt, setPublishedAt] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
-    if (!supabase) return;
-
     let active = true;
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("panchang")
-          .select("tithi,nakshatra,rahu_kal,sunrise,sunset")
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
 
-        if (!active || error || !data) return;
-        setItems(applyRow(initial, data as Record<string, string>));
+    (async () => {
+      const today = istDayKey(new Date());
+      const supabase = getSupabaseClient();
+
+      // 1. Prefer a published row for TODAY.
+      if (supabase) {
+        try {
+          const { data } = await supabase
+            .from("panchang")
+            .select("tithi,nakshatra,rahu_kal,sunrise,sunset,created_at,day")
+            .eq("day", today)
+            .limit(1)
+            .maybeSingle();
+          if (!active) return;
+          if (data) {
+            setItems(applyRow(initial, data as Record<string, string>));
+            setPublishedAt((data as { created_at?: string }).created_at ?? null);
+            return;
+          }
+        } catch {
+          // fall through to client computation
+        }
+      }
+
+      // 2. No row for today → compute it on the client (date-accurate, daily).
+      try {
+        const { computePanchang } = await import("@/lib/panchang");
+        const computed = computePanchang(new Date());
+        if (!active) return;
+        setItems(computed);
+        setPublishedAt(new Date().toISOString());
+
+        // 3. Persist today's values so it's served from the DB next time.
+        if (supabase) {
+          const val = (label: string) =>
+            computed.find((i) => i.label === label)?.value ?? null;
+          try {
+            await supabase.from("panchang").insert({
+              day: today,
+              tithi: val("Tithi"),
+              nakshatra: val("Nakshatra"),
+              rahu_kal: val("Rahu Kaal"),
+              sunrise: val("Sunrise"),
+              sunset: val("Sunset"),
+            });
+          } catch {
+            // Duplicate (another visitor already inserted) or RLS — ignore.
+          }
+        }
       } catch {
-        // Network/Supabase failure → keep the build-time values.
+        // Keep the build-time `initial` values.
       }
     })();
 
@@ -64,5 +117,5 @@ export function usePanchang(
     };
   }, [initial]);
 
-  return items;
+  return { items, publishedAt };
 }

@@ -8,9 +8,12 @@ import { gitaChapters } from "@/lib/data/gita";
 import { articles } from "@/lib/data/articles";
 import { vrats } from "@/lib/data/vrat";
 import { authors } from "@/lib/data/authors";
+import { gods } from "@/lib/data/gods";
 
 // Static-export sitemap (emitted as /sitemap.xml at build time). Lists every
-// public, indexable route. Auth/profile routes are intentionally excluded.
+// public, indexable route. Image discovery is handled by the dedicated
+// /image-sitemap.xml route (Next 14's sitemap type has no `images` field).
+// Auth/profile routes are intentionally excluded.
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -47,6 +50,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }));
 
+  for (const g of gods) {
+    entries.push({ url: url(`/gods/${g.slug}`), changeFrequency: "monthly", priority: 0.7 });
+  }
   for (const m of mantras) {
     entries.push({ url: url(`/mantras/${m.slug}`), changeFrequency: "monthly", priority: 0.7 });
   }

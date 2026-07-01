@@ -25,7 +25,7 @@ export const SITE_DESCRIPTION =
   "A premium, mindful Indian spirituality app. Digital jap counter, mantra library, gods, temples, festivals, vrat guides, daily Panchang and the Bhagavad Gita — beautifully designed.";
 
 /** Default social-share image (must exist under /public). */
-export const DEFAULT_OG_IMAGE = "/assets/hero-illustration.png";
+export const DEFAULT_OG_IMAGE = "/og-image.png";
 
 /**
  * Real, verified social profile URLs. Fill these in — empty strings are

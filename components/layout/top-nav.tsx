@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, User as UserIcon, LogIn, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
+import { AccessibilityMenu } from "./accessibility-menu";
 import { useAuth } from "@/lib/use-auth";
 
 function initials(name: string) {
@@ -185,7 +186,7 @@ export function TopNav() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {links.map((l) => {
             const active = isActive(l.href);
             return (
@@ -213,6 +214,7 @@ export function TopNav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <AccessibilityMenu />
           <ThemeToggle />
           <ProfileMenu />
         </div>

@@ -115,6 +115,9 @@ export function BottomNav() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 380, damping: 38 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Explore sections"
               className="absolute inset-x-0 bottom-0 rounded-t-4xl border-t border-border bg-card p-5 pb-8 shadow-soft-lg"
             >
               <div className="mb-4 flex items-center justify-between">
@@ -161,7 +164,7 @@ export function BottomNav() {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Mobile">
         <div className="mx-auto max-w-md px-4 pb-4">
           <div className="glass relative flex items-end justify-between rounded-3xl px-3 pb-2 pt-2.5 shadow-soft-lg">
             {left.map((item) => (

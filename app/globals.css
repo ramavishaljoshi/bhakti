@@ -131,6 +131,92 @@
   .decor-anim { animation: none !important; }
 }
 
+/* ===========================================================================
+   Accessibility (WCAG 2.2 AA)
+   - Skip link, visible focus, reduced motion, and user-controlled
+     high-contrast / larger-text / dyslexia-friendly font (driven by
+     data-a11y-* attributes on <html>, set by the Accessibility menu).
+=========================================================================== */
+
+/* Skip-to-content link: off-screen until focused. */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid hsl(var(--primary-foreground));
+  outline-offset: 2px;
+}
+
+/* Clearly visible keyboard focus for every interactive element. */
+:focus-visible {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Don't show the ring for mouse/touch users who didn't tab in. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Respect the OS "reduce motion" preference AND the in-app toggle. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+[data-a11y-motion="reduce"] { scroll-behavior: auto; }
+[data-a11y-motion="reduce"] *,
+[data-a11y-motion="reduce"] *::before,
+[data-a11y-motion="reduce"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+[data-a11y-motion="reduce"] .decor-anim { animation: none !important; }
+
+/* Larger text for low-vision / elderly users (scales rem-based sizing). */
+[data-a11y-text="large"] { font-size: 118.75%; }
+
+/* Dyslexia-friendly: a highly legible fallback stack + generous spacing. */
+[data-a11y-font="dyslexic"],
+[data-a11y-font="dyslexic"] body {
+  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif !important;
+  letter-spacing: 0.03em;
+  word-spacing: 0.08em;
+  line-height: 1.7;
+}
+
+/* High-contrast mode: stronger text, borders and underlined links. */
+[data-a11y-contrast="high"] {
+  --muted-foreground: 24 30% 28%;
+  --border: 24 40% 45%;
+}
+[data-a11y-contrast="high"].dark {
+  --muted-foreground: 28 25% 82%;
+  --border: 28 25% 70%;
+}
+[data-a11y-contrast="high"] a:not([class*="btn"]):not([class*="bg-"]) {
+  text-decoration: underline;
+}
+[data-a11y-contrast="high"] :focus-visible {
+  outline-width: 4px;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

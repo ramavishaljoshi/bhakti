@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { CalendarDays } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
-import { Icon } from "@/components/shared/icon";
-import { cn } from "@/lib/utils";
+import { PanchangGrid } from "@/components/panchang/panchang-grid";
 import { computePanchang, DEFAULT_LOCATION } from "@/lib/panchang";
 
 // Panchang values change with the day — recompute hourly so the page always
@@ -73,31 +72,7 @@ export default function PanchangPage() {
         icon={<CalendarDays className="h-6 w-6" />}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((p) => (
-          <div
-            key={p.label}
-            className="flex items-center gap-4 rounded-4xl border border-border bg-card p-5 shadow-soft"
-          >
-            <span
-              className={cn(
-                "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl",
-                p.color
-              )}
-            >
-              <Icon name={p.icon} className="h-5 w-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                {p.label}
-              </p>
-              <p className="truncate text-lg font-semibold leading-tight">
-                {p.value}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <PanchangGrid initial={items} />
 
       <section className="mt-12 max-w-2xl space-y-8">
         <div>

@@ -1,7 +1,5 @@
 import { God } from "@/lib/types";
 
-const img = (seed: string) => `https://picsum.photos/seed/${seed}/1000/700`;
-
 export const gods: God[] = [
   {
     id: "g1",
@@ -21,7 +19,7 @@ export const gods: God[] = [
       { q: "What does the third eye represent?", a: "It symbolises higher awareness, wisdom and the power to see beyond the material world." },
     ],
     color: "from-blue-500 to-indigo-600",
-    image: img("god-shiva"),
+    image: "/assets/shiva-artwork.jpg",
   },
   {
     id: "g2",
@@ -41,7 +39,7 @@ export const gods: God[] = [
       { q: "Why does Krishna play the flute?", a: "The flute symbolises the divine call that draws the soul towards God." },
     ],
     color: "from-sky-500 to-blue-600",
-    image: img("god-krishna"),
+    image: "/assets/mantras/hare-krishna-maha-mantra.jpg",
   },
   {
     id: "g3",
@@ -61,7 +59,7 @@ export const gods: God[] = [
       { q: "What does Hanuman symbolise?", a: "Strength, courage, humility and unwavering devotion." },
     ],
     color: "from-orange-500 to-red-600",
-    image: img("god-hanuman"),
+    image: "/assets/mantras/hanuman-chalisa.jpg",
   },
   {
     id: "g4",
@@ -81,7 +79,7 @@ export const gods: God[] = [
       { q: "What is Navratri?", a: "A nine-night festival honouring the nine forms of Goddess Durga." },
     ],
     color: "from-rose-500 to-pink-600",
-    image: img("god-durga"),
+    image: "/assets/mantras/om-dum-durgayei-namaha.jpg",
   },
   {
     id: "g5",
@@ -101,7 +99,7 @@ export const gods: God[] = [
       { q: "What does the lotus symbolise?", a: "Purity and spiritual power rising untouched above the muddy waters of materialism." },
     ],
     color: "from-amber-400 to-yellow-600",
-    image: img("god-lakshmi"),
+    image: "/assets/mantras/om-shreem-mahalakshmiyei-namaha.jpg",
   },
   {
     id: "g6",
@@ -121,7 +119,7 @@ export const gods: God[] = [
       { q: "What does the broken tusk mean?", a: "It represents sacrifice — he broke it to write the Mahabharata, symbolising wisdom over vanity." },
     ],
     color: "from-orange-400 to-amber-600",
-    image: img("god-ganesh"),
+    image: "/assets/mantras/om-gam-ganapataye-namaha.jpg",
   },
 ];
 

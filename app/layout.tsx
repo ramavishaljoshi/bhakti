@@ -50,6 +50,19 @@ export const metadata: Metadata = {
   creator: "Agentic Vani",
   publisher: SITE_NAME,
   alternates: { canonical: SITE_URL },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#FF7A4D" }],
+  },
   robots: {
     index: true,
     follow: true,
@@ -91,6 +104,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} font-sans`}>
+        {/* Apply saved accessibility preferences before paint (no flash). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var s=JSON.parse(localStorage.getItem('bhakti:a11y')||'{}');var m={text:['data-a11y-text','large'],contrast:['data-a11y-contrast','high'],font:['data-a11y-font','dyslexic'],motion:['data-a11y-motion','reduce']};var r=document.documentElement;for(var k in m){if(s[k])r.setAttribute(m[k][0],m[k][1]);}}catch(e){}})();",
+          }}
+        />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
         <ThemeProvider
           attribute="class"

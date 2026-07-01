@@ -9,7 +9,7 @@ import { usePanchang } from "@/lib/use-panchang";
 import type { PanchangItem } from "@/lib/data/misc";
 
 export function PanchangCard({ initial }: { initial?: PanchangItem[] }) {
-  const panchang = usePanchang(initial);
+  const { items: panchang } = usePanchang(initial);
 
   return (
     <motion.div

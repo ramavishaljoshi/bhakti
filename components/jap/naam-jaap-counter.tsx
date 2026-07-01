@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./naam-jaap-counter.css";
 import { useJap } from "@/lib/use-jap";
+import { useSpeech, type VoiceGender } from "@/lib/use-speech";
 
 type Language = "en" | "hi";
 type Theme = "calm" | "hindu";
@@ -384,6 +385,16 @@ export default function NaamJaapCounter() {
   const [theme, setTheme] = useState<Theme>("calm");
   const [music, setMusic] = useState(false);
   const [chimeOn, setChimeOn] = useState(true);
+  // --- Chanting audio (TTS) + accessibility settings ---
+  const [ttsOn, setTtsOn] = useState(false);
+  const [voiceGender, setVoiceGender] = useState<VoiceGender>("female");
+  const [ttsRate, setTtsRate] = useState(1);
+  const [ttsRepeat, setTtsRepeat] = useState(1);
+  const [haptics, setHaptics] = useState(true);
+  const [autoChant, setAutoChant] = useState(false);
+  const [autoChantSpeed, setAutoChantSpeed] = useState(3000);
+  const [announce, setAnnounce] = useState(true);
+  const [liveMsg, setLiveMsg] = useState("");
   const [count, setCount] = useState(0);
   const [running, setRunning] = useState(false);
   const [sessionStart, setSessionStart] = useState<string | null>(null);
@@ -405,6 +416,8 @@ export default function NaamJaapCounter() {
   const elapsedRef = useRef(0);
   const sessionsRef = useRef<Session[]>([]);
   const { ensure, chime } = useTone(chimeOn, music);
+  const { supported: ttsSupported, speak, cancel: cancelSpeech } = useSpeech();
+  const tapRef = useRef<() => void>(() => {});
   const L = UI[language];
 
   const selectedMantra = useMemo(() => MANTRAS.find((m) => m.id === mantraId) || MANTRAS[0], [mantraId]);
@@ -419,6 +432,13 @@ export default function NaamJaapCounter() {
     setTheme(storage.get<Theme>("njc-theme", "calm"));
     setMusic(storage.get("njc-music", false));
     setChimeOn(storage.get("njc-chime", true));
+    setTtsOn(storage.get("njc-tts", false));
+    setVoiceGender(storage.get<VoiceGender>("njc-tts-gender", "female"));
+    setTtsRate(storage.get("njc-tts-rate", 1));
+    setTtsRepeat(storage.get("njc-tts-repeat", 1));
+    setHaptics(storage.get("njc-haptics", true));
+    setAutoChantSpeed(storage.get("njc-autochant-speed", 3000));
+    setAnnounce(storage.get("njc-announce", true));
     setCount(storage.get("njc-current-count", 0));
     setElapsed(storage.get("njc-current-elapsed", 0));
     setSessions(storage.get("njc-sessions", []));
@@ -437,6 +457,13 @@ export default function NaamJaapCounter() {
     storage.set("njc-theme", theme);
     storage.set("njc-music", music);
     storage.set("njc-chime", chimeOn);
+    storage.set("njc-tts", ttsOn);
+    storage.set("njc-tts-gender", voiceGender);
+    storage.set("njc-tts-rate", ttsRate);
+    storage.set("njc-tts-repeat", ttsRepeat);
+    storage.set("njc-haptics", haptics);
+    storage.set("njc-autochant-speed", autoChantSpeed);
+    storage.set("njc-announce", announce);
     storage.set("njc-current-count", count);
     storage.set("njc-current-elapsed", elapsed);
     storage.set("njc-sessions", sessions);
@@ -450,7 +477,7 @@ export default function NaamJaapCounter() {
     sessionsRef.current = sessions;
     elapsedRef.current = elapsed;
     document.dispatchEvent(new CustomEvent("naamjapa:deity", { detail: { text: DEITY_TEXT[deity] || "" } }));
-  }, [ready, language, theme, music, chimeOn, count, elapsed, sessions, totals, dayLog, mantraId, customMantra, deity, deityImage]);
+  }, [ready, language, theme, music, chimeOn, ttsOn, voiceGender, ttsRate, ttsRepeat, haptics, autoChantSpeed, announce, count, elapsed, sessions, totals, dayLog, mantraId, customMantra, deity, deityImage]);
 
   useEffect(() => {
     elapsedRef.current = elapsed;
@@ -510,10 +537,19 @@ export default function NaamJaapCounter() {
     setSessionStart(now);
     setElapsed(0);
     undoRef.current = [];
-  }, [deity, mantraLabel, sessionStart]);
+    if (announce) setLiveMsg(L.complete);
+  }, [deity, mantraLabel, sessionStart, announce, L.complete]);
+
+  const speakMantra = useCallback(() => {
+    if (!ttsOn) return;
+    // Devanagari text → Hindi voice; otherwise the English transliteration.
+    const lang = /[ऀ-ॿ]/.test(mantraLabel) ? "hi-IN" : "en-US";
+    speak(mantraLabel, { lang, gender: voiceGender, rate: ttsRate, repeat: ttsRepeat });
+  }, [ttsOn, mantraLabel, voiceGender, ttsRate, ttsRepeat, speak]);
 
   const tap = useCallback(() => {
     ensure();
+    speakMantra();
     addJap(1, mantraLabel);
     if (!running) {
       setRunning(true);
@@ -524,7 +560,7 @@ export default function NaamJaapCounter() {
       undoRef.current.push(prev);
       const isComplete = next >= MALA_SIZE;
       chime(isComplete);
-      if (navigator.vibrate) {
+      if (haptics && navigator.vibrate) {
         try {
           navigator.vibrate(isComplete ? [15, 35, 25] : 7);
         } catch {
@@ -537,7 +573,31 @@ export default function NaamJaapCounter() {
       }
       return next;
     });
-  }, [chime, completeMala, ensure, running, addJap, mantraLabel]);
+  }, [chime, completeMala, ensure, running, addJap, mantraLabel, speakMantra, haptics]);
+
+  // Keep a ref to the latest tap() so the auto-chant interval always calls the
+  // current closure without re-creating the interval on every tap.
+  useEffect(() => {
+    tapRef.current = tap;
+  }, [tap]);
+
+  // Auto-chanting: hands-free taps at the chosen pace while enabled.
+  useEffect(() => {
+    if (!autoChant) return;
+    const id = window.setInterval(() => tapRef.current(), Math.max(600, autoChantSpeed));
+    return () => window.clearInterval(id);
+  }, [autoChant, autoChantSpeed]);
+
+  // Stop any in-flight speech when chanting audio or auto-chant is turned off.
+  useEffect(() => {
+    if (!ttsOn || !autoChant) cancelSpeech();
+  }, [ttsOn, autoChant, cancelSpeech]);
+
+  // Screen-reader announcements of progress (aria-live region below).
+  useEffect(() => {
+    if (!announce || count === 0) return;
+    setLiveMsg(`${count} ${L.chants} · ${MALA_SIZE - count} ${L.remaining}`);
+  }, [count, announce, L.chants, L.remaining]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -706,6 +766,23 @@ export default function NaamJaapCounter() {
 
   return (
     <section ref={appRef} className={`counter-app ${isFullscreen ? "is-counter-fullscreen" : ""}`} tabIndex={-1} aria-label="Naam Jaap counter">
+      <span
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: "hidden",
+          clip: "rect(0 0 0 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {liveMsg}
+      </span>
       <div className="counter-topbar" aria-label="Counter summary and settings">
         <div className="compact-stats" aria-label="Today and lifetime summary">
           <CompactStat label={L.today} malas={today.malas} chants={today.chants} time={today.seconds} />
@@ -843,6 +920,98 @@ export default function NaamJaapCounter() {
                 {L.export}
               </button>
             </div>
+
+            <div className="jap-audio-settings" style={{ marginTop: 16, display: "grid", gap: 12 }}>
+              <div className="panel-title">
+                <span>Chanting audio</span>
+              </div>
+
+              {!ttsSupported ? (
+                <div className="empty">Voice chanting isn&apos;t supported in this browser.</div>
+              ) : (
+                <>
+                  <div className="settings-grid">
+                    <button
+                      className={`chip ${ttsOn ? "is-on" : ""}`}
+                      onClick={() => setTtsOn((v) => !v)}
+                      aria-pressed={ttsOn}
+                    >
+                      {ttsOn ? "Voice on" : "Voice off"}
+                    </button>
+                    <button
+                      className={`chip ${voiceGender === "female" ? "is-on" : ""}`}
+                      onClick={() => setVoiceGender((g) => (g === "female" ? "male" : "female"))}
+                      aria-label={`Voice: ${voiceGender}`}
+                    >
+                      {voiceGender === "female" ? "Female voice" : "Male voice"}
+                    </button>
+                    <button
+                      className={`chip ${autoChant ? "is-on" : ""}`}
+                      onClick={() => setAutoChant((v) => !v)}
+                      aria-pressed={autoChant}
+                    >
+                      {autoChant ? "Auto-chant on" : "Auto-chant"}
+                    </button>
+                    <button
+                      className={`chip ${haptics ? "is-on" : ""}`}
+                      onClick={() => setHaptics((v) => !v)}
+                      aria-pressed={haptics}
+                    >
+                      Vibration
+                    </button>
+                    <button
+                      className={`chip ${announce ? "is-on" : ""}`}
+                      onClick={() => setAnnounce((v) => !v)}
+                      aria-pressed={announce}
+                    >
+                      Announcements
+                    </button>
+                  </div>
+
+                  <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+                    <span>Speed: {ttsRate.toFixed(2)}×</span>
+                    <input
+                      type="range"
+                      min={0.5}
+                      max={1.5}
+                      step={0.05}
+                      value={ttsRate}
+                      onChange={(e) => setTtsRate(Number(e.target.value))}
+                      aria-label="Chanting speed"
+                    />
+                  </label>
+
+                  <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+                    <span>Repeat per tap: {ttsRepeat}×</span>
+                    <input
+                      type="range"
+                      min={1}
+                      max={5}
+                      step={1}
+                      value={ttsRepeat}
+                      onChange={(e) => setTtsRepeat(Number(e.target.value))}
+                      aria-label="Repeats per tap"
+                    />
+                  </label>
+
+                  {autoChant ? (
+                    <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+                      <span>Auto-chant pace: {(autoChantSpeed / 1000).toFixed(1)}s</span>
+                      <input
+                        type="range"
+                        min={600}
+                        max={6000}
+                        step={100}
+                        value={autoChantSpeed}
+                        onChange={(e) => setAutoChantSpeed(Number(e.target.value))}
+                        aria-label="Auto-chant interval in seconds"
+                      />
+                    </label>
+                  ) : null}
+                </>
+              )}
+            </div>
+
             <div className="modal-actions">
               <button className="btn" onClick={() => setShowSettings(false)}>
                 {L.close}

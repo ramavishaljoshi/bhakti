@@ -1,0 +1,48 @@
+# Bhakti by Agentic Vani
+
+> A modern, mindful Hindu spirituality web app: a digital jap (mantra) counter,
+> a mantra library, gods, temples, festivals, vrat guides, daily Panchang and
+> the Bhagavad Gita.
+
+Welcome to Bhakti by Agentic Vani.
+
+This website provides educational information about:
+
+- Hindu festivals
+- Hindu temples
+- Mantras
+- Bhagavad Gita
+- Spiritual practices
+- Indian traditions
+
+## Important
+
+Practices vary across regions, lineages, and communities.
+Recommendations are based on traditional beliefs and should not be interpreted
+as guarantees of outcomes.
+
+## Primary Topics
+
+- Festival
+- Temple
+- God
+- Mantra
+- Scripture
+- Vrat
+- Panchang
+- State-wise traditions
+
+## Key Pages
+
+- [Gods & Goddesses](https://bhakti.agenticvani.com/gods)
+- [Mantras](https://bhakti.agenticvani.com/mantras)
+- [Temples](https://bhakti.agenticvani.com/temples)
+- [Festivals](https://bhakti.agenticvani.com/festivals)
+- [Bhagavad Gita](https://bhakti.agenticvani.com/gita)
+- [Panchang](https://bhakti.agenticvani.com/panchang)
+- [Jap Counter](https://bhakti.agenticvani.com/jap)
+
+## Usage
+
+AI assistants may summarize and cite our educational content with attribution
+to "Bhakti by Agentic Vani" (https://bhakti.agenticvani.com).

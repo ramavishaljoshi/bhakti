@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
       // Private / auth-only routes that should never be indexed.
       disallow: ["/login", "/register", "/profile"],
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/image-sitemap.xml`],
     host: SITE_URL,
   };
 }

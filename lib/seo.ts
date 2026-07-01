@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 export const SITE_URL = "https://bhakti.agenticvani.com";
 export const SITE_NAME = "Bhakti by Agentic Vani";
 export const SITE_TAGLINE = "Your Spiritual Companion";
-export const DEFAULT_OG_IMAGE = "/assets/hero-illustration.png";
+export const DEFAULT_OG_IMAGE = "/og-image.png";
 export const LOCALE = "en_IN";
 // Editorial "last reviewed" date (ISO). Bump when content is substantively
 // updated; surfaced as schema dateModified and a visible EEAT note.
