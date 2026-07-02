@@ -18,10 +18,15 @@ import { useAuth } from "@/lib/use-auth";
 // (full-screen, distraction-free experience).
 const BARE_ROUTES: string[] = [];
 
-// Pages a signed-out visitor is allowed to open. Everything else (incl. "/")
-// is locked behind login. This site is a static export, so the gate must run
-// client-side (server middleware never runs with `output: "export"`).
-const PUBLIC_ROUTES = ["/login", "/register"];
+// Auth-only pages. A signed-in visitor landing here is sent home; the rest of
+// the site is fully public and browsable without logging in.
+const AUTH_ROUTES = ["/login", "/register"];
+
+// Routes that require a signed-in user. Everything else is open to guests.
+// (The profile pages also self-guard, but gating here shows a clean loader
+// while the redirect happens.) This site is a static export, so the gate must
+// run client-side (server middleware never runs with `output: "export"`).
+const PROTECTED_ROUTES = ["/profile"];
 
 function matchRoute(routes: string[], pathname: string | null) {
   if (!pathname) return false;
@@ -34,24 +39,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, ready, configured } = useAuth();
 
   const bare = matchRoute(BARE_ROUTES, pathname);
-  const isPublic = matchRoute(PUBLIC_ROUTES, pathname);
+  const isAuthRoute = matchRoute(AUTH_ROUTES, pathname);
+  const isProtected = matchRoute(PROTECTED_ROUTES, pathname);
 
-  // Until the user logs in, keep them on the login page: any protected route
-  // (and any menu click that lands on one) bounces back to /login. A signed-in
-  // user sitting on the login/register page is sent home. When Supabase isn't
-  // configured we never lock the site (dev fallback).
-  const awaitingProtected = configured && !isPublic && (!ready || !user);
-  const redirectingAuthed = configured && isPublic && ready && Boolean(user);
+  // Guests can browse the whole site. Only the protected (profile) routes send
+  // a signed-out visitor to /login, and a signed-in user sitting on the
+  // login/register page is sent home. When Supabase isn't configured we never
+  // redirect (dev fallback).
+  const awaitingProtected = configured && isProtected && (!ready || !user);
+  const redirectingAuthed = configured && isAuthRoute && ready && Boolean(user);
   const blocked = awaitingProtected || redirectingAuthed;
 
   React.useEffect(() => {
     if (!configured || !ready) return;
-    if (!user && !isPublic) {
+    if (!user && isProtected) {
       router.replace("/login");
-    } else if (user && isPublic) {
+    } else if (user && isAuthRoute) {
       router.replace("/");
     }
-  }, [configured, ready, user, isPublic, router]);
+  }, [configured, ready, user, isProtected, isAuthRoute, router]);
 
   return (
     <FavoritesProvider>
