@@ -24,8 +24,11 @@ export const mantras: Mantra[] = [
     intentions: ["peace", "meditation", "spiritual-growth", "protection"],
     image: "/assets/shiva-artwork.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/om-namah-shivay-dhoon/Om%20Namah%20Shivay%20Dhoon.mp3",
+    aarti: {
+      title: "Om Jai Shiv Omkara",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Om%20Jai%20Shiv%20Omkara%20Aarti%20Audio%20Song.mp3",
+    },
   },
   {
     id: "m2",
@@ -49,8 +52,11 @@ export const mantras: Mantra[] = [
     intentions: ["happiness", "spiritual-growth", "gratitude", "peace"],
     image: "/assets/mantras/hare-krishna-maha-mantra.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/famous-powerful-gayatri-mantra-108-times-om-bhur-bhuva-swaha-mp-3-1/30%20Mins%20of%20The%20Great%20Mantra_%20Hare%20Krishna_%20Hare%20Rama%20_%20Chanting%20_%20Meditation%20Music(MP3_160K).mp3",
+    aarti: {
+      title: "Aarti Kunj Bihari Ki",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Aarti%20Kunjbihari%20Ki%20With%20Lyrics%20By%20Anuradha%20Paudwal.mp3",
+    },
   },
   {
     id: "m3",
@@ -74,8 +80,11 @@ export const mantras: Mantra[] = [
     intentions: ["protection", "career", "success", "health"],
     image: "/assets/mantras/hanuman-chalisa.jpg",
     count: 11,
-    audio:
-      "https://archive.org/download/shree-hanuman-chalisa-original-video-gulshan-kumar-hariharan-full-hd_202503/%E0%A4%B6%E0%A4%B0%20%E0%A4%B9%E0%A4%A8%E0%A4%AE%E0%A4%A8%20%E0%A4%9A%E0%A4%B2%E0%A4%B8%20%20Shree%20Hanuman%20Chalisa%20Original%20Video%20%20GULSHAN%20KUMAR%20%20HARIHARAN%20Full%20HD.mp3",
+    aarti: {
+      title: "Hanuman Chalisa",
+      audio:
+        "https://archive.org/download/shree-hanuman-chalisa-original-video-gulshan-kumar-hariharan-full-hd_202503/%E0%A4%B6%E0%A4%B0%20%E0%A4%B9%E0%A4%A8%E0%A4%AE%E0%A4%A8%20%E0%A4%9A%E0%A4%B2%E0%A4%B8%20%20Shree%20Hanuman%20Chalisa%20Original%20Video%20%20GULSHAN%20KUMAR%20%20HARIHARAN%20Full%20HD.mp3",
+    },
   },
   {
     id: "m4",
@@ -97,8 +106,11 @@ export const mantras: Mantra[] = [
     intentions: ["education", "meditation", "spiritual-growth", "success"],
     image: "/assets/mantras/gayatri-mantra.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/famous-powerful-gayatri-mantra-108-times-om-bhur-bhuva-swaha/Famous%20Powerful%20Gayatri%20Mantra%20108%20Times%20_%20Om%20Bhur%20Bhuva%20Swaha%20_%20%E0%A4%97%E0%A4%BE%E0%A4%AF%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%20%E0%A4%AE%E0%A4%82%E0%A4%A4%E0%A5%8D%E0%A4%B0%20%20_%20%E0%A4%93%E0%A4%AE%20%E0%A4%AD%E0%A5%82%E0%A4%B0%20%E0%A4%AD%E0%A5%81%E0%A4%B5%E0%A4%BE%20%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%B9%E0%A4%BE.mp3",
+    aarti: {
+      title: "Gayatri Mantra",
+      audio:
+        "https://archive.org/download/famous-powerful-gayatri-mantra-108-times-om-bhur-bhuva-swaha/Famous%20Powerful%20Gayatri%20Mantra%20108%20Times%20_%20Om%20Bhur%20Bhuva%20Swaha%20_%20%E0%A4%97%E0%A4%BE%E0%A4%AF%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%20%E0%A4%AE%E0%A4%82%E0%A4%A4%E0%A5%8D%E0%A4%B0%20%20_%20%E0%A4%93%E0%A4%AE%20%E0%A4%AD%E0%A5%82%E0%A4%B0%20%E0%A4%AD%E0%A5%81%E0%A4%B5%E0%A4%BE%20%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%B9%E0%A4%BE.mp3",
+    },
   },
   {
     id: "m5",
@@ -122,8 +134,11 @@ export const mantras: Mantra[] = [
     intentions: ["success", "career", "education", "protection"],
     image: "/assets/mantras/om-gam-ganapataye-namaha.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/OmGamGanapatayeNamaha/GaneshMantra-ObstacleBreakerstrobe.mp3",
+    aarti: {
+      title: "Jai Ganesh Deva",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Ganpati%20Aarti%20Audio%20Song.mp3",
+    },
   },
   {
     id: "m6",
@@ -146,7 +161,11 @@ export const mantras: Mantra[] = [
     intentions: ["protection", "success", "health", "career"],
     image: "/assets/mantras/om-dum-durgayei-namaha.jpg",
     count: 108,
-    audio: "https://archive.org/download/DurgaChalisa/Ambe%20Tu%20Hai.mp3",
+    aarti: {
+      title: "Jai Ambe Gauri",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Ambe%20Ji%20Ki%20Aarti.mp3",
+    },
   },
   {
     id: "m7",
@@ -169,8 +188,11 @@ export const mantras: Mantra[] = [
     intentions: ["prosperity", "career", "success", "gratitude"],
     image: "/assets/mantras/om-shreem-mahalakshmiyei-namaha.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/NavarathriNayagiStuti/Navarathri%20Nayagi%20Stuti%2F01-Sri%20Devi%20Navaratna%20Malika%20Stotram.mp3",
+    aarti: {
+      title: "Om Jai Lakshmi Mata",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Aarti%20Lakshmi%20Ji%20Ki.mp3",
+    },
   },
   {
     id: "m8",
@@ -193,6 +215,11 @@ export const mantras: Mantra[] = [
     intentions: ["education", "success", "spiritual-growth"],
     image: "/assets/mantras/saraswati-vandana.jpg",
     count: 108,
+    aarti: {
+      title: "Om Jai Saraswati Mata",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Aarti-Om-Jai-Saraswati-Mata-Alka-Yagnik-Mp3-Lyrics-Song.mp3",
+    },
   },
   {
     id: "m9",
@@ -216,8 +243,11 @@ export const mantras: Mantra[] = [
     intentions: ["peace", "spiritual-growth", "happiness", "protection"],
     image: "/assets/mantras/shree-ram-jai-ram.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/RainbowQuest1001/10_01_Pete-Seeger_Raghupati-Raghav-Raja-Ram.mp3",
+    aarti: {
+      title: "Aarti Shri Ramayan Ji Ki",
+      audio:
+        "https://archive.org/download/saibabaeveningaartiaudiosong_202002/Aarti%20Shri%20Ramayan%20Ji%20Ki%20With%20Lyrics%20By%20Anuradha%20Paudwal.mp3",
+    },
   },
   {
     id: "m10",
@@ -239,8 +269,11 @@ export const mantras: Mantra[] = [
     intentions: ["peace", "health", "gratitude", "protection"],
     image: "/assets/mantras/om-sai-namo-namaha.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/BhagawanSatyaSaiBabaSingsBhajans/Baba%20Sings%20Volume_1%2FTrack%2010Madhura%20Murali%20Ghana%20Shyama.mp3",
+    aarti: {
+      title: "Sai Ram Sai Shyam Sai Bhagwan",
+      audio:
+        "https://archive.org/download/BhakthiSongs/Om%20sairam%20om%20shyam%20sai%20bhagwan.mp3",
+    },
   },
   {
     id: "m11",
@@ -263,7 +296,11 @@ export const mantras: Mantra[] = [
     intentions: ["success", "protection", "career", "spiritual-growth"],
     image: "/assets/mantras/om-saravana-bhava.jpg",
     count: 108,
-    audio: "https://archive.org/download/mu-saravana-bhava/Mu-kumaran.mp3",
+    aarti: {
+      title: "Om Saravana Bhavaya Namaha",
+      audio:
+        "/assets/mantras/Trisha_Parui_-_Lord_Murugan_Mantra_Om_Saravana_Bhava_108_Times_%28mp3.pm%29.mp3",
+    },
   },
   {
     id: "m12",
@@ -286,8 +323,11 @@ export const mantras: Mantra[] = [
     intentions: ["health", "protection", "peace", "spiritual-growth"],
     image: "/assets/mantras/mahamrityunjaya-mantra.jpg",
     count: 108,
-    audio:
-      "https://archive.org/download/MahamrityunjayaMantra108Times1/Mahamrityunjaya%20Mantra%20108%20Times-1.mp3",
+    aarti: {
+      title: "Mahamrityunjaya Mantra",
+      audio:
+        "/assets/mantras/Sacred_Sound_Choir_-_Mahamrityunjaya_Mantra_%28mp3.pm%29.mp3",
+    },
   },
 ];
 

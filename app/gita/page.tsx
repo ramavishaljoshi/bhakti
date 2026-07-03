@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, ArrowRight, Quote } from "lucide-react";
+import { BookOpen, ArrowRight, Quote, FileText } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { FaqSection } from "@/components/shared/faq-section";
 import { gitaChapters, dailyVerse } from "@/lib/data/gita";
@@ -81,6 +81,16 @@ export default function GitaPage() {
         (duty), gyaan aur bhakti ka saar diya gaya hai — har adhyay ko uske
         saral arth ke saath padhiye aur roz ek shlok apne jeevan mein utariye.
       </p>
+
+      {/* Complete Gita PDF */}
+      <a
+        href="/assets/gita/srimad-bhagavad-gita.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mb-10 inline-flex items-center gap-2 rounded-2xl bg-saffron-gradient px-6 py-3 font-semibold text-white shadow-glow transition-transform active:scale-95"
+      >
+        <FileText className="h-4 w-4" /> Read the Complete Gita (PDF)
+      </a>
 
       {/* Daily verse */}
       <div className="mb-10 rounded-4xl border border-border bg-card p-6 shadow-soft sm:p-8">

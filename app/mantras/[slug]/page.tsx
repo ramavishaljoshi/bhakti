@@ -186,6 +186,9 @@ export default function MantraDetailPage({
               <Play className="h-4 w-4 fill-white" /> Start Jap
             </Link>
             <MantraListenButton src={mantra.audio} />
+            {mantra.aarti?.audio && (
+              <MantraListenButton src={mantra.aarti.audio} noun="aarti" />
+            )}
           </div>
 
           <Section title="Meaning" icon={<Sparkles className="h-4 w-4" />}>

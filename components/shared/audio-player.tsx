@@ -61,11 +61,15 @@ export function AudioPlayer() {
     if (!audio) return;
     const onPlay = () => setPlaying(true);
     const onPause = () => setPlaying(false);
+    // No loop: reset the button when a track finishes on its own.
+    const onEnded = () => setPlaying(false);
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
+    audio.addEventListener("ended", onEnded);
     return () => {
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("ended", onEnded);
     };
   }, []);
 
@@ -111,7 +115,7 @@ export function AudioPlayer() {
     <>
       {/* preload="none": don't fetch the (multi-MB) audio until the user picks
           a track — it must never download on initial page load. */}
-      <audio ref={audioRef} loop preload="none" />
+      <audio ref={audioRef} preload="none" />
 
       {/* Bhajan list panel */}
       {open && (

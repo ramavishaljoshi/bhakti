@@ -77,8 +77,10 @@ export function usePanchang(
             setPublishedAt((data as { created_at?: string }).created_at ?? null);
             return;
           }
-        } catch {
+        } catch (err) {
           // fall through to client computation
+          if (process.env.NODE_ENV !== "production")
+            console.warn("[panchang] read failed:", err);
         }
       }
 
@@ -94,18 +96,25 @@ export function usePanchang(
         if (supabase) {
           const val = (label: string) =>
             computed.find((i) => i.label === label)?.value ?? null;
-          try {
-            await supabase.from("panchang").insert({
-              day: today,
-              tithi: val("Tithi"),
-              nakshatra: val("Nakshatra"),
-              rahu_kal: val("Rahu Kaal"),
-              sunrise: val("Sunrise"),
-              sunset: val("Sunset"),
-            });
-          } catch {
-            // Duplicate (another visitor already inserted) or RLS — ignore.
-          }
+          // Upsert on `day` so a repeat visit updates (not duplicates) today's
+          // row. Requires the `day` column + unique index from
+          // supabase/panchang-daily.sql — run that migration once in the
+          // Supabase SQL Editor or every write fails with PGRST204.
+          const { error } = await supabase
+            .from("panchang")
+            .upsert(
+              {
+                day: today,
+                tithi: val("Tithi"),
+                nakshatra: val("Nakshatra"),
+                rahu_kal: val("Rahu Kaal"),
+                sunrise: val("Sunrise"),
+                sunset: val("Sunset"),
+              },
+              { onConflict: "day" }
+            );
+          if (error && process.env.NODE_ENV !== "production")
+            console.warn("[panchang] write failed:", error.message);
         }
       } catch {
         // Keep the build-time `initial` values.

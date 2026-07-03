@@ -17,6 +17,11 @@ export interface Mantra {
   count?: number;
   /** Optional URL of an audio recording for the "Listen" button. */
   audio?: string;
+  /** Optional related aarti — shows a "Listen to Aarti" button on the detail page. */
+  aarti?: {
+    title: string;
+    audio?: string;
+  };
 }
 
 export interface God {

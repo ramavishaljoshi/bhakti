@@ -7,7 +7,17 @@ import { Headphones, Pause, Loader2 } from "lucide-react";
  * "Listen" button for a mantra detail page. Plays the mantra's audio recording
  * inline (play / pause). Renders nothing when no audio is available.
  */
-export function MantraListenButton({ src }: { src?: string }) {
+export function MantraListenButton({
+  src,
+  label = "Listen",
+  noun = "mantra",
+}: {
+  src?: string;
+  /** Idle button text (default "Listen"). */
+  label?: string;
+  /** Used in the aria-label, e.g. "Listen to aarti". */
+  noun?: string;
+}) {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -47,7 +57,7 @@ export function MantraListenButton({ src }: { src?: string }) {
       <button
         type="button"
         onClick={toggle}
-        aria-label={playing ? "Pause mantra" : "Listen to mantra"}
+        aria-label={playing ? `Pause ${noun}` : `Listen to ${noun}`}
         className="inline-flex h-12 items-center gap-2 rounded-2xl border border-border bg-card px-6 font-semibold transition-colors hover:bg-secondary"
       >
         {loading ? (
@@ -57,7 +67,7 @@ export function MantraListenButton({ src }: { src?: string }) {
         ) : (
           <Headphones className="h-4 w-4" />
         )}
-        {playing ? "Pause" : "Listen"}
+        {playing ? "Pause" : label}
       </button>
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Quote } from "lucide-react";
 import { Icon } from "@/components/shared/icon";
@@ -8,8 +9,25 @@ import { cn } from "@/lib/utils";
 import { usePanchang } from "@/lib/use-panchang";
 import type { PanchangItem } from "@/lib/data/misc";
 
+/** Today's date, e.g. "Thursday, 3 July 2026", in India time. */
+function istDateLabel(d: Date): string {
+  return new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(d);
+}
+
 export function PanchangCard({ initial }: { initial?: PanchangItem[] }) {
   const { items: panchang } = usePanchang(initial);
+
+  // Set after mount to avoid a server/client hydration mismatch on the date.
+  const [dateLabel, setDateLabel] = useState<string>("");
+  useEffect(() => {
+    setDateLabel(istDateLabel(new Date()));
+  }, []);
 
   return (
     <motion.div
@@ -18,10 +36,15 @@ export function PanchangCard({ initial }: { initial?: PanchangItem[] }) {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="rounded-4xl border border-border bg-card p-5 shadow-soft"
     >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 font-display font-semibold">
-          <span className="text-saffron-500">📅</span> Today&apos;s Panchang
-        </h3>
+      <div className="mb-4 flex items-start justify-between">
+        <div>
+          <h3 className="flex items-center gap-2 font-display font-semibold">
+            <span className="text-saffron-500">📅</span> Today&apos;s Panchang
+          </h3>
+          {dateLabel && (
+            <p className="mt-0.5 text-xs text-muted-foreground">{dateLabel}</p>
+          )}
+        </div>
         <Link
           href="/panchang"
           className="flex items-center gap-0.5 text-xs font-semibold text-saffron-600 dark:text-saffron-400"

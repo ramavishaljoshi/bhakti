@@ -33,3 +33,22 @@ alter table public.panchang alter column day set not null;
 
 -- 5. One row per day (enables clean "today" lookups + prevents duplicates).
 create unique index if not exists panchang_day_key on public.panchang (day);
+
+-- 6. Make sure anon/authenticated visitors can actually WRITE today's row.
+--    (Read policy already exists; without an insert policy the app's upsert
+--    fails RLS even after the column is added.)
+alter table public.panchang enable row level security;
+
+drop policy if exists "Public can insert panchang" on public.panchang;
+create policy "Public can insert panchang"
+  on public.panchang for insert
+  to anon, authenticated
+  with check (true);
+
+-- upsert needs UPDATE too (on conflict → update the existing day's row).
+drop policy if exists "Public can update panchang" on public.panchang;
+create policy "Public can update panchang"
+  on public.panchang for update
+  to anon, authenticated
+  using (true)
+  with check (true);
