@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL, CONTENT_UPDATED } from "@/lib/seo";
 import { mantras } from "@/lib/data/mantras";
 import { temples, getAllStates } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
@@ -81,5 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entries.push({ url: url(`/authors/${au.slug}`), changeFrequency: "yearly", priority: 0.3 });
   }
 
-  return entries;
+  // Stamp every URL with the editorial "last reviewed" date so crawlers get a
+  // consistent lastmod signal. Bump CONTENT_UPDATED when content changes.
+  return entries.map((e) => ({ lastModified: CONTENT_UPDATED, ...e }));
 }

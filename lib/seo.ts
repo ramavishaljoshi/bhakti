@@ -86,14 +86,31 @@ export function buildMetadata({
 // AI search engines (ChatGPT, Gemini, Perplexity) clean, entity-rich facts.
 // ---------------------------------------------------------------------------
 
+// Stable @id anchors so every schema block on the site refers to ONE canonical
+// Organization / WebSite node. This is the strongest signal we can send Google
+// for the site name (Task 6) — the brand is defined once and referenced by id.
+export const ORG_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORG_ID,
     name: SITE_NAME,
-    alternateName: "Bhakti",
+    // alternateName teaches Google the accepted short forms so it stops falling
+    // back to the bare domain (agenticvani.com) as the display name.
+    alternateName: ["Bhakti", "Bhakti App", "Agentic Vani"],
     url: SITE_URL,
-    logo: absoluteUrl("/assets/hero-illustration.png"),
+    // Square logo (Google requires a square, ≥112px logo for the site-name /
+    // knowledge panel). icon-512.png is a clean 512×512 square.
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/icon-512.png"),
+      width: 512,
+      height: 512,
+    },
+    image: absoluteUrl(DEFAULT_OG_IMAGE),
     description:
       "A premium, mindful Hindu spirituality app — digital jap counter, mantra library, gods, temples, festivals and the Bhagavad Gita.",
     knowsLanguage: ["en", "hi"],
@@ -113,10 +130,34 @@ export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": WEBSITE_ID,
     name: SITE_NAME,
+    alternateName: ["Bhakti", "Bhakti by Agentic Vani", "Agentic Vani Bhakti"],
     url: SITE_URL,
     inLanguage: ["en", "hi"],
-    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+/**
+ * ItemList structured data for hub/listing pages (e.g. /intentions). Gives
+ * Google and AI engines a clean, ordered map of the child pages.
+ */
+export function itemListSchema(
+  items: { name: string; path: string }[],
+  { name }: { name?: string } = {}
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    ...(name ? { name } : {}),
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      url: absoluteUrl(it.path),
+    })),
   };
 }
 
@@ -193,10 +234,11 @@ export function articleSchema({
     },
     publisher: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: absoluteUrl("/assets/hero-illustration.png"),
+        url: absoluteUrl("/icon-512.png"),
       },
     },
   };

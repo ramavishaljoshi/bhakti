@@ -2,45 +2,62 @@
 
 > A modern, mindful Hindu spirituality web app: a digital jap (mantra) counter,
 > a mantra library, gods, temples, festivals, vrat guides, daily Panchang and
-> the Bhagavad Gita.
+> the Bhagavad Gita. Published by Bhakti by Agentic Vani
+> (https://bhakti.agenticvani.com).
 
 Welcome to Bhakti by Agentic Vani.
 
-This website provides educational information about:
-
-- Hindu festivals
-- Hindu temples
-- Mantras
-- Bhagavad Gita
-- Spiritual practices
-- Indian traditions
+This website provides educational information about Hindu mantras, gods,
+temples, festivals, vrat (fasting), Panchang and the Bhagavad Gita.
 
 ## Important
 
-Practices vary across regions, lineages, and communities.
-Recommendations are based on traditional beliefs and should not be interpreted
-as guarantees of outcomes.
+Practices vary across regions, lineages, and communities. Recommendations are
+based on traditional beliefs and should not be interpreted as guarantees of
+outcomes, medical advice, or financial advice.
 
 ## Primary Topics
 
-- Festival
-- Temple
-- God
-- Mantra
-- Scripture
-- Vrat
-- Panchang
-- State-wise traditions
+- Mantra (with meaning, pronunciation, benefits and how to chant)
+- Mantras by purpose (peace, health, protection, prosperity, job, marriage, etc.)
+- God / Goddess
+- Temple (history, timings, how to reach)
+- Festival (story, puja vidhi, dates)
+- Vrat / fasting guides
+- Bhagavad Gita (chapters, verses, daily shloka)
+- Panchang (tithi, nakshatra, Rahu Kaal)
+- State-wise temple traditions
 
 ## Key Pages
 
-- [Gods & Goddesses](https://bhakti.agenticvani.com/gods)
+- [Home](https://bhakti.agenticvani.com/)
 - [Mantras](https://bhakti.agenticvani.com/mantras)
+- [Find Mantras by Purpose](https://bhakti.agenticvani.com/intentions)
+- [Gods & Goddesses](https://bhakti.agenticvani.com/gods)
 - [Temples](https://bhakti.agenticvani.com/temples)
 - [Festivals](https://bhakti.agenticvani.com/festivals)
+- [Vrat & Fasting](https://bhakti.agenticvani.com/vrat)
 - [Bhagavad Gita](https://bhakti.agenticvani.com/gita)
 - [Panchang](https://bhakti.agenticvani.com/panchang)
+- [Articles](https://bhakti.agenticvani.com/articles)
 - [Jap Counter](https://bhakti.agenticvani.com/jap)
+
+## Mantras by Purpose (examples)
+
+- [Mantras for Peace](https://bhakti.agenticvani.com/intentions/peace)
+- [Mantras for Health](https://bhakti.agenticvani.com/intentions/health)
+- [Mantras for Protection](https://bhakti.agenticvani.com/intentions/protection)
+- [Mantras for Prosperity](https://bhakti.agenticvani.com/intentions/prosperity)
+- [Mantras for a Job](https://bhakti.agenticvani.com/intentions/job)
+- [Mantras for Business](https://bhakti.agenticvani.com/intentions/business)
+- [Mantras for Marriage](https://bhakti.agenticvani.com/intentions/marriage)
+- [Mantras for Education](https://bhakti.agenticvani.com/intentions/education)
+
+## Machine-readable
+
+- Sitemap: https://bhakti.agenticvani.com/sitemap.xml
+- Image sitemap: https://bhakti.agenticvani.com/image-sitemap.xml
+- RSS (articles): https://bhakti.agenticvani.com/rss.xml
 
 ## Usage
 
