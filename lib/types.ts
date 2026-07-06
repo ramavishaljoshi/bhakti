@@ -15,6 +15,8 @@ export interface Mantra {
   intentions: string[];
   image: string;
   count?: number;
+  /** Optional URL of a downloadable PDF (e.g. full lyrics) — shows a "Read PDF" button on the detail page. */
+  pdf?: string;
   /** Optional URL of an audio recording for the "Listen" button. */
   audio?: string;
   /** Optional related aarti — shows a "Listen to Aarti" button on the detail page. */
@@ -99,6 +101,17 @@ export interface Intention {
   description: string;
   color: string;
   mantraIds: string[];
+  /**
+   * 2–3 sentence definition / traditional context. Rendered as the page intro
+   * and used verbatim in the AEO "summary box" and speakable/AI-overview text.
+   */
+  intro?: string;
+  /** Purpose-phrased search label, e.g. "Mantras for Peace of Mind". */
+  seoTitle?: string;
+  /** Page-specific FAQ — rendered on the page and emitted as FAQPage schema. */
+  faqs?: { q: string; a: string }[];
+  /** Extra long-tail keywords for this purpose. */
+  keywords?: string[];
 }
 
 export interface StateInfo {

@@ -8,6 +8,7 @@ import {
   CalendarDays,
   Landmark,
   CheckCircle2,
+  FileText,
 } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -188,6 +189,16 @@ export default function MantraDetailPage({
             <MantraListenButton src={mantra.audio} />
             {mantra.aarti?.audio && (
               <MantraListenButton src={mantra.aarti.audio} noun="aarti" />
+            )}
+            {mantra.pdf && (
+              <a
+                href={mantra.pdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center gap-2 rounded-2xl bg-saffron-gradient px-6 font-semibold text-white shadow-glow transition-transform active:scale-95"
+              >
+                <FileText className="h-4 w-4" /> Read PDF
+              </a>
             )}
           </div>
 

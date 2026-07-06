@@ -79,6 +79,7 @@ export const mantras: Mantra[] = [
     relatedTemple: "Salasar Balaji",
     intentions: ["protection", "career", "success", "health"],
     image: "/assets/mantras/hanuman-chalisa.jpg",
+    pdf: "/assets/mantras/hanuman-chalisa.pdf",
     count: 11,
     aarti: {
       title: "Hanuman Chalisa",
@@ -105,6 +106,7 @@ export const mantras: Mantra[] = [
     whenToChant: "At dawn (Brahma Muhurta) facing the rising sun.",
     intentions: ["education", "meditation", "spiritual-growth", "success"],
     image: "/assets/mantras/gayatri-mantra.jpg",
+    pdf: "/assets/mantras/gayatri-mantra.pdf",
     count: 108,
     aarti: {
       title: "Gayatri Mantra",
@@ -322,6 +324,7 @@ export const mantras: Mantra[] = [
     relatedFestival: "Maha Shivaratri",
     intentions: ["health", "protection", "peace", "spiritual-growth"],
     image: "/assets/mantras/mahamrityunjaya-mantra.jpg",
+    pdf: "/assets/mantras/mahamrityunjaya-mantra.pdf",
     count: 108,
     aarti: {
       title: "Mahamrityunjaya Mantra",
