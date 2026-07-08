@@ -921,6 +921,10 @@ export default function NaamJaapCounter() {
   const selectDeity = (name: string) => {
     setDeity(name);
     setDeityImage(DEITY_IMAGE[name] ?? "");
+    // Keep the center mantra name in sync with the chosen deity — so selecting a
+    // Background name changes BOTH the image and the mantra shown, not just the image.
+    const match = MANTRAS.find((m) => m.deity === name);
+    if (match) setMantraId(match.id);
   };
 
   const handleImage = (file?: File) => {
