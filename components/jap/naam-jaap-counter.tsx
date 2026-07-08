@@ -36,7 +36,7 @@ const MALA_SIZE = 108;
 // stay as the short picker labels). `audio` is a built-in recording that plays
 // automatically for that mantra (an uploaded mp3 still overrides it).
 const MANTRAS: Array<{ id: MantraId; en: string; hi: string; deity: string; chant?: string; audio?: string }> = [
-  { id: "radhe", en: "Radhe Radhe", hi: "राधे राधे", deity: "Radhe" },
+  { id: "radhe", en: "Radhe Radhe", hi: "राधे राधे", deity: "Radhe", chant: "राधे राधे" },
   { id: "krishna", en: "Hare Krishna", hi: "हरे कृष्ण", deity: "Krishna" },
   { id: "ram", en: "Ram Naam", hi: "राम नाम", deity: "Ram", chant: "राम राम" },
   { id: "shiv", en: "Om Namah Shivaya", hi: "ॐ नमः शिवाय", deity: "Shiv" },
@@ -49,6 +49,17 @@ const MANTRAS: Array<{ id: MantraId; en: string; hi: string; deity: string; chan
   },
   { id: "waheguru", en: "Waheguru", hi: "वाहेगुरु", deity: "Waheguru" },
 ];
+
+// Maps the mantra-library data slugs (used in ?mantra=<slug> deep links from
+// mantra pages) to this counter's preset ids.
+const SLUG_TO_MANTRA: Record<string, MantraId> = {
+  "om-namah-shivaya": "shiv",
+  "hare-krishna-maha-mantra": "krishna",
+  "gayatri-mantra": "gayatri",
+  "shree-ram-jai-ram": "ram",
+  "radhe-radhe": "radhe",
+  waheguru: "waheguru",
+};
 
 const DEITIES = ["None", "Radhe", "Krishna", "Ram", "Shiv", "Gayatri", "Waheguru"];
 
@@ -467,12 +478,13 @@ export default function NaamJaapCounter() {
         : selectedMantra.en;
   const mantraSub =
     mantraId === "custom" ? "" : language === "hi" ? selectedMantra.en : selectedMantra.hi;
-  // What the voice actually speaks: the full verse when the mantra defines one,
-  // otherwise its name.
+  // What the voice actually speaks: the full verse (chant) when defined, else the
+  // Devanagari (hi) form — NOT the roman en — so the Hindi voice pronounces it
+  // correctly instead of an anglicised reading.
   const mantraSpoken =
     mantraId === "custom"
       ? customMantra || "Custom mantra"
-      : selectedMantra.chant ?? (language === "hi" ? selectedMantra.hi : selectedMantra.en);
+      : selectedMantra.chant ?? selectedMantra.hi;
   // Audio that actually plays: the user's uploaded mp3 wins; otherwise the
   // selected mantra's built-in recording (if any).
   // This mantra's uploaded recording wins; otherwise its built-in recording.
@@ -504,6 +516,23 @@ export default function NaamJaapCounter() {
     setDeity(storage.get("njc-deity", "Radhe"));
     setDeityImage(storage.get("njc-deity-image", ""));
     setMantraAudios(storage.get<Record<string, string>>("njc-mantra-audios", {}));
+
+    // A ?mantra=<slug> deep link (from a mantra page) preselects that mantra,
+    // overriding the last saved one and setting its matching background image.
+    const linkedSlug =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("mantra")
+        : null;
+    const linkedId = linkedSlug ? SLUG_TO_MANTRA[linkedSlug] : undefined;
+    if (linkedId) {
+      const linked = MANTRAS.find((x) => x.id === linkedId);
+      setMantraId(linkedId);
+      if (linked) {
+        setDeity(linked.deity);
+        setDeityImage(DEITY_IMAGE[linked.deity] ?? "");
+      }
+    }
+
     setReady(true);
   }, []);
 
@@ -937,7 +966,16 @@ export default function NaamJaapCounter() {
               <small>{language === "hi" ? m.en : m.hi}</small>
             </button>
           ))}
-          <button className={`tag ${mantraId === "custom" ? "is-on" : ""}`} onClick={() => setMantraId("custom")}>
+          <button
+            className={`tag ${mantraId === "custom" ? "is-on" : ""}`}
+            onClick={() => {
+              setMantraId("custom");
+              setDeity("None");
+              // Custom has no preset deity image — drop any preset background,
+              // but keep a photo the user uploaded themselves (data: URL).
+              setDeityImage((img) => (img.startsWith("data:") ? img : ""));
+            }}
+          >
             {L.custom}
           </button>
         </div>

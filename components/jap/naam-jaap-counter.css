@@ -467,7 +467,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: -4px;
+  margin-top: 30px;
   color: var(--ink-dim);
   font-size: 0.86rem;
 }
@@ -490,7 +490,7 @@
   grid-template-columns: 1fr 1fr 1.25fr;
   gap: 10px;
   width: min(100%, 470px);
-  margin-top: 18px;
+  margin: 20px 0;
 }
 
 .btn {
@@ -560,10 +560,11 @@
 
 .counter-under-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 12px;
+  margin: 20px 0;
 }
 
 .mantra-trigger {
