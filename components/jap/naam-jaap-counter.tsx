@@ -32,12 +32,21 @@ type DayLog = Record<string, { malas: number; chants: number; seconds: number }>
 
 const MALA_SIZE = 108;
 
-const MANTRAS: Array<{ id: MantraId; en: string; hi: string; deity: string }> = [
+// `chant`, when present, is the full mantra text displayed and spoken (en/hi
+// stay as the short picker labels). `audio` is a built-in recording that plays
+// automatically for that mantra (an uploaded mp3 still overrides it).
+const MANTRAS: Array<{ id: MantraId; en: string; hi: string; deity: string; chant?: string; audio?: string }> = [
   { id: "radhe", en: "Radhe Radhe", hi: "राधे राधे", deity: "Radhe" },
   { id: "krishna", en: "Hare Krishna", hi: "हरे कृष्ण", deity: "Krishna" },
-  { id: "ram", en: "Ram Naam", hi: "राम नाम", deity: "Ram" },
+  { id: "ram", en: "Ram Naam", hi: "राम नाम", deity: "Ram", chant: "राम राम" },
   { id: "shiv", en: "Om Namah Shivaya", hi: "ॐ नमः शिवाय", deity: "Shiv" },
-  { id: "gayatri", en: "Gayatri Mantra", hi: "गायत्री मंत्र", deity: "Gayatri" },
+  {
+    id: "gayatri",
+    en: "Gayatri Mantra",
+    hi: "गायत्री मंत्र",
+    deity: "Gayatri",
+    chant: "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्॥",
+  },
   { id: "waheguru", en: "Waheguru", hi: "वाहेगुरु", deity: "Waheguru" },
 ];
 
@@ -51,6 +60,18 @@ const DEITY_TEXT: Record<string, string> = {
   Shiv: "शिव",
   Gayatri: "ॐ",
   Waheguru: "ੴ",
+};
+
+// Preset background for each deity option — clicking a deity auto-selects its
+// picture as the ring background. Uploading a photo overrides this.
+const DEITY_IMAGE: Record<string, string> = {
+  None: "",
+  Radhe: "/assets/mantras/hare-krishna-maha-mantra.jpg",
+  Krishna: "/assets/festivals/janmashtami.jpg",
+  Ram: "/assets/mantras/shree-ram-jai-ram.jpg",
+  Shiv: "/assets/shiva-artwork.jpg",
+  Gayatri: "/assets/mantras/gayatri-mantra.jpg",
+  Waheguru: "/assets/temples/golden-temple.jpg",
 };
 
 const UI = {
@@ -73,6 +94,8 @@ const UI = {
     customPlaceholder: "Type your mantra",
     upload: "Upload deity photo",
     removeImage: "Remove image",
+    uploadAudio: "Upload chant mp3",
+    removeAudio: "Remove audio",
     noRecent: "Completed malas appear here after 108 counts.",
     recent: "Recent malas",
     reset: "Reset",
@@ -117,6 +140,8 @@ const UI = {
     customPlaceholder: "अपना मंत्र लिखें",
     upload: "देवी/देवता फोटो",
     removeImage: "फोटो हटाएँ",
+    uploadAudio: "जाप mp3 अपलोड",
+    removeAudio: "ऑडियो हटाएँ",
     noRecent: "108 पूर्ण होने के बाद माला यहाँ दिखेगी।",
     recent: "हाल की माला",
     reset: "रीसेट",
@@ -392,6 +417,9 @@ export default function NaamJaapCounter() {
   const [ttsRepeat, setTtsRepeat] = useState(1);
   const [haptics, setHaptics] = useState(true);
   const [autoChant, setAutoChant] = useState(false);
+  // When auto-chanting: true = keep looping mala after mala (Repeat button);
+  // false = stop after one full mala of 108 (Auto button).
+  const [autoLoop, setAutoLoop] = useState(true);
   const [autoChantSpeed, setAutoChantSpeed] = useState(3000);
   const [announce, setAnnounce] = useState(true);
   const [liveMsg, setLiveMsg] = useState("");
@@ -406,6 +434,9 @@ export default function NaamJaapCounter() {
   const [customMantra, setCustomMantra] = useState("");
   const [deity, setDeity] = useState("Radhe");
   const [deityImage, setDeityImage] = useState("");
+  // User-uploaded chant recordings (mp3), keyed per mantra id. A recording for a
+  // mantra plays instead of the robotic TTS voice — and only for that mantra.
+  const [mantraAudios, setMantraAudios] = useState<Record<string, string>>({});
   const [showExport, setShowExport] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -417,12 +448,36 @@ export default function NaamJaapCounter() {
   const sessionsRef = useRef<Session[]>([]);
   const { ensure, chime } = useTone(chimeOn, music);
   const { supported: ttsSupported, speak, cancel: cancelSpeech } = useSpeech();
-  const tapRef = useRef<() => void>(() => {});
+  const tapRef = useRef<(silent?: boolean) => void>(() => {});
+  const countRef = useRef(0);
+  const mantraSpokenRef = useRef("");
+  const ttsOptsRef = useRef({ gender: "female" as VoiceGender, rate: 1, repeat: 1 });
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
+  const mantraAudioUrlRef = useRef("");
   const L = UI[language];
 
   const selectedMantra = useMemo(() => MANTRAS.find((m) => m.id === mantraId) || MANTRAS[0], [mantraId]);
-  const mantraLabel = mantraId === "custom" ? customMantra || "Custom mantra" : language === "hi" ? selectedMantra.hi : selectedMantra.en;
-  const mantraSub = mantraId === "custom" ? "" : language === "hi" ? selectedMantra.en : selectedMantra.hi;
+  // The counter center shows the short mantra NAME (a long verse looks cluttered
+  // in the ring); the full verse is used only for the spoken audio.
+  const mantraLabel =
+    mantraId === "custom"
+      ? customMantra || "Custom mantra"
+      : language === "hi"
+        ? selectedMantra.hi
+        : selectedMantra.en;
+  const mantraSub =
+    mantraId === "custom" ? "" : language === "hi" ? selectedMantra.en : selectedMantra.hi;
+  // What the voice actually speaks: the full verse when the mantra defines one,
+  // otherwise its name.
+  const mantraSpoken =
+    mantraId === "custom"
+      ? customMantra || "Custom mantra"
+      : selectedMantra.chant ?? (language === "hi" ? selectedMantra.hi : selectedMantra.en);
+  // Audio that actually plays: the user's uploaded mp3 wins; otherwise the
+  // selected mantra's built-in recording (if any).
+  // This mantra's uploaded recording wins; otherwise its built-in recording.
+  const uploadedAudio = mantraAudios[mantraId] || "";
+  const effectiveAudio = uploadedAudio || (mantraId === "custom" ? "" : selectedMantra.audio ?? "");
   const today = dayLog[todayKey()] || { malas: 0, chants: 0, seconds: 0 };
   const remaining = MALA_SIZE - count;
 
@@ -448,8 +503,21 @@ export default function NaamJaapCounter() {
     setCustomMantra(storage.get("njc-custom-mantra", ""));
     setDeity(storage.get("njc-deity", "Radhe"));
     setDeityImage(storage.get("njc-deity-image", ""));
+    setMantraAudios(storage.get<Record<string, string>>("njc-mantra-audios", {}));
     setReady(true);
   }, []);
+
+  // Persist the chant audios on their own (they can be large data URLs, so we
+  // keep them out of the high-frequency save effect that runs on every tap).
+  useEffect(() => {
+    if (!ready) return;
+    storage.set("njc-mantra-audios", mantraAudios);
+  }, [ready, mantraAudios]);
+
+  // The playback ref follows the effective audio (upload or built-in preset).
+  useEffect(() => {
+    mantraAudioUrlRef.current = effectiveAudio;
+  }, [effectiveAudio]);
 
   useEffect(() => {
     if (!ready) return;
@@ -540,16 +608,62 @@ export default function NaamJaapCounter() {
     if (announce) setLiveMsg(L.complete);
   }, [deity, mantraLabel, sessionStart, announce, L.complete]);
 
+  // Play the uploaded chant recording from the start. Returns false when there
+  // is no recording (so callers fall back to TTS). `onEnd` fires when the clip
+  // finishes, letting auto-repeat chain the next count in sync with the audio.
+  const playMantraAudio = useCallback((onEnd?: () => void): boolean => {
+    const url = mantraAudioUrlRef.current;
+    if (!url || typeof window === "undefined") return false;
+    if (!audioElRef.current) audioElRef.current = new Audio();
+    const el = audioElRef.current;
+    try {
+      // A new source starts at 0 on its own; only rewind when replaying the same
+      // clip (setting currentTime on a just-assigned src can throw before load).
+      if (el.src !== url) el.src = url;
+      else el.currentTime = 0;
+      el.loop = false; // a single manual tap plays the clip once
+      el.muted = false;
+      el.playbackRate = 1; // a recording plays at its natural speed
+      el.onended = onEnd ?? null;
+      const p = el.play();
+      // If autoplay is blocked or errors, still advance so a chain can't stall.
+      if (p && typeof p.catch === "function") p.catch(() => onEnd?.());
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
+
+  // "Unlock" the audio element inside a click gesture so the auto/repeat loop's
+  // later play() (started from an effect, outside the gesture) isn't blocked by
+  // autoplay policy. We start a muted play here; the loop then unmutes and
+  // restarts it — we deliberately do NOT pause (a pause would race the loop).
+  const unlockAudio = useCallback(() => {
+    const url = mantraAudioUrlRef.current;
+    if (!url || typeof window === "undefined") return;
+    if (!audioElRef.current) audioElRef.current = new Audio();
+    const el = audioElRef.current;
+    if (el.src !== url) el.src = url;
+    el.muted = true;
+    el.play().catch(() => {});
+  }, []);
+
+  // TTS voice only — controlled by the Voice toggle. (The uploaded recording is
+  // handled separately in tap() so it plays even when Voice is off.)
   const speakMantra = useCallback(() => {
     if (!ttsOn) return;
-    // Devanagari text → Hindi voice; otherwise the English transliteration.
-    const lang = /[ऀ-ॿ]/.test(mantraLabel) ? "hi-IN" : "en-US";
-    speak(mantraLabel, { lang, gender: voiceGender, rate: ttsRate, repeat: ttsRepeat });
-  }, [ttsOn, mantraLabel, voiceGender, ttsRate, ttsRepeat, speak]);
+    // Speak the full verse (mantraSpoken); Devanagari → Hindi voice, else English.
+    const lang = /[ऀ-ॿ]/.test(mantraSpoken) ? "hi-IN" : "en-US";
+    speak(mantraSpoken, { lang, gender: voiceGender, rate: ttsRate, repeat: ttsRepeat });
+  }, [ttsOn, mantraSpoken, voiceGender, ttsRate, ttsRepeat, speak]);
 
-  const tap = useCallback(() => {
+  const tap = useCallback((silent = false) => {
     ensure();
-    speakMantra();
+    // Auto-chant plays the audio itself (to chain the next one), so it taps
+    // silently to avoid playing it twice. On a manual tap, a real uploaded
+    // recording plays whenever present — regardless of the Voice toggle — and
+    // only when there's none do we fall back to the TTS voice.
+    if (!silent && !playMantraAudio()) speakMantra();
     addJap(1, mantraLabel);
     if (!running) {
       setRunning(true);
@@ -573,24 +687,117 @@ export default function NaamJaapCounter() {
       }
       return next;
     });
-  }, [chime, completeMala, ensure, running, addJap, mantraLabel, speakMantra, haptics]);
+  }, [chime, completeMala, ensure, running, addJap, mantraLabel, speakMantra, playMantraAudio, haptics]);
 
-  // Keep a ref to the latest tap() so the auto-chant interval always calls the
-  // current closure without re-creating the interval on every tap.
+  // Keep refs to the latest values so the auto-chant loop reads current state
+  // without re-starting itself on every tap / setting change.
   useEffect(() => {
     tapRef.current = tap;
   }, [tap]);
+  useEffect(() => {
+    countRef.current = count;
+  }, [count]);
+  useEffect(() => {
+    mantraSpokenRef.current = mantraSpoken;
+  }, [mantraSpoken]);
+  useEffect(() => {
+    ttsOptsRef.current = { gender: voiceGender, rate: ttsRate, repeat: ttsRepeat };
+  }, [voiceGender, ttsRate, ttsRepeat]);
 
-  // Auto-chanting: hands-free taps at the chosen pace while enabled.
+  // Hands-free chanting while enabled. Two separate processes:
+  //  • Auto  (autoLoop=false): mantra plays automatically and counts to one full
+  //    mala (108), then STOPS. No looping.
+  //  • Repeat (autoLoop=true): mantra plays and counts, and after 108 it rolls
+  //    over and repeats the SAME mantra again — loops until the user stops it.
   useEffect(() => {
     if (!autoChant) return;
-    const id = window.setInterval(() => tapRef.current(), Math.max(600, autoChantSpeed));
-    return () => window.clearInterval(id);
-  }, [autoChant, autoChantSpeed]);
+    const loop = autoLoop;
+    let cancelled = false;
+    let timer = 0;
 
-  // Stop any in-flight speech when chanting audio or auto-chant is turned off.
+    // Advance the counter one step; return true if we've completed a mala and
+    // (in Auto mode) should stop.
+    const step = (): boolean => {
+      const willComplete = countRef.current + 1 >= MALA_SIZE;
+      tapRef.current(true); // silent — audio is handled below, not per tap
+      if (willComplete && !loop) {
+        setAutoChant(false);
+        return true;
+      }
+      return false;
+    };
+
+    const url = mantraAudioUrlRef.current;
+
+    if (url) {
+      // --- Uploaded mp3: play it on a continuous loop so the mantra genuinely
+      //     repeats; count ticks at the chosen steady pace, independent of the
+      //     clip's length (works for a short mantra or a long recording). ---
+      if (!audioElRef.current) audioElRef.current = new Audio();
+      const el = audioElRef.current;
+      if (el.src !== url) el.src = url;
+      el.loop = true;
+      el.muted = false;
+      el.playbackRate = 1;
+      try {
+        el.currentTime = 0;
+      } catch {
+        // ignore: seeking before load throws in some browsers
+      }
+      el.play().catch(() => {});
+
+      const tick = () => {
+        if (cancelled) return;
+        if (step()) return;
+        timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+      };
+      timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+    } else if (ttsSupported) {
+      // --- No mp3: speak the mantra, then count when speech ends (no overlap). ---
+      const runCycle = () => {
+        if (cancelled) return;
+        const label = mantraSpokenRef.current;
+        const lang = /[ऀ-ॿ]/.test(label) ? "hi-IN" : "en-US";
+        const { gender, rate, repeat } = ttsOptsRef.current;
+        speak(label, {
+          lang,
+          gender,
+          rate,
+          repeat,
+          onEnd: () => {
+            if (cancelled) return;
+            if (step()) return;
+            timer = window.setTimeout(runCycle, 500);
+          },
+        });
+      };
+      timer = window.setTimeout(runCycle, 300);
+    } else {
+      // --- No audio at all: just count silently at the chosen pace. ---
+      const tick = () => {
+        if (cancelled) return;
+        if (step()) return;
+        timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+      };
+      timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+    }
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      cancelSpeech();
+      if (audioElRef.current) {
+        audioElRef.current.loop = false;
+        audioElRef.current.pause();
+      }
+    };
+  }, [autoChant, autoLoop, autoChantSpeed, ttsSupported, speak, cancelSpeech]);
+
+  // Stop any leftover speech only when there's no reason to chant — both manual
+  // voice and auto-chant are off. (Auto-chant voices on its own, so it must not
+  // be cancelled just because the manual Voice toggle is off.)
   useEffect(() => {
-    if (!ttsOn || !autoChant) cancelSpeech();
+    if (!ttsOn && !autoChant) cancelSpeech();
   }, [ttsOn, autoChant, cancelSpeech]);
 
   // Screen-reader announcements of progress (aria-live region below).
@@ -635,6 +842,7 @@ export default function NaamJaapCounter() {
     setCount(0);
     setElapsed(0);
     setRunning(false);
+    setAutoChant(false); // stop Auto/Repeat too on reset
     setSessionStart(null);
     undoRef.current = [];
     setShowReset(false);
@@ -679,11 +887,35 @@ export default function NaamJaapCounter() {
     }
   };
 
+  // Choosing a deity option also swaps the ring background to its preset
+  // picture. "None" clears it. An uploaded photo (handleImage) overrides this.
+  const selectDeity = (name: string) => {
+    setDeity(name);
+    setDeityImage(DEITY_IMAGE[name] ?? "");
+  };
+
   const handleImage = (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => setDeityImage(String(reader.result || ""));
     reader.readAsDataURL(file);
+  };
+
+  // Store the uploaded recording under the currently selected mantra only.
+  const handleAudio = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () =>
+      setMantraAudios((prev) => ({ ...prev, [mantraId]: String(reader.result || "") }));
+    reader.readAsDataURL(file);
+  };
+
+  // Clicking a mantra option selects it and swaps the background image (via its
+  // deity). It does NOT start chanting/counting — the user controls that with the
+  // Auto / Repeat buttons.
+  const selectMantra = (m: (typeof MANTRAS)[number]) => {
+    setMantraId(m.id);
+    selectDeity(m.deity);
   };
 
   if (!ready) return null;
@@ -699,10 +931,7 @@ export default function NaamJaapCounter() {
             <button
               key={m.id}
               className={`tag ${mantraId === m.id ? "is-on" : ""}`}
-              onClick={() => {
-                setMantraId(m.id);
-                setDeity(m.deity);
-              }}
+              onClick={() => selectMantra(m)}
             >
               {language === "hi" ? m.hi : m.en}
               <small>{language === "hi" ? m.en : m.hi}</small>
@@ -713,6 +942,34 @@ export default function NaamJaapCounter() {
           </button>
         </div>
         {mantraId === "custom" ? <input className="field" style={{ marginTop: 10 }} value={customMantra} onChange={(event) => setCustomMantra(event.target.value)} placeholder={L.customPlaceholder} /> : null}
+        <div className="upload-row" style={{ marginTop: 12 }}>
+          <label className="chip" style={{ justifyContent: "center" }}>
+            {L.uploadAudio}
+            <input type="file" accept="audio/*" hidden onChange={(event) => handleAudio(event.target.files?.[0])} />
+          </label>
+          {uploadedAudio ? (
+            <button
+              className="btn"
+              onClick={() =>
+                setMantraAudios((prev) => {
+                  const next = { ...prev };
+                  delete next[mantraId];
+                  return next;
+                })
+              }
+            >
+              {L.removeAudio}
+            </button>
+          ) : null}
+        </div>
+        {effectiveAudio ? (
+          <audio
+            controls
+            src={effectiveAudio}
+            style={{ width: "100%", marginTop: 10 }}
+            aria-label="Chant audio preview"
+          />
+        ) : null}
       </div>
 
       <div className="panel">
@@ -721,7 +978,7 @@ export default function NaamJaapCounter() {
         </div>
         <div className="deity-list">
           {DEITIES.map((name) => (
-            <button key={name} className={`tag ${deity === name ? "is-on" : ""}`} onClick={() => setDeity(name)}>
+            <button key={name} className={`tag ${deity === name ? "is-on" : ""}`} onClick={() => selectDeity(name)}>
               {DEITY_TEXT[name] || name}
             </button>
           ))}
@@ -807,7 +1064,7 @@ export default function NaamJaapCounter() {
                 </div>
               </div>
             </div>
-            <button className="tap-layer" onClick={tap} aria-label={L.tap} />
+            <button className="tap-layer" onClick={() => tap()} aria-label={L.tap} />
             <button
               className={`ring-music-button ${music ? "is-on" : ""}`}
               onClick={() => setMusic((value) => !value)}
@@ -849,6 +1106,41 @@ export default function NaamJaapCounter() {
           </div>
 
           <div className="counter-under-actions" aria-label="Counter actions">
+            {ttsSupported ? (
+              <button
+                className={`chip ${ttsOn ? "is-on" : ""}`}
+                onClick={() => setTtsOn((v) => !v)}
+                aria-pressed={ttsOn}
+              >
+                <span aria-hidden="true">🔊</span> {ttsOn ? "Voice on" : "Voice"}
+              </button>
+            ) : null}
+            <button
+              className={`chip ${autoChant && !autoLoop ? "is-on" : ""}`}
+              onClick={() => {
+                const turningOn = !(autoChant && !autoLoop);
+                if (turningOn) unlockAudio();
+                setAutoLoop(false);
+                setAutoChant(turningOn);
+                if (turningOn && ttsSupported) setTtsOn(true);
+              }}
+              aria-pressed={autoChant && !autoLoop}
+            >
+              <span aria-hidden="true">▶</span> {autoChant && !autoLoop ? "Auto on" : "Auto"}
+            </button>
+            <button
+              className={`chip ${autoChant && autoLoop ? "is-on" : ""}`}
+              onClick={() => {
+                const turningOn = !(autoChant && autoLoop);
+                if (turningOn) unlockAudio();
+                setAutoLoop(true);
+                setAutoChant(turningOn);
+                if (turningOn && ttsSupported) setTtsOn(true);
+              }}
+              aria-pressed={autoChant && autoLoop}
+            >
+              <span aria-hidden="true">🔁</span> {autoChant && autoLoop ? "Repeat on" : "Repeat"}
+            </button>
             <button
               className="chip fullscreen-trigger"
               onClick={() => {

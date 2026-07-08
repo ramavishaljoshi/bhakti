@@ -20,7 +20,18 @@ let browserClient: SupabaseClient | null = null;
 export function getSupabaseClient(): SupabaseClient | null {
   if (!isSupabaseConfigured) return null;
   if (!browserClient) {
-    browserClient = createBrowserClient(url!, anonKey!);
+    browserClient = createBrowserClient(url!, anonKey!, {
+      auth: {
+        // PKCE with a single, explicit code exchange on our /auth/callback page.
+        // detectSessionInUrl must be OFF so the code isn't auto-exchanged on
+        // random page loads too — a double exchange causes the Supabase
+        // "flow_state_already_used / State has already been used" error.
+        flowType: "pkce",
+        detectSessionInUrl: false,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    });
   }
   return browserClient;
 }

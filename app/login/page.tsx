@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { AuthShell, Field } from "@/components/auth/auth-shell";
+import { GoogleButton } from "@/components/auth/google-button";
 import { FormMessage } from "@/components/shared/form-message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,10 +23,14 @@ export default function LoginPage() {
   const [registered, setRegistered] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  // Show a success note when arriving from registration (?registered=1).
+  // Show a success note when arriving from registration (?registered=1), or an
+  // error forwarded by the auth callback (?error=...), e.g. an expired link.
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      setRegistered(new URLSearchParams(window.location.search).has("registered"));
+      const params = new URLSearchParams(window.location.search);
+      setRegistered(params.has("registered"));
+      const err = params.get("error");
+      if (err) setError(err);
     }
   }, []);
 
@@ -113,6 +118,8 @@ export default function LoginPage() {
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           Sign In
         </Button>
+
+        <GoogleButton label="Sign in with Google" />
       </form>
     </AuthShell>
   );

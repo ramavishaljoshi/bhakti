@@ -1,7 +1,10 @@
 "use client";
 
+// Auth hook (Supabase): email/password + Google OAuth. `useAuth()` returns
+// user/ready plus login, loginWithGoogle, register, logout, updateAccount.
 import * as React from "react";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { authCallbackUrl } from "@/lib/site-url";
 
 export interface BhaktiUser {
   name: string;
@@ -25,8 +28,16 @@ function mapUser(u: {
 } | null): BhaktiUser | null {
   if (!u) return null;
   const meta = u.user_metadata ?? {};
+  // Google/OAuth stores the display name under full_name/name; our own signups
+  // use name. Fall back through them, then the email prefix.
+  const metaName =
+    (meta.name as string) ||
+    (meta.full_name as string) ||
+    (meta.user_name as string) ||
+    (meta.given_name as string) ||
+    "";
   return {
-    name: (meta.name as string) || (u.email ? u.email.split("@")[0] : "Seeker"),
+    name: metaName || (u.email ? u.email.split("@")[0] : "Seeker"),
     email: u.email ?? "",
     sankalp: (meta.sankalp as string) || undefined,
     createdAt: u.created_at ? new Date(u.created_at).getTime() : Date.now(),
@@ -78,6 +89,10 @@ export function useAuth() {
         email: data.email.trim().toLowerCase(),
         password: data.password,
         options: {
+          // The confirmation email link must return to our callback route on the
+          // live site (NEXT_PUBLIC_SITE_URL) so it works from any device — not
+          // localhost. Without this it lands on the site root and can't sign in.
+          emailRedirectTo: authCallbackUrl(),
           data: {
             name: data.name.trim(),
             sankalp: data.sankalp?.trim() || null,
@@ -109,6 +124,20 @@ export function useAuth() {
     []
   );
 
+  const loginWithGoogle = React.useCallback(async (): Promise<AuthResult> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return { ok: false, error: NOT_CONFIGURED };
+
+    // Redirects the browser to Google, then back to our /auth/callback route,
+    // which exchanges the code for a session. No further action here on success.
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: authCallbackUrl() },
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }, []);
+
   const logout = React.useCallback(async () => {
     const supabase = getSupabaseClient();
     if (!supabase) return;
@@ -134,7 +163,10 @@ export function useAuth() {
       if (data.email) payload.email = data.email.trim().toLowerCase();
       if (data.password) payload.password = data.password;
 
-      const { data: result, error } = await supabase.auth.updateUser(payload);
+      const { data: result, error } = await supabase.auth.updateUser(payload, {
+        // Email changes also send a confirmation link — route it to our callback.
+        emailRedirectTo: authCallbackUrl(),
+      });
       if (error) return { ok: false, error: error.message };
 
       setUser(mapUser(result.user));
@@ -152,6 +184,7 @@ export function useAuth() {
     ready,
     register,
     login,
+    loginWithGoogle,
     logout,
     updateAccount,
     configured: isSupabaseConfigured,

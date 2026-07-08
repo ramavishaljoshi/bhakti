@@ -81,21 +81,11 @@ export function AudioPlayer() {
     audio.src = BHAJANS[0].src;
   }, []);
 
-  // When the user picks a different track, swap the source and play it.
-  const mounted = React.useRef(false);
-  React.useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return; // initial track is handled by the mount effect above
-    }
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.src = BHAJANS[index].src;
-    audio.muted = false;
-    audio.play().catch(() => {});
-  }, [index]);
-
   // Play the chosen row, or toggle pause/resume if it's already current.
+  // Playback is started ONLY here, from a real click — never from an effect —
+  // so the initial track can never auto-play on load. (An effect that played on
+  // index change once fired under a StrictMode double-mount and made Hanuman
+  // Chalisa start by itself.)
   const selectTrack = (i: number) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -109,6 +99,9 @@ export function AudioPlayer() {
       return;
     }
     setIndex(i);
+    audio.src = BHAJANS[i].src;
+    audio.muted = false;
+    audio.play().catch(() => {});
   };
 
   return (

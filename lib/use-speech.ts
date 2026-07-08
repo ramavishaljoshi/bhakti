@@ -9,6 +9,9 @@ export interface SpeakOptions {
   gender?: VoiceGender;
   rate?: number;
   repeat?: number;
+  /** Fired once after the final repeat finishes (or errors). Lets callers
+   *  chain the next chant so auto-repeat paces itself to the voice. */
+  onEnd?: () => void;
 }
 
 // Name hints used to guess a voice's gender (the Web Speech API doesn't expose
@@ -88,12 +91,38 @@ export function useSpeech() {
       const lang = opts.lang ?? "en-US";
       const voice = pickVoice(lang, opts.gender ?? "female");
       const repeat = Math.min(9, Math.max(1, Math.round(opts.repeat ?? 1)));
+      const onEnd = opts.onEnd;
+      let ended = false;
+      let started = false;
+      const finish = () => {
+        if (ended) return;
+        ended = true;
+        onEnd?.();
+      };
       for (let i = 0; i < repeat; i++) {
         const u = new SpeechSynthesisUtterance(trimmed);
         u.rate = Math.min(2, Math.max(0.5, opts.rate ?? 1));
         u.lang = voice?.lang ?? lang;
         if (voice) u.voice = voice;
+        if (i === 0) u.onstart = () => (started = true);
+        if (i === repeat - 1) {
+          // The real pacing signal: advance only after speech actually ends.
+          u.onend = finish;
+          u.onerror = finish;
+        }
         synth.speak(u);
+      }
+      // Safety nets for an auto-chain, so it neither stalls nor cuts speech off:
+      if (onEnd) {
+        // (a) If speech never even starts (blocked / no matching voice), advance
+        //     after a short grace so the chain keeps moving.
+        window.setTimeout(() => {
+          if (!started) finish();
+        }, 1600);
+        // (b) Backstop for a genuinely stuck onend — deliberately far longer
+        //     than any real utterance so it never cuts normal speech short.
+        const est = (trimmed.length * 0.09 + 1.4) * repeat * 1000;
+        window.setTimeout(finish, Math.min(30000, Math.max(9000, est)));
       }
     },
     [pickVoice]
