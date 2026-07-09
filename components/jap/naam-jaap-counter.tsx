@@ -36,18 +36,19 @@ const MALA_SIZE = 108;
 // stay as the short picker labels). `audio` is a built-in recording that plays
 // automatically for that mantra (an uploaded mp3 still overrides it).
 const MANTRAS: Array<{ id: MantraId; en: string; hi: string; deity: string; chant?: string; audio?: string }> = [
-  { id: "radhe", en: "Radhe Radhe", hi: "राधे राधे", deity: "Radhe", chant: "राधे राधे" },
-  { id: "krishna", en: "Hare Krishna", hi: "हरे कृष्ण", deity: "Krishna" },
-  { id: "ram", en: "Ram Naam", hi: "राम नाम", deity: "Ram", chant: "राम राम" },
-  { id: "shiv", en: "Om Namah Shivaya", hi: "ॐ नमः शिवाय", deity: "Shiv" },
+  { id: "radhe", en: "Radhe Radhe", hi: "राधे राधे", deity: "Radhe", chant: "राधे राधे", audio: "/radhe-radhe.mp3" },
+  { id: "krishna", en: "Hare Krishna", hi: "हरे कृष्ण", deity: "Krishna", audio: "/hare-krishna.mp3" },
+  { id: "ram", en: "Ram Naam", hi: "राम नाम", deity: "Ram", chant: "राम राम", audio: "/ram-naam.mp3" },
+  { id: "shiv", en: "Om Namah Shivaya", hi: "ॐ नमः शिवाय", deity: "Shiv", audio: "/om-namah-shivaya.mp3" },
   {
     id: "gayatri",
     en: "Gayatri Mantra",
     hi: "गायत्री मंत्र",
     deity: "Gayatri",
     chant: "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्॥",
+    audio: "/gayatri-mantra.mp3",
   },
-  { id: "waheguru", en: "Waheguru", hi: "वाहेगुरु", deity: "Waheguru" },
+  { id: "waheguru", en: "Waheguru", hi: "वाहेगुरु", deity: "Waheguru", audio: "/waheguru.mp3" },
 ];
 
 // Maps the mantra-library data slugs (used in ?mantra=<slug> deep links from
@@ -465,6 +466,12 @@ export default function NaamJaapCounter() {
   const ttsOptsRef = useRef({ gender: "female" as VoiceGender, rate: 1, repeat: 1 });
   const audioElRef = useRef<HTMLAudioElement | null>(null);
   const mantraAudioUrlRef = useRef("");
+  // Web Audio pieces for gapless mantra looping: a dedicated context, a cache of
+  // decoded clips (decoding to PCM strips the mp3 encoder padding that makes an
+  // <audio loop> stutter), and the currently-playing looping source.
+  const waCtxRef = useRef<AudioContext | null>(null);
+  const waBufRef = useRef<Record<string, AudioBuffer>>({});
+  const waSrcRef = useRef<AudioBufferSourceNode | null>(null);
   const L = UI[language];
 
   const selectedMantra = useMemo(() => MANTRAS.find((m) => m.id === mantraId) || MANTRAS[0], [mantraId]);
@@ -675,6 +682,19 @@ export default function NaamJaapCounter() {
     if (el.src !== url) el.src = url;
     el.muted = true;
     el.play().catch(() => {});
+    // Create/resume the gapless-loop context inside this click gesture so the
+    // auto-chant effect (which runs just after, outside the gesture) can play.
+    try {
+      const AudioCtor =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (AudioCtor) {
+        if (!waCtxRef.current) waCtxRef.current = new AudioCtor();
+        if (waCtxRef.current.state === "suspended") void waCtxRef.current.resume();
+      }
+    } catch {
+      // Web Audio unavailable — the effect falls back to <audio> looping.
+    }
   }, []);
 
   // TTS voice only — controlled by the Voice toggle. (The uploaded recording is
@@ -743,6 +763,7 @@ export default function NaamJaapCounter() {
     const loop = autoLoop;
     let cancelled = false;
     let timer = 0;
+    let detachAudio = () => {}; // removes the mp3 loop-counter listener on cleanup
 
     // Advance the counter one step; return true if we've completed a mala and
     // (in Auto mode) should stop.
@@ -759,28 +780,107 @@ export default function NaamJaapCounter() {
     const url = mantraAudioUrlRef.current;
 
     if (url) {
-      // --- Uploaded mp3: play it on a continuous loop so the mantra genuinely
-      //     repeats; count ticks at the chosen steady pace, independent of the
-      //     clip's length (works for a short mantra or a long recording). ---
-      if (!audioElRef.current) audioElRef.current = new Audio();
-      const el = audioElRef.current;
-      if (el.src !== url) el.src = url;
-      el.loop = true;
-      el.muted = false;
-      el.playbackRate = 1;
-      try {
-        el.currentTime = 0;
-      } catch {
-        // ignore: seeking before load throws in some browsers
-      }
-      el.play().catch(() => {});
+      // --- mp3 (uploaded or built-in preset): the chant must repeat with NO
+      //     audible break. An <audio loop> (or an onended reload) stutters at
+      //     the seam because the mp3 carries encoder padding, so instead we
+      //     decode the clip to PCM once and loop it through Web Audio, which is
+      //     sample-accurate and truly gapless. One loop = one count, so Auto
+      //     mode stops exactly on the 108th repeat. ---
 
-      const tick = () => {
+      // Fallback used when Web Audio is unavailable or decode fails: a plain
+      // <audio loop>, counting each wrap of currentTime back to the start.
+      const startHtmlLoop = () => {
         if (cancelled) return;
-        if (step()) return;
-        timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+        if (!audioElRef.current) audioElRef.current = new Audio();
+        const el = audioElRef.current;
+        if (el.src !== url) el.src = url;
+        el.loop = true;
+        el.muted = false;
+        el.playbackRate = 1;
+        try {
+          el.currentTime = 0;
+        } catch {
+          // ignore: seeking before load throws in some browsers
+        }
+        let lastTime = 0;
+        const onTime = () => {
+          if (cancelled) return;
+          const t = el.currentTime;
+          if (t + 0.15 < lastTime) {
+            if (step()) {
+              el.loop = false;
+              el.pause();
+              detachAudio();
+              return;
+            }
+          }
+          lastTime = t;
+        };
+        el.addEventListener("timeupdate", onTime);
+        detachAudio = () => el.removeEventListener("timeupdate", onTime);
+        el.play().catch(() => {
+          // Autoplay blocked: fall back to a timed step chain so it still counts.
+          detachAudio();
+          const tick = () => {
+            if (cancelled) return;
+            if (step()) return;
+            timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+          };
+          timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+        });
       };
-      timer = window.setTimeout(tick, Math.max(600, autoChantSpeed));
+
+      const ctx = waCtxRef.current;
+      if (ctx) {
+        // Gapless path. Decode (cached) then loop the PCM buffer; count one step
+        // per clip length using the buffer's exact duration.
+        const playBuffer = (buf: AudioBuffer) => {
+          if (cancelled) return;
+          const src = ctx.createBufferSource();
+          src.buffer = buf;
+          src.loop = true;
+          src.connect(ctx.destination);
+          waSrcRef.current = src;
+          detachAudio = () => {
+            try {
+              src.stop();
+            } catch {
+              // already stopped
+            }
+            src.disconnect();
+            if (waSrcRef.current === src) waSrcRef.current = null;
+          };
+          const period = Math.max(300, buf.duration * 1000);
+          const tick = () => {
+            if (cancelled) return;
+            if (step()) {
+              detachAudio();
+              return;
+            }
+            timer = window.setTimeout(tick, period);
+          };
+          src.start();
+          timer = window.setTimeout(tick, period);
+        };
+
+        const cached = waBufRef.current[url];
+        if (cached) {
+          playBuffer(cached);
+        } else {
+          void ctx.resume();
+          fetch(url)
+            .then((r) => r.arrayBuffer())
+            .then((data) => ctx.decodeAudioData(data))
+            .then((buf) => {
+              if (cancelled) return;
+              waBufRef.current[url] = buf;
+              playBuffer(buf);
+            })
+            .catch(() => startHtmlLoop()); // network/decode failed → <audio> loop
+        }
+      } else {
+        startHtmlLoop();
+      }
     } else if (ttsSupported) {
       // --- No mp3: speak the mantra, then count when speech ends (no overlap). ---
       const runCycle = () => {
@@ -815,8 +915,10 @@ export default function NaamJaapCounter() {
       cancelled = true;
       window.clearTimeout(timer);
       cancelSpeech();
+      detachAudio(); // stop counting loop wraps
       if (audioElRef.current) {
         audioElRef.current.loop = false;
+        audioElRef.current.onended = null;
         audioElRef.current.pause();
       }
     };
@@ -1004,14 +1106,6 @@ export default function NaamJaapCounter() {
             </button>
           ) : null}
         </div>
-        {effectiveAudio ? (
-          <audio
-            controls
-            src={effectiveAudio}
-            style={{ width: "100%", marginTop: 10 }}
-            aria-label="Chant audio preview"
-          />
-        ) : null}
       </div>
 
       <div className="panel">

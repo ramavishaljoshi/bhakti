@@ -222,9 +222,10 @@
 .panel {
   border: 1px solid var(--line);
   border-radius: 18px;
-  padding: 16px;
+  padding: 10px;
   background: var(--panel);
   box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
 }
 
