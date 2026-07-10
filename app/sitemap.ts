@@ -36,6 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/gods", priority: 0.9, freq: "weekly" },
     { path: "/panchang", priority: 0.8, freq: "daily" },
     { path: "/jap", priority: 0.7, freq: "monthly" },
+    { path: "/kids-naam-jaap-counter", priority: 0.8, freq: "monthly" },
     { path: "/ai-guru", priority: 0.7, freq: "monthly" },
     { path: "/about", priority: 0.5, freq: "yearly" },
     { path: "/contact", priority: 0.5, freq: "yearly" },

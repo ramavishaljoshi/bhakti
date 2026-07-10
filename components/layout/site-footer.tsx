@@ -32,6 +32,7 @@ export function SiteFooter() {
           <nav className="flex flex-col gap-2">
             <p className="mb-1 font-semibold text-foreground">More</p>
             <Link href="/jap" className="text-muted-foreground hover:text-foreground">Jap Counter</Link>
+            <Link href="/kids-naam-jaap-counter" className="text-muted-foreground hover:text-foreground">Kids Naam Jaap Counter</Link>
             <Link href="/intentions" className="text-muted-foreground hover:text-foreground">Intentions</Link>
             <Link href="/about" className="text-muted-foreground hover:text-foreground">About</Link>
             <Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link>
