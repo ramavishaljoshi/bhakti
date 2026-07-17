@@ -26,7 +26,8 @@ export function SiteFooter() {
             <Link href="/temples" className="text-muted-foreground hover:text-foreground">Temples</Link>
             <Link href="/festivals" className="text-muted-foreground hover:text-foreground">Festivals</Link>
             <Link href="/panchang" className="text-muted-foreground hover:text-foreground">Panchang</Link>
-            <Link href="/gita" className="text-muted-foreground hover:text-foreground">Bhagavad Gita</Link>
+            <Link href="/ramayan" className="text-muted-foreground hover:text-foreground">Ramayan</Link>
+            <Link href="/mahabharat" className="text-muted-foreground hover:text-foreground">Mahabharat</Link>
             <Link href="/states" className="text-muted-foreground hover:text-foreground">Temples by State</Link>
           </nav>
           <nav className="flex flex-col gap-2">

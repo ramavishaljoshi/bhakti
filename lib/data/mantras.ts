@@ -1,4 +1,5 @@
 import { Mantra } from "@/lib/types";
+import { hanumanChalisaText } from "@/lib/data/hanuman-chalisa";
 
 
 export const mantras: Mantra[] = [
@@ -80,6 +81,7 @@ export const mantras: Mantra[] = [
     intentions: ["protection", "career", "success", "health"],
     image: "/assets/mantras/hanuman-chalisa.jpg",
     pdf: "/assets/mantras/hanuman-chalisa.pdf",
+    fullText: hanumanChalisaText,
     count: 11,
     aarti: {
       title: "Hanuman Chalisa",

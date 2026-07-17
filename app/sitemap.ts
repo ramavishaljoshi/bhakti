@@ -5,6 +5,8 @@ import { temples, getAllStates } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
 import { intentions } from "@/lib/data/intentions";
 import { gitaChapters } from "@/lib/data/gita";
+import { ramayanKands } from "@/lib/data/ramayan";
+import { mahabharatParvas } from "@/lib/data/mahabharat";
 import { articles } from "@/lib/data/articles";
 import { vrats } from "@/lib/data/vrat";
 import { authors } from "@/lib/data/authors";
@@ -33,6 +35,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/states", priority: 0.8, freq: "monthly" },
     { path: "/intentions", priority: 0.8, freq: "monthly" },
     { path: "/gita", priority: 0.8, freq: "monthly" },
+    { path: "/ramayan", priority: 0.8, freq: "monthly" },
+    { path: "/mahabharat", priority: 0.8, freq: "monthly" },
     { path: "/gods", priority: 0.9, freq: "weekly" },
     { path: "/panchang", priority: 0.8, freq: "daily" },
     { path: "/jap", priority: 0.7, freq: "monthly" },
@@ -74,6 +78,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
   for (const c of gitaChapters) {
     entries.push({ url: url(`/gita/${c.number}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const k of ramayanKands) {
+    entries.push({ url: url(`/ramayan/${k.slug}`), changeFrequency: "monthly", priority: 0.6 });
+  }
+  for (const p of mahabharatParvas) {
+    entries.push({ url: url(`/mahabharat/${p.slug}`), changeFrequency: "monthly", priority: 0.6 });
   }
   for (const s of getAllStates()) {
     entries.push({ url: url(`/states/${s.slug}`), changeFrequency: "monthly", priority: 0.6 });

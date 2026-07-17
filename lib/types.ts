@@ -17,6 +17,8 @@ export interface Mantra {
   count?: number;
   /** Optional URL of a downloadable PDF (e.g. full lyrics) — shows a "Read PDF" button on the detail page. */
   pdf?: string;
+  /** Full recitation text, rendered on the detail page. The PDF stays as a takeaway. */
+  fullText?: RecitationVerse[];
   /** Optional URL of an audio recording for the "Listen" button. */
   audio?: string;
   /** Optional related aarti — shows a "Listen to Aarti" button on the detail page. */
@@ -85,6 +87,20 @@ export interface Verse {
   meaning: string;
 }
 
+/**
+ * One line of a long-form recitation (a chalisa's doha/chaupai, an aarti verse).
+ * Lives on `Mantra.fullText` so a devotee can do paath on the page instead of
+ * opening the PDF.
+ */
+export interface RecitationVerse {
+  kind: "doha" | "chaupai";
+  /** 1–40 for a chalisa's chaupais; framing dohas are unnumbered. */
+  number?: number;
+  text: string;
+  transliteration: string;
+  meaning: string;
+}
+
 export interface Chapter {
   number: number;
   name: string;
@@ -92,6 +108,36 @@ export interface Chapter {
   versesCount: number;
   summary: string;
   verses: Verse[];
+}
+
+/**
+ * A quoted shloka from a narrative scripture (Ramayan / Mahabharat).
+ * Unlike `Verse`, the citation is a free string and deliberately stays at
+ * kand/parva level — recensions disagree on sarga and adhyaya numbering, so a
+ * precise "5.33" would imply an accuracy we cannot honestly claim.
+ */
+export interface ScriptureVerse {
+  /** Section-level citation, e.g. "Sundara Kand" or "Vana Parva". */
+  ref: string;
+  sanskrit: string;
+  transliteration: string;
+  meaning: string;
+}
+
+/** One book of a narrative scripture — a Ramayan kand or a Mahabharat parva. */
+export interface ScriptureSection {
+  number: number;
+  slug: string;
+  name: string;
+  translation: string;
+  /** Sargas (Ramayan) or adhyayas (Mahabharat) this section contains. */
+  unitsCount: number;
+  summary: string;
+  /** Mukhya prasang — the key episodes, as short bullets. */
+  highlights: string[];
+  verses: ScriptureVerse[];
+  /** Optional internal cross-link, e.g. Bhishma Parva → /gita. */
+  crossLink?: { label: string; href: string };
 }
 
 export interface Intention {

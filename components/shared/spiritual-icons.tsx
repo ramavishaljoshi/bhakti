@@ -112,6 +112,30 @@ export function TrishulIcon(props: IconProps) {
   );
 }
 
+/** Ram's dhanush — the bow with a nocked arrow. */
+export function BowIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M7 3c5 2.5 7.5 6 7.5 9s-2.5 6.5-7.5 9" />
+      <path d="M7 3v18" />
+      <path d="M7 12h13" />
+      <path d="M17 9l3 3-3 3" />
+    </svg>
+  );
+}
+
+/** Sudarshan Chakra — Krishna's discus. */
+export function ChakraIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="3.5" />
+      <path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21" />
+      <path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9" />
+    </svg>
+  );
+}
+
 export function ScrollIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>

@@ -66,6 +66,8 @@ export const shortcuts: Shortcut[] = [
   { label: "Festivals", icon: "PartyPopper", href: "/festivals" },
   { label: "Chalisa", icon: "ScrollText", href: "/mantras" },
   { label: "Bhagavad Gita", icon: "BookText", href: "/gita" },
+  { label: "Ramayan", icon: "Bow", href: "/ramayan" },
+  { label: "Mahabharat", icon: "Chakra", href: "/mahabharat" },
   { label: "Articles", icon: "Newspaper", href: "/articles" },
   { label: "Favorites", icon: "Heart", href: "/favorites" },
   { label: "AI Guru", icon: "Bot", href: "/ai-guru" },

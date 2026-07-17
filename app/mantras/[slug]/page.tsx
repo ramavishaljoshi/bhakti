@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { MantraListenButton } from "@/components/shared/mantra-listen-button";
 import { MantraCard } from "@/components/cards/mantra-card";
+import { RecitationText } from "@/components/mantras/recitation-text";
 import { mantras, getMantraBySlug, getMantrasByCategory } from "@/lib/data/mantras";
 import { getGodByName } from "@/lib/data/gods";
 import { getFestivalByName } from "@/lib/data/festivals";
@@ -246,6 +247,10 @@ export default function MantraDetailPage({
           </div>
         </div>
       </div>
+
+      {mantra.fullText && (
+        <RecitationText verses={mantra.fullText} title={mantra.name} />
+      )}
 
       <RelatedLinks groups={relatedGroups} />
 

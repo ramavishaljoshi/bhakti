@@ -104,6 +104,8 @@ export function intentionRelations(intention: Intention): RelatedGroup[] {
   // --- Static hubs (always relevant) -------------------------------------
   const scriptureLinks: RelatedItem[] = [
     { label: "Bhagavad Gita", href: "/gita" },
+    { label: "Ramayan", href: "/ramayan" },
+    { label: "Mahabharat", href: "/mahabharat" },
   ];
   const dailyQuoteLinks: RelatedItem[] = [
     { label: "Verse of the Day", href: "/gita" },
