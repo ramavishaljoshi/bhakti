@@ -16,10 +16,29 @@ export const LOCALE = "en_IN";
 // updated; surfaced as schema dateModified and a visible EEAT note.
 export const CONTENT_UPDATED = "2026-06-29";
 
+/**
+ * Canonical path form for this site. `next.config.mjs` sets
+ * `trailingSlash: true`, so every *page* URL ends in "/" and the unslashed
+ * form 308-redirects to it. Emitting the unslashed form in a sitemap, feed or
+ * JSON-LD node costs a needless redirect hop and splits Search Console
+ * reporting across two URLs, so normalise here — once, for every caller.
+ * Asset paths (anything with a file extension, e.g. /og-image.png, /rss.xml)
+ * are left exactly as-is.
+ */
+export function canonicalPath(path: string): string {
+  const i = path.search(/[?#]/);
+  const pathname = i === -1 ? path : path.slice(0, i);
+  const suffix = i === -1 ? "" : path.slice(i);
+  if (pathname.endsWith("/")) return pathname + suffix;
+  // A dot in the final segment means this is a file, not a page.
+  if (/\.[a-z0-9]+$/i.test(pathname.split("/").pop() ?? "")) return pathname + suffix;
+  return `${pathname}/${suffix}`;
+}
+
 /** Build an absolute URL for a site-relative path (or pass through if absolute). */
 export function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path;
-  return `${SITE_URL}${path === "/" ? "" : path}`;
+  return `${SITE_URL}${canonicalPath(path)}`;
 }
 
 interface PageMetaInput {

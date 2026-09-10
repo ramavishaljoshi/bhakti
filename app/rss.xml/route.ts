@@ -1,4 +1,4 @@
-import { SITE_URL, SITE_NAME } from "@/lib/seo";
+import { absoluteUrl, SITE_NAME } from "@/lib/seo";
 import { articles } from "@/lib/data/articles";
 
 // RSS 2.0 feed of articles. Emitted as a static file at build time
@@ -13,7 +13,8 @@ const esc = (s: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
-const loc = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
+// Canonical trailing slash on page links; "/rss.xml" is a file and stays bare.
+const loc = absoluteUrl;
 const rfc822 = (iso: string) => new Date(`${iso}T09:00:00Z`).toUTCString();
 
 export function GET() {

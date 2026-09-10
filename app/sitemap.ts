@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, CONTENT_UPDATED } from "@/lib/seo";
+import { absoluteUrl, CONTENT_UPDATED } from "@/lib/seo";
 import { mantras } from "@/lib/data/mantras";
 import { temples, getAllStates } from "@/lib/data/temples";
 import { festivals } from "@/lib/data/festivals";
@@ -19,7 +19,9 @@ import { gods } from "@/lib/data/gods";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const url = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
+  // absoluteUrl applies the site's canonical trailing slash, so every <loc>
+  // is the URL Google actually indexes rather than a 308 redirect to it.
+  const url = absoluteUrl;
 
   const staticRoutes: {
     path: string;

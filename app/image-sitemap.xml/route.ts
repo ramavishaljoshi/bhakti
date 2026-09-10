@@ -1,4 +1,4 @@
-import { SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { absoluteUrl, SITE_URL, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { gods } from "@/lib/data/gods";
 import { mantras } from "@/lib/data/mantras";
 import { temples } from "@/lib/data/temples";
@@ -11,8 +11,10 @@ import { articles } from "@/lib/data/articles";
 // `images` field. Each <url> lists the images shown on that page.
 export const dynamic = "force-static";
 
+// Image srcs keep their exact path (they are files); page <loc>s go through
+// absoluteUrl so they carry the site's canonical trailing slash.
 const abs = (p: string) => (p.startsWith("http") ? p : `${SITE_URL}${p}`);
-const loc = (path: string) => `${SITE_URL}${path === "/" ? "" : path}`;
+const loc = absoluteUrl;
 
 const esc = (s: string) =>
   s

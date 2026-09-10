@@ -83,11 +83,11 @@ export default function MahabharatPage() {
       />
 
       <p className="-mt-2 mb-10 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Ved Vyasa's Mahabharat runs to some one hundred thousand shlokas,
+        Ved Vyasa&rsquo;s Mahabharat runs to some one hundred thousand shlokas,
         arranged in eighteen parvas. It is not simply the story of a war — it is
         the story of dharma in its hardest form, where the line between right
         and wrong is never clean. The Bhagavad Gita belongs to its Bhishma
-        Parva. Read each parva's story and sit with the verses that carry it.
+        Parva. Read each parva&rsquo;s story and sit with the verses that carry it.
       </p>
 
       <h2 className="mb-4 font-display text-xl font-bold tracking-tight sm:text-2xl">

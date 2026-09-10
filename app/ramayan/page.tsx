@@ -78,10 +78,10 @@ export default function RamayanPage() {
       />
 
       <p className="-mt-2 mb-10 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Maharishi Valmiki's Ramayan is an epic of some 24,000 shlokas, arranged
+        Maharishi Valmiki&rsquo;s Ramayan is an epic of some 24,000 shlokas, arranged
         in seven kands. It is less the story of a king than an answer to a
         question: what does an ideal human being actually look like — as a son,
-        a brother, a husband and a ruler? Read each kand's story, follow its key
+        a brother, a husband and a ruler? Read each kand&rsquo;s story, follow its key
         episodes, and sit with the verses that carry it.
       </p>
 
